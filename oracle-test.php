@@ -16,7 +16,7 @@
   OCILogon below to be your ORACLE username and password -->
 
 <p>If you wish to reset the table press on the reset button. If this is the first time you're running this page, you MUST use reset</p>
-<form method="POST" action="oracle-test1.php">
+<form method="POST" action="oracle-test.php">
    
 <p><input type="submit" value="Reset" name="reset"></p>
 </form>
@@ -24,7 +24,7 @@
 <p>Insert values into tab1 below:</p>
 <p><font size="2"> Number&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
 Name</font></p>
-<form method="POST" action="oracle-test1.php">
+<form method="POST" action="oracle-test.php">
 <!--refresh page when submit-->
 
    <p><input type="text" name="insNo" size="6"><input type="text" name="insName" 
@@ -39,7 +39,7 @@ get the values-->
 <p> Update the name by inserting the old and new values below: </p>
 <p><font size="2"> Old Name&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
 New Name</font></p>
-<form method="POST" action="oracle-test1.php">
+<form method="POST" action="oracle-test.php">
 <!--refresh page when submit-->
 
    <p><input type="text" name="oldName" size="6"><input type="text" name="newName" 
@@ -56,7 +56,7 @@ size="18">
 //html; it's now parsing PHP
 
 $success = True; //keep track of errors so it redirects the page only if there are no errors
-$db_conn = OCILogon("ora_u4e7", "a71174098", "ug");
+$db_conn = OCILogon("ug", "a71174098 ", "ug");
 
 function executePlainSQL($cmdstr) { //takes a plain (no bound variables) SQL command and executes it
 	//echo "<br>running ".$cmdstr."<br>";
@@ -199,7 +199,7 @@ if ($db_conn) {
 
 	if ($_POST && $success) {
 		//POST-REDIRECT-GET -- See http://en.wikipedia.org/wiki/Post/Redirect/Get
-		header("location: oracle-test1.php");
+		header("location: oracle-test.php");
 	} else {
 		// Select data...
 		$result = executePlainSQL("select * from tab1");
