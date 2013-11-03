@@ -2,7 +2,7 @@
 <html>
 <?php
 
-if ($c=OCILogon("ug", "a71174098", "ug")) {
+if ($c=OCILogon("ora_u4e7", "a71174098", "ug")) {
   echo "Successfully connected to Oracle.\n";
   OCILogoff($c);
 } else {

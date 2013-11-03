@@ -30,7 +30,7 @@ include 'game_class.php';
 		}
 
 		$TBS = new clsTinyButStrong;
-		$TBS->LoadTemplate('game-history.htm');
+		$TBS->LoadTemplate('game-history.html');
 		$TBS->MergeBlock('gameData', $gameData);
 		$TBS->Show();
 	}

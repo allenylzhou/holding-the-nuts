@@ -3,7 +3,7 @@
 class Database {
 
 	public static function insert($params) {
-		if ($c=OCILogon("ug", "a71174098", "ug")) {
+		if ($c=OCILogon("ora_u4e7", "a71174098", "ug")) {
 		  echo "Successfully connected to Oracle.\n";
 		  OCILogoff($c);
 		} else {
@@ -13,7 +13,7 @@ class Database {
 	}
 
 	public static function update($params) {
-		if ($c=OCILogon("ug", "a71174098", "ug")) {
+		if ($c=OCILogon("ora_u4e7", "a71174098", "ug")) {
 		  echo "Successfully connected to Oracle.\n";
 		  OCILogoff($c);
 		} else {
@@ -23,7 +23,7 @@ class Database {
 	}
 
 	public static function delete() {
-		if ($c=OCILogon("ug", "a71174098", "ug")) {
+		if ($c=OCILogon("ora_u4e7", "a71174098", "ug")) {
 		  echo "Successfully connected to Oracle.\n";
 		  OCILogoff($c);
 		} else {
