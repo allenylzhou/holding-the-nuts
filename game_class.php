@@ -59,7 +59,7 @@ class CashGame extends Game {
 
 	public static function loadSavedGames($uid) {
 
-		if ($connection = oci_connect("ug", "a71174098", "ug")) {
+		if ($connection = oci_connect("ora_u4e7", "a71174098", "ug")) {
 			//echo "Successfully connected to Oracle.\n";
 
 			$sql_text = 'SELECT *
@@ -95,7 +95,7 @@ class TournamentGame extends Game {
 	public function getPlacedFinished() {return $this->placedFinished;}
 
 	public static function loadSavedGames($uid) {
-		if ($connection = oci_connect("ug", "a71174098", "ug")) {
+		if ($connection = oci_connect("ora_u4e7", "a71174098", "ug")) {
 			//echo "Successfully connected to Oracle.\n";
 
 			$sql_text = 'SELECT *
