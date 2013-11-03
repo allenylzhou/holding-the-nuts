@@ -1,0 +1,29 @@
+<table>
+	<tr style="background-color:#CACACA">
+		<td><strong>Start Date</strong></td>
+		<td><strong>Start Time</strong></td>
+		<td><strong>End Time</strong></td>
+		<td><strong>Buy In</strong></td>
+		<td><strong>Buy Out</strong></td>
+		<td><strong>Big Blind[onload;block=td;when [var.gameType.cash]=1]</strong></td>
+		<td><strong>Small Blind[onload;block=td;when [var.gameType.cash]=1]</strong></td>
+		<td><strong>Place Finished[onload;block=td;when [var.gameType.tournament]=1]</strong></td>
+	</tr>
+	
+	<tr style="background-color:#F0F0F0">
+		<td>[gameData.START_DATE;block=tr;frm='mmm dd yyyy']</td>
+		<td>[gameData.START_DATE;frm='hh:nn:ss']</td>
+		<td>[gameData.END_DATE;frm='hh:nn:ss']</td>
+		<td>[gameData.AMOUNT_IN;frm='$ 0,000.00']</td>
+		<td>[gameData.AMOUNT_OUT;frm='$ 0,000.00']</td>
+		<td>[gameData.BIG_BLIND][onload;block=td;when [var.gameType.cash]=1]</td>
+		<td>[gameData.SMALL_BLIND][onload;block=td;when [var.gameType.cash]=1]</td>
+		<td>[gameData.PLACED_FINISHED][onload;block=td;when [var.gameType.tournament]=1]</td>
+	</tr>
+
+	<tr style="background-color:#FFCFB9">
+		[gameData;block=tr;nodata]
+		<td colspan="7">No history available.[onload;block=td;when [var.gameType.cash]=1]</td>
+		<td colspan="6">No history available.[onload;block=td;when [var.gameType.tournament]=1]</td>
+	</tr>
+</table>
