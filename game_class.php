@@ -48,6 +48,7 @@ class CashGame extends Game {
 
 	public function __construct () {
 		parent::__construct();
+		// This is the order in which table instances are inserted to satisfy integrity constraint
 		static::$tableSchemas = array_merge(parent::$tableSchemas, self::$tableSchemas);
 	}
 
@@ -68,24 +69,22 @@ class CashGame extends Game {
 		}
 	}
 
-	public static function loadSavedGames($uid) {
+	public static function loadSavedGames($userId) {
 
 		if ($connection = oci_connect("ora_u4e7", "a71174098", "ug")) {
-			//echo "Successfully connected to Oracle.\n";
-
-			$sql_text = 'SELECT *
+			$sqlString = 'SELECT *
 				FROM Game G, Game_Cash C
 				WHERE G.gs_id = C.gs_id AND G.user_id = (:userId)';
 
-			$query = oci_parse($connection, $sql_text);
-			oci_bind_by_name($query, ':userId', $uid);
+			$sqlStatement = oci_parse($connection, $sqlString);
+			oci_bind_by_name($sqlStatement, ':userId', $userId);
 
-			oci_execute($query);
+			oci_execute($sqlStatement);
 
-			$results = array();
-			while ($row = oci_fetch_array($query)) {
+			$returnData = array();
+			while ($row = oci_fetch_array($sqlStatement)) {
 
-				array_push($results, $row);
+				array_push($returnData, $row);
 			}
 		  	OCILogoff($connection);
 
@@ -94,7 +93,7 @@ class CashGame extends Game {
 		  echo "Oracle Connect Error " . $err['message'];
 		}
 
-		return $results;
+		return $returnData;
 	}
 
 }
@@ -110,10 +109,11 @@ class TournamentGame extends Game {
 
 	public function __construct () {
 		parent::__construct();
-		static::$tableSchemas = array_merge(self::$tableSchemas, parent::$tableSchemas);
+		// This is the order in which table instances are inserted to satisfy integrity constraint
+		static::$tableSchemas = array_merge(parent::$tableSchemas, self::$tableSchemas);
 	}
 
-	protected $placedFinished;
+	protected $placeFinished;
 
 	public function setProperties($properties) {
 		foreach($properties as $key => $value) {
@@ -129,23 +129,22 @@ class TournamentGame extends Game {
 		}
 	}
 
-	public static function loadSavedGames($uid) {
-		if ($connection = oci_connect("ora_u4e7", "a71174098", "ug")) {
-			//echo "Successfully connected to Oracle.\n";
+	public static function loadSavedGames($userId) {
 
-			$sql_text = 'SELECT *
+		if ($connection = oci_connect("ora_u4e7", "a71174098", "ug")) {
+			$sqlString = 'SELECT *
 				FROM Game G, Game_Tournament T
 				WHERE G.gs_id = T.gs_id AND G.user_id = (:userId)';
 
-			$query = oci_parse($connection, $sql_text);
-			oci_bind_by_name($query, ':userId', $uid);
+			$sqlStatement = oci_parse($connection, $sqlString);
+			oci_bind_by_name($sqlStatement, ':userId', $userId);
 
-			oci_execute($query);
+			oci_execute($sqlStatement);
 
-			$results = array();
-			while ($row = oci_fetch_array($query)) {
+			$returnData = array();
+			while ($row = oci_fetch_array($sqlStatement)) {
 
-				array_push($results, $row);
+				array_push($returnData, $row);
 			}
 		  	OCILogoff($connection);
 
@@ -154,7 +153,7 @@ class TournamentGame extends Game {
 		  echo "Oracle Connect Error " . $err['message'];
 		}
 
-		return $results;
+		return $returnData;
 	}
 }
 

@@ -21,7 +21,6 @@ public static function closeConnection($c){
 
 public function insert() {
 	if ($connection = oci_connect("ora_u4e7", "a71174098", "ug")) {
-
 		foreach(static::$tableSchemas as $name => $properties) {
 
 			$columns = array();
