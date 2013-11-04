@@ -31,10 +31,6 @@ abstract class Game extends Database {
 	protected $amountOut;
 	protected $locationName;
 
-	protected function getID() {
-		return $this->ID;
-	}
-
 	abstract protected function setProperties($properties);
 	abstract protected function save();
 
