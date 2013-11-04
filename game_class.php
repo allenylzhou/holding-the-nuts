@@ -4,30 +4,36 @@ include 'database_class.php';
 	
 abstract class Game extends Database {
 
-	protected static $tableName = 'GAME';
-
-	// This maps table columns to model properties
-	protected static $tableModelMap = array(
-		'GS_ID' => 'gsId',
-		'USER_ID' => 'userId',
-		'START_DATE' => 'startDate',
-		'END_DATE' => 'endDate',
-		'AMOUNT_IN' => 'amountIn',
-		'AMOUNT_OUT' => 'amountOut',
-		'LOCATION_NAME' => 'locationName'
+	// This maps model properties to database
+	protected static $tableSchemas = array(
+		'GAME' => array(
+			'ID' => 'GS_ID',
+			'userId' => 'USER_ID',
+			'startDate' => 'START_DATE',
+			'endDate' => 'END_DATE',
+			'amountIn' => 'AMOUNT_IN',
+			'amountOut' => 'AMOUNT_OUT',
+			'locationName' => 'LOCATION_NAME'
+		)
 	);
+
+	protected static $tableSequencer = 'GAME_SEQUENCE';
 
 	protected function __construct () {
 		parent::__construct();
 	}
 
-	protected $gsId;
+	protected $ID;
 	protected $userId;
 	protected $startDate;
 	protected $endDate;
 	protected $amountIn;
 	protected $amountOut;
 	protected $locationName;
+
+	protected function getID() {
+		return $this->ID;
+	}
 
 	abstract protected function setProperties($properties);
 	abstract protected function save();
@@ -36,21 +42,21 @@ abstract class Game extends Database {
 
 class CashGame extends Game {
 
-	protected static $tableName = 'GAME_CASH';
-
-	//This maps table columns to model properties
-	protected static $tableModelMap = array(
-		'GS_ID' => 'gsId',
-		'BIG_BLIND' => 'bigBlind',
-		'SMALL_BLIND' => 'smallBlind'
+	protected static $tableSchemas = array(
+		'GAME_CASH' => array(
+			'ID' => 'GS_ID',
+			'bigBlind' => 'BIG_BLIND',
+			'smallBlind' => 'SMALL_BLIND'
+		)
 	);
 
 	public function __construct () {
 		parent::__construct();
+		static::$tableSchemas = array_merge(parent::$tableSchemas, self::$tableSchemas);
 	}
 
-	private $bigBlind;
-	private $smallBlind;
+	protected $bigBlind;
+	protected $smallBlind;
 
 	public function setProperties($properties) {
 		foreach($properties as $key => $value) {
@@ -59,22 +65,8 @@ class CashGame extends Game {
 	}
 
 	public function save() {
-		// INSERT a GAME instance
-		$gameAttributes = array();
-		foreach(parent::$tableModelMap as $column => $property) {
-			$gameAttributes[$column] = $this->{$property};
-		}
-		$this->insert($gameAttributes, parent::$tableName);
-
-		// INSERT a GAME_CASH instance
-		$cashGameAttributes = array();
-		foreach(self::$tableModelMap as $column => $property) {
-			$cashGameAttributes[$column] = $this->{$property};
-		}
-		$this->insert($cashGameAttributes);
+		$this->insert();
 	}
-
-
 
 	public static function loadSavedGames($uid) {
 
@@ -109,19 +101,19 @@ class CashGame extends Game {
 
 class TournamentGame extends Game {
 
-	protected static $tableName = 'GAME_TOURNAMENT';
-
-	//This maps table columns to model properties
-	protected static $tableModelMap = array(
-		'GS_ID' => 'gsId',
-		'PLACED_FINISHED' => 'placedFinished'
+	protected static $tableSchemas = array(
+		'GAME_TOURNAMENT' => array(
+			'ID' => 'GS_ID',
+			'placeFinished' => 'PLACED_FINISHED'
+		)
 	);
 
 	public function __construct () {
 		parent::__construct();
+		static::$tableSchemas = array_merge(self::$tableSchemas, parent::$tableSchemas);
 	}
 
-	private $placedFinished;
+	protected $placedFinished;
 
 	public function setProperties($properties) {
 		foreach($properties as $key => $value) {
@@ -130,15 +122,7 @@ class TournamentGame extends Game {
 	}
 
 	public function save() {
-		// INSERT a GAME instance
-		$this->insert(array_map(function($propertyName) {
-			return $this->{$propertyName};
-		}, parent::$tableModelMap), parent::$tableName);
-
-		// INSERT a GAME_CASH instance
-		$this->insert(array_map(function($propertyName) {
-			return $this->{$propertyName};
-		}, self::$tableModelMap));
+		$this->insert();
 	}
 
 	public static function loadSavedGames($uid) {

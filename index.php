@@ -64,7 +64,6 @@ include 'game_class.php';
 		}
 
 		$newGame->setProperties(array(
-			'gsId' => $_POST['gsId'],
 			'userId' => $_POST['userId'],
 			'amountIn' => $_POST['amountIn'],
 			'amountOut' => $_POST['amountOut']
