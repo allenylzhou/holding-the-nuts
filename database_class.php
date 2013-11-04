@@ -2,10 +2,22 @@
 
 abstract class Database {
 
+private static $USERNAME = 'project'; // "ora_u4e7"
+private static $PASSWORD = 'project'; // "a71174098"
+private static $CONNECTSTRING = 'localhost:1521'; // "ug";
+
 protected static $tableName;
 protected static $tableModelMap;
 
 protected function __construct () {}
+
+public static function getConnection(){
+	return OCILogon(self::$USERNAME, self::$PASSWORD, self::$CONNECTSTRING);
+}
+
+public static function closeConnection($c){
+	OCILogoff($c);
+}
 
 public static function insert($attributes, $overrideTableName = null) {
 	if ($connection = oci_connect("ora_u4e7", "a71174098", "ug")) {
