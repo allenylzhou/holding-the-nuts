@@ -32,7 +32,7 @@ class PaymentPart extends Database {
 	}
 
 	public function save() {
-		if isset($this->ID) {
+		if (isset($this->ID)) {
 			$this->update();
 		} else {
 			$this->insert();
