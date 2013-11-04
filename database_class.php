@@ -55,7 +55,7 @@ public function insert() {
 			}
 
 			if(oci_execute($sqlStatement)) {
-				echo "Successfully inserted into $name: ID = $this->ID.<br/>";
+				echo "Successfully inserted into $name table: ID = $this->ID.<br/>";
 			}
 		}
 
@@ -68,10 +68,43 @@ public function insert() {
 }
 
 public function update() {
-	echo $this->amountOut;
-	if ($c=OCILogon("ora_u4e7", "a71174098", "ug")) {
-		echo "Successfully connected to Oracle.\n";
-		OCILogoff($c);
+	if ($connection = oci_connect("ora_u4e7", "a71174098", "ug")) {
+
+		foreach(static::$tableSchemas as $name => $properties) {
+
+			$sets = array();
+
+			// Create bind variable placeholders for each property
+			$bindings = array();
+			foreach($properties as $field => $column) {
+
+				if ($field == "ID") {
+					$where = "$column=".$this->{$field};
+				} else {
+					$placeholder = ":bv" . count($bindings);
+					$sets[] = "$column = $placeholder";	
+					$bindings[$placeholder] = $this->{$field};
+				}
+			}
+
+			$sets = implode(',', $sets);
+
+			// Prepare SQL statement
+			$sqlString = "UPDATE $name SET $sets WHERE $where";
+			$sqlStatement = oci_parse($connection, $sqlString);
+
+			// Make bindings
+			foreach($bindings as $placeholder => $value) {
+				oci_bind_by_name($sqlStatement, $placeholder, $bindings[$placeholder]);
+			}
+
+			if(oci_execute($sqlStatement)) {
+				echo "Successfully updated $name table: ID = $this->ID.<br/>";
+			}
+		}
+
+		OCILogoff($connection);
+
 	} else {
 		$err = OCIError();
 		echo "Oracle Connect Error " . $err['message'];

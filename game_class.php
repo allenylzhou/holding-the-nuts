@@ -65,7 +65,11 @@ class CashGame extends Game {
 	}
 
 	public function save() {
-		$this->insert();
+		if isset($this->ID) {
+			$this->update();
+		} else {
+			$this->insert();
+		}
 	}
 
 	public static function loadSavedGames($uid) {
@@ -122,7 +126,11 @@ class TournamentGame extends Game {
 	}
 
 	public function save() {
-		$this->insert();
+		if isset($this->ID) {
+			$this->update();
+		} else {
+			$this->insert();
+		}
 	}
 
 	public static function loadSavedGames($uid) {
