@@ -1,8 +1,27 @@
 <?php
-	
-abstract class Game {
 
-	protected $id;
+include 'database_class.php';
+	
+abstract class Game extends Database {
+
+	protected static $tableName = 'GAME';
+
+	// This maps table columns to model properties
+	protected static $tableModelMap = array(
+		'GS_ID' => 'gsId',
+		'USER_ID' => 'userId',
+		'START_DATE' => 'startDate',
+		'END_DATE' => 'endDate',
+		'AMOUNT_IN' => 'amountIn',
+		'AMOUNT_OUT' => 'amountOut',
+		'LOCATION_NAME' => 'locationName'
+	);
+
+	protected function __construct () {
+		parent::__construct();
+	}
+
+	protected $gsId;
 	protected $userId;
 	protected $startDate;
 	protected $endDate;
@@ -10,52 +29,48 @@ abstract class Game {
 	protected $amountOut;
 	protected $locationName;
 
-	protected function getUserId() {return $this->userId;}
-	protected function getStartDate() {return $this->startDate;}
-	protected function getEndDate() {return $this->endDate;}
-	protected function getAmountIn() {return $this->amountIn;}
-	protected function getAmountOut() {return $this->amountOut;}
-	protected function getLocationName() {return $this->locationName;}
-
-	protected function setStartDate($v) {
-		//TODO: Add input validation
-		// if (isValid($v)) {
-				$this->startDate = $v;
-		// } else {
-		//		throw new Exception;
-		// }
-	}
-
-	protected function setEndDate($v) {
-		//TODO: Add input validation
-		$this->endDate = $v;
-	}
-	protected function setAmountIn($v) {
-		//TODO: Add input validation
-		$this->amountIn = $v;
-	}
-	protected function setAmountOut($v) {
-		//TODO: Add input validation
-		$this->amountOut = $v;
-	}
-	protected function setLocationName($v) {
-		//TODO: Add input validation
-		$this->locationName = $v;
-	}
-
-	protected function save() {
-		print(get_object_vars($this));
-	}
+	abstract protected function setProperties($properties);
+	abstract protected function save();
 
 }
 
 class CashGame extends Game {
 
+	protected static $tableName = 'GAME_CASH';
+
+	//This maps table columns to model properties
+	protected static $tableModelMap = array(
+		'GS_ID' => 'gsId',
+		'BIG_BLIND' => 'bigBlind',
+		'SMALL_BLIND' => 'smallBlind'
+	);
+
+	public function __construct () {
+		parent::__construct();
+	}
+
 	private $bigBlind;
 	private $smallBlind;
 
-	public function getBigBlind() {return $this->bigBlind;}
-	public function getSmallBlind() {return $this->smallBlind;}
+	public function setProperties($properties) {
+		foreach($properties as $key => $value) {
+			$this->{$key} = $value;
+		}
+	}
+
+	public function save() {
+		// INSERT a GAME instance
+		$this->insert(array_map(function($propertyName) {
+			return $this->{$propertyName};
+		}, parent::$tableModelMap), parent::$tableName);
+
+		// INSERT a GAME_CASH instance
+		$this->insert(array_map(function($propertyName) {
+			return $this->{$propertyName};
+		}, self::$tableModelMap));
+	}
+
+
 
 	public static function loadSavedGames($uid) {
 
@@ -90,9 +105,37 @@ class CashGame extends Game {
 
 class TournamentGame extends Game {
 
+	protected static $tableName = 'GAME_TOURNAMENT';
+
+	//This maps table columns to model properties
+	protected static $tableModelMap = array(
+		'GS_ID' => 'gsId',
+		'PLACED_FINISHED' => 'placedFinished'
+	);
+
+	public function __construct () {
+		parent::__construct();
+	}
+
 	private $placedFinished;
 
-	public function getPlacedFinished() {return $this->placedFinished;}
+	public function setProperties($properties) {
+		foreach($properties as $key => $value) {
+			$this->{$key} = $value;
+		}
+	}
+
+	public function save() {
+		// INSERT a GAME instance
+		$this->insert(array_map(function($propertyName) {
+			return $this->{$propertyName};
+		}, parent::$tableModelMap), parent::$tableName);
+
+		// INSERT a GAME_CASH instance
+		$this->insert(array_map(function($propertyName) {
+			return $this->{$propertyName};
+		}, self::$tableModelMap));
+	}
 
 	public static function loadSavedGames($uid) {
 		if ($connection = oci_connect("ora_u4e7", "a71174098", "ug")) {
@@ -121,7 +164,6 @@ class TournamentGame extends Game {
 
 		return $results;
 	}
-
 }
 
 ?>
