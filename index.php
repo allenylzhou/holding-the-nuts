@@ -5,27 +5,31 @@
 <h2>Function 1: Show Game History by User ID</h2>
 
 <form method="POST" action="index.php">
-	<label>USER_ID:</label>
-	<input type="text" name="userId" value="0" size="1">
-	<input type="submit" value="Cash Games" name="cash">
-	<input type="submit" value="Tournament Games" name="tournament">
+	<input type="submit" value="See Cash Games" name="cash">
+	<input type="submit" value="See Tournament Games" name="tournament">
+	<input type="hidden" name="userId" value="0"><br/>
 </form>
 
 <h2>Function 2: Create Game Session</h2>
 <form method="POST" action="index.php">
-	<label>USER_ID:</label>
-	<input type="text" name="userId" value="0" size="1"><br/>
-	<label>GS_ID:</label>
-	<input type="text" name="gsId" value="0" size="1"><br/>
 	<label>GS_TYPE:</label>
 	<select name="gsType">
 		<option value="cash">Cash</option>
 		<option value="tournament">Tournament</option>
 	</select><br/>
+
+	<label>START_TIME:</label>
+	<input type="date" name="startDate"><br/>
+
+	<label>END_TIME:</label>
+	<input type="date" name="endDate"><br/>
+
 	<label>AMOUNT_IN:</label>
 	<input type="text" name="amountIn" value="0" size="1"><br/>
+
 	<label>AMOUNT_OUT:</label>
 	<input type="text" name="amountOut" value="0" size="1"><br/>
+
 	<input type="submit" value="Create" name="create">
 </form>
 
@@ -64,7 +68,9 @@ include 'game_class.php';
 		}
 
 		$newGame->setProperties(array(
-			'userId' => $_POST['userId'],
+			'userId' => 0,
+			// 'startDate' => $_POST['startDate'],
+			// 'endDate' => $_POST['endDate'],
 			'amountIn' => $_POST['amountIn'],
 			'amountOut' => $_POST['amountOut']
 		));

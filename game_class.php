@@ -74,7 +74,8 @@ class CashGame extends Game {
 		if ($connection = oci_connect("ora_u4e7", "a71174098", "ug")) {
 			$sqlString = 'SELECT *
 				FROM Game G, Game_Cash C
-				WHERE G.gs_id = C.gs_id AND G.user_id = (:userId)';
+				WHERE G.gs_id = C.gs_id AND G.user_id = (:userId)
+				ORDER BY G.GS_ID ASC';
 
 			$sqlStatement = oci_parse($connection, $sqlString);
 			oci_bind_by_name($sqlStatement, ':userId', $userId);
@@ -134,7 +135,8 @@ class TournamentGame extends Game {
 		if ($connection = oci_connect("ora_u4e7", "a71174098", "ug")) {
 			$sqlString = 'SELECT *
 				FROM Game G, Game_Tournament T
-				WHERE G.gs_id = T.gs_id AND G.user_id = (:userId)';
+				WHERE G.GS_ID = T.GS_ID AND G.USER_ID = (:userId)
+				ORDER BY G.GS_ID ASC';
 
 			$sqlStatement = oci_parse($connection, $sqlString);
 			oci_bind_by_name($sqlStatement, ':userId', $userId);
