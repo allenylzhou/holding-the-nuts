@@ -60,14 +60,18 @@ class CashGame extends Game {
 
 	public function save() {
 		// INSERT a GAME instance
-		$this->insert(array_map(function($propertyName) {
-			return $this->{$propertyName};
-		}, parent::$tableModelMap), parent::$tableName);
+		$gameAttributes = array();
+		foreach(parent::$tableModelMap as $column => $property) {
+			$gameAttributes[$column] = $this->{$property};
+		}
+		$this->insert($gameAttributes, parent::$tableName);
 
 		// INSERT a GAME_CASH instance
-		$this->insert(array_map(function($propertyName) {
-			return $this->{$propertyName};
-		}, self::$tableModelMap));
+		$cashGameAttributes = array();
+		foreach(self::$tableModelMap as $column => $property) {
+			$cashGameAttributes[$column] = $this->{$property};
+		}
+		$this->insert($cashGameAttributes);
 	}
 
 
