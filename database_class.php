@@ -2,9 +2,9 @@
 
 class Database {
 
-private static $USERNAME = 'project'; // "ora_u4e7"
-private static $PASSWORD = 'project'; // "a71174098"
-private static $CONNECTSTRING = 'localhost:1521'; // "ug";
+private static $USERNAME = 'ora_u4e7'; // 'project'; 
+private static $PASSWORD = 'a71174098'; //'project';
+private static $CONNECTSTRING = 'ug'; //'localhost:1521'; 
 
 protected static $tableSchemas;
 protected static $tableSequencer;
