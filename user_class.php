@@ -45,7 +45,9 @@ class User extends Database {
 	public function register() {
 		try{
 			$connection = Database::getConnection();
-			$stid = oci_parse($connection, 'INSERT INTO USERS (USER_ID, USERNAME, PASSWORD) VALUES (USERS_SEQUENCE.nextval, :username, :password)');
+			$sqlString = 'INSERT INTO USERS (USER_ID, USERNAME, PASSWORD) 
+							VALUES (USERS_SEQUENCE.nextval, :username, :password)';
+			$stid = oci_parse($connection, $sqlString);
 			oci_bind_by_name($stid, ':username', $this->username, 20);
 			oci_bind_by_name($stid, ':password', $this->password, 20);
 			$return = @oci_execute($stid, OCI_NO_AUTO_COMMIT);
@@ -70,6 +72,44 @@ class User extends Database {
 		}
 		finally {
 			if($connection != null){
+				Database::closeConnection($connection);	
+			}
+		}
+	}
+	
+	
+	public function login() {
+		try{
+			$connection = Database::getConnection();
+			$sqlString = 'SELECT * 
+						FROM USERS
+						WHERE USERNAME = :username 
+						and PASSWORD = :password';
+			$stid = oci_parse($connection, $sqlString);
+			oci_bind_by_name($stid, ':username', $this->username, 20);
+			oci_bind_by_name($stid, ':password', $this->password, 20);
+			
+			oci_define_by_name($stid, 'USER_ID', $userid);
+			oci_define_by_name($stid, 'USERNAME', $username);
+			oci_define_by_name($stid, 'PASSWORD', $passwordHash);
+			oci_execute($stid);
+
+			while (oci_fetch($stid)) {
+				if($userid != null){
+					$this->ID = $userid;
+					$this->username = $username;
+					$this->password = $passwordHash;
+					return;
+				}
+			}
+			throw new Exception('Improper credentials supplied');
+		}
+		catch (Exception $exception) {
+			throw $exception;
+		}
+		finally {
+			if($connection != null){
+				oci_free_statement($stid);
 				Database::closeConnection($connection);	
 			}
 		}
