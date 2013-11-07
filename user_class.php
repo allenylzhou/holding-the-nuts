@@ -58,6 +58,9 @@ class User extends Database {
 					case 1:
 						throw new Exception("This username has already been claimed.");
 						break;
+					case 2290:
+						throw new Exception("Your username is invalid");
+						break;
 					default:
 						throw new Exception("An unknown error has occured");
 						break;

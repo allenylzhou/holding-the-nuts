@@ -2,6 +2,7 @@
 <body>
 <h1>Registration Form</h1>
 <form method="POST" action="register.php">
+	<p>Your username must be of at least length 3</p>
 	<label>Username:</label>
 	<input type="text" name="username">
 	<label>Password:</label>
