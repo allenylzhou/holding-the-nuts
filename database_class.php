@@ -152,7 +152,7 @@ protected function delete() {
 				echo "$name DELETE SUCCESS; ID = $this->id<br/>";
 			} else {
 				$err = OCIError($sqlStatement)['code'];		
-				handleError($err);
+				$this->handleError($err);
 			}
 		}
 	} catch (Exception $exception) {
@@ -186,7 +186,7 @@ protected function select() {
 				$properties = array_merge($properties, oci_fetch_assoc($sqlStatement));
 			} else {
 				$err = OCIError($sqlStatement)['code'];				
-				handleError($err);
+				$this->handleError($err);
 			}
 		}
 

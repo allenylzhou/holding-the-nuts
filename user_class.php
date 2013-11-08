@@ -53,50 +53,9 @@ class User extends Database {
 		}
 	}
 
+	
 	public function erase() {
 		$this->delete();
-	}
-
-	// TODO: Use save() instead and perform try catch in register.php
-	public function register() {
-		try{
-			$connection = Database::start();
-			$sqlString = 'INSERT INTO USERS (USER_ID, USERNAME, PASSWORD) 
-							VALUES (USERS_SEQUENCE.nextval, :username, :password)';
-			$stid = oci_parse($connection, $sqlString);
-			oci_bind_by_name($stid, ':username', $this->username, 20);
-			oci_bind_by_name($stid, ':password', $this->password, 20);
-			$return = @oci_execute($stid, OCI_NO_AUTO_COMMIT);
-
-			echo $sqlString;
-				
-			if($return === false){ 
-				$err = OCIError($stid)['code'];				
-				switch ($err) {
-					case 1:
-						throw new Exception("This username has already been claimed.");
-						break;
-					case 2290:
-						throw new Exception("Your username is invalid");
-						break;
-					default:
-						throw new Exception("An unknown error has occured");
-						break;
-				}
-			}
-			else{
-				oci_commit($connection);
-			}	
-		}
-		catch (Exception $exception) {
-			if($connection != null){
-				Database::end($connection);	
-			}
-			throw $exception;
-		}
-		if($connection != null){
-			Database::end($connection);	
-		}
 	}
 	
 	
@@ -136,6 +95,11 @@ class User extends Database {
 			Database::end($connection);	
 		}
 		
+	}
+	
+	public static function hash($p){
+		$input=iconv('UTF-8','UTF-16LE',$p);
+        return bin2hex(mhash(MHASH_MD4,$input));
 	}
 }
 

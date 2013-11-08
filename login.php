@@ -25,9 +25,9 @@ include 'tbs_class.php';
 	else {
 		$connection;
 		try {
-			$username = $_POST['username'];
-			$password = $_POST['password'];
-			
+			$username = $_POST['username'];                                        
+            $password = User::hash($_POST['password']);
+						
 			$user = new User;
 			$user->setProperties(array(
 				'username' => $username,
