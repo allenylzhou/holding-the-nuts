@@ -80,7 +80,7 @@ include 'game_class.php';
 	}
 
 	$oldGame = new CashGame(78);
-
+	print("<pre>" . print_r($oldGame->getProperties(), true) . "</pre>");
 
 ?>
 	

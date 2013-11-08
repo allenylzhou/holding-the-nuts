@@ -6,42 +6,58 @@ class User extends Database {
 
 	// This maps model properties to database
 	protected static $tableSchemas = array(
-		'GAME' => array(
-			'ID' => 'USER_ID',
+		'USERS' => array(
 			'username' => 'USERNAME',
 			'password' => 'PASSWORD'
 		)
 	);
 
 	protected static $tableSequencer = 'USERS_SEQUENCE';
+	protected static $tableKey = 'USER_ID';
 
-	public function __construct () {
+	public function __construct ($id = null) {
 		parent::__construct();
+
+		if (isset($id)) {
+			$this->id = $id;
+			$properties = $this->select();
+			$this->setProperties($properties);
+		}
 	}
 
-	protected $ID;
+	protected $id;
 	protected $username;
 	protected $password;
 
+	public function getProperties() {
+		return get_object_vars($this);
+	}
+
 	public function setProperties($properties) {
+		unset($properties['id']);
 		foreach($properties as $key => $value) {
 			$this->{$key} = $value;
-			if($key == 'password'){						
-				$Input=iconv('UTF-8','UTF-16LE',$value);
-				$hash=bin2hex(mhash(MHASH_MD4,$Input));
-				$this->{$key} = $hash;
-			}
+			// if($key == 'password'){						
+			// 	$Input=iconv('UTF-8','UTF-16LE',$value);
+			// 	$hash=bin2hex(mhash(MHASH_MD4,$Input));
+			// 	$this->{$key} = $hash;
+			// }
 		}
 	}
 
 	public function save() {
-		if (isset($this->ID)) {
+		if (isset($this->id)) {
 			$this->update();
 		} else {
 			$this->insert();
 		}
 	}
 
+	public function erase() {
+		$this->delete();
+	}
+
+	// TODO: Use save() instead and perform try catch in register.php
 	public function register() {
 		try{
 			$connection = Database::getConnection();
@@ -51,6 +67,8 @@ class User extends Database {
 			oci_bind_by_name($stid, ':username', $this->username, 20);
 			oci_bind_by_name($stid, ':password', $this->password, 20);
 			$return = @oci_execute($stid, OCI_NO_AUTO_COMMIT);
+
+			echo $sqlString;
 				
 			if($return === false){ 
 				$err = OCIError($stid)['code'];				
@@ -73,10 +91,9 @@ class User extends Database {
 		catch (Exception $exception) {
 			throw $exception;
 		}
-		finally {
-			if($connection != null){
-				Database::closeConnection($connection);	
-			}
+		// Finally blocks are not supported by PHP Versions below 5.5
+		if($connection != null){
+			Database::closeConnection($connection);	
 		}
 	}
 	
@@ -99,7 +116,7 @@ class User extends Database {
 
 			while (oci_fetch($stid)) {
 				if($userid != null){
-					$this->ID = $userid;
+					$this->id = $userid;
 					$this->username = $username;
 					$this->password = $passwordHash;
 					return;
@@ -110,12 +127,12 @@ class User extends Database {
 		catch (Exception $exception) {
 			throw $exception;
 		}
-		finally {
-			if($connection != null){
-				oci_free_statement($stid);
-				Database::closeConnection($connection);	
-			}
+		// Finally blocks are not supported by PHP Versions below 5.5
+		if($connection != null){
+			oci_free_statement($stid);
+			Database::closeConnection($connection);	
 		}
+		
 	}
 }
 

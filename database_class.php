@@ -198,7 +198,7 @@ protected function select() {
 
 			$selects = array();
 			foreach($attributes as $property => $column) {
-				$selects[] = "$column AS $property";
+				$selects[] = "$column";
 			}
 			$selects = implode(',', $selects);
 
@@ -209,10 +209,7 @@ protected function select() {
 
 			// Execute SQL statement
 			if (oci_execute($sqlStatement)) {
-				while ($property = oci_fetch_array($sqlStatement)) {
-					array_push($properties, $property);
-				}
-				return $properties;
+				$properties = array_merge($properties, oci_fetch_assoc($sqlStatement));
 			} else {
 				$err = OCIError($sqlStatement)['code'];				
 				switch ($err) {
@@ -222,6 +219,14 @@ protected function select() {
 				}
 			}
 		}
+
+		$keys = array();
+		foreach($properties as $key => $value) {
+			// Transforms an under_scored_string to a camelCasedOne
+			$keys[] = lcfirst(implode('', explode(' ', ucwords(implode(' ', explode('_', strtolower($key)))))));
+		}
+		$properties = array_combine($keys, array_values($properties));
+		return $properties;
 	} catch (Exception $exception) {
 		throw $exception;
 	}

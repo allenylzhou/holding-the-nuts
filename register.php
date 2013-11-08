@@ -14,6 +14,14 @@
 
 include 'user_class.php';
 include 'tbs_class.php';
+
+	echo "Testing if you can load users by passing in an id in constructor...\n";
+	$user1 = new User(1);
+	print("<pre>" . print_r($user1->getProperties(), true) . "</pre>");
+
+	$user2 = new User(2);
+	print("<pre>" . print_r($user2->getProperties(), true) . "</pre>");
+
 	if (!array_key_exists('username', $_POST) && !array_key_exists('password', $_POST)) {
 		
 	}
@@ -35,7 +43,8 @@ include 'tbs_class.php';
 				'password' => $password
 			));
 			
-			$user->register();
+			//$user->register();
+			$user->save();
 			echo 'Registration successful';
 		}
 		catch (Exception $exception) {
