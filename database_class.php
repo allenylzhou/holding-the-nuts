@@ -80,6 +80,7 @@ protected function insert() {
 				oci_bind_by_name($sqlStatement, $placeholder, $bindings[$placeholder]);
 			}
 
+			// Execute SQL statement
 			if (oci_execute($sqlStatement, OCI_NO_AUTO_COMMIT)) {
 				oci_commit($connection);
 				echo "$name INSERT SUCCESS; ID = $this->id<br/>";
@@ -136,6 +137,7 @@ protected function update() {
 				oci_bind_by_name($sqlStatement, $placeholder, $bindings[$placeholder]);
 			}
 
+			// Execute SQL statement
 			if (oci_execute($sqlStatement, OCI_NO_AUTO_COMMIT)) {
 				oci_commit($connection);
 				echo "$name UPDATE SUCCESS; ID = $this->id<br/>";
@@ -158,12 +160,33 @@ protected function update() {
 }
 
 protected function delete() {
-	if ($c=OCILogon("ora_u4e7", "a71174098", "ug")) {
-		echo "Successfully connected to Oracle.\n";
-		OCILogoff($c);
-	} else {
-		$err = OCIError();
-		echo "Oracle Connect Error " . $err['message'];
+	try {
+		$connection = $this->start();
+		foreach(array_reverse(static::$tableSchemas) as $name => $attributes) {
+			// Prepare SQL statement
+			$where = static::$tableKey . "=" . $this->id;
+			$sqlString = "DELETE FROM $name WHERE $where";
+			$sqlStatement = oci_parse($connection, $sqlString);
+
+			// Execute SQL statement
+			if (oci_execute($sqlStatement, OCI_NO_AUTO_COMMIT)) {
+				oci_commit($connection);
+				echo "$name DELETE SUCCESS; ID = $this->id<br/>";
+			} else {
+				$err = OCIError($sqlStatement)['code'];				
+				switch ($err) {
+					default:
+						throw new Exception("An unknown error has occured.");
+						break;
+				}
+			}
+		}
+	} catch (Exception $exception) {
+		throw $exception;
+	}
+
+	if (isset($connection)) {
+		$this->end($connection);
 	}
 }
 

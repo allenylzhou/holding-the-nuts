@@ -76,7 +76,7 @@ include 'game_class.php';
 			'amountOut' => $_POST['amountOut']
 		));
 
-		$newGame->save();
+		$newGame->erase();
 	}
 
 	$array = array();

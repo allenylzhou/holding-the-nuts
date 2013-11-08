@@ -67,6 +67,10 @@ class CashGame extends Game {
 		}
 	}
 
+	public function erase() {
+		$this->delete();
+	}
+
 	public static function loadSavedGames($userId) {
 
 		if ($connection = oci_connect("ora_u4e7", "a71174098", "ug")) {
