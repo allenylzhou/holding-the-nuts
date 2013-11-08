@@ -14,7 +14,11 @@
 
 include 'user_class.php';
 include 'tbs_class.php';
-
+session_start();
+	if (null != $_SESSION['USER']) {
+		print("<pre>" . print_r($_SESSION['USER']->getProperties(), true) . "</pre>");
+	}
+	
 	echo "Testing if you can load users by passing in an id in constructor...\n";
 	$user1 = new User(1);
 	print("<pre>" . print_r($user1->getProperties(), true) . "</pre>");

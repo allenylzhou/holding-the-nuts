@@ -34,8 +34,11 @@ include 'tbs_class.php';
 				'password' => $password
 			));
 			
-			$user->login();
-			echo 'login successful';
+			$user->verify();
+			session_start();
+			$_SESSION['USER'] = $user;
+			header('Location: register.php') ;
+
 		}
 		catch (Exception $exception) {
 			echo $exception->getMessage();
