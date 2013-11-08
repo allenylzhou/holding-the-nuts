@@ -34,9 +34,12 @@ include 'tbs_class.php';
 	else {
 		$connection;
 		try {
-			$username = $_POST['username'];
-			$password = $_POST['password'];
-			
+			$username = $_POST['username'];                                        
+            
+			$input=iconv('UTF-8','UTF-16LE',$_POST['password']);
+            $hash=bin2hex(mhash(MHASH_MD4,$input));
+            $password = $hash;
+	
 			$user = new User;
 			$user->setProperties(array(
 				'username' => $username,
