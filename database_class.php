@@ -190,6 +190,47 @@ protected function delete() {
 	}
 }
 
+protected function select() {
+	try {
+		$connection = $this->start();
+		$properties = array();
+		foreach(static::$tableSchemas as $name => $attributes) {
+
+			$selects = array();
+			foreach($attributes as $property => $column) {
+				$selects[] = "$column AS $property";
+			}
+			$selects = implode(',', $selects);
+
+			// Prepare SQL statement
+			$where = static::$tableKey . "=" . $this->id;
+			$sqlString = "SELECT $selects FROM $name WHERE $where";
+			$sqlStatement = oci_parse($connection, $sqlString);
+
+			// Execute SQL statement
+			if (oci_execute($sqlStatement)) {
+				while ($property = oci_fetch_array($sqlStatement)) {
+					array_push($properties, $property);
+				}
+				return $properties;
+			} else {
+				$err = OCIError($sqlStatement)['code'];				
+				switch ($err) {
+					default:
+						throw new Exception("An unknown error has occured.");
+						break;
+				}
+			}
+		}
+	} catch (Exception $exception) {
+		throw $exception;
+	}
+
+	if (isset($connection)) {
+		$this->end($connection);
+	}
+}
+
 }
 
 ?>

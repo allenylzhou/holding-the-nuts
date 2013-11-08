@@ -30,30 +30,12 @@ abstract class Game extends Database {
 	protected $amountOut;
 	protected $locationName;
 
-	abstract protected function setProperties($properties);
-	abstract protected function save();
-
-}
-
-class CashGame extends Game {
-
-	protected static $tableSchemas = array(
-		'GAME_CASH' => array(
-			'bigBlind' => 'BIG_BLIND',
-			'smallBlind' => 'SMALL_BLIND'
-		)
-	);
-
-	public function __construct () {
-		parent::__construct();
-		// This is the order in which table instances are inserted to satisfy integrity constraint
-		static::$tableSchemas = array_merge(parent::$tableSchemas, self::$tableSchemas);
+	public function getProperties() {
+		return get_object_vars($this);
 	}
 
-	protected $bigBlind;
-	protected $smallBlind;
-
 	public function setProperties($properties) {
+		unset($properties['id']);
 		foreach($properties as $key => $value) {
 			$this->{$key} = $value;
 		}
@@ -70,6 +52,31 @@ class CashGame extends Game {
 	public function erase() {
 		$this->delete();
 	}
+}
+
+class CashGame extends Game {
+
+	protected static $tableSchemas = array(
+		'GAME_CASH' => array(
+			'bigBlind' => 'BIG_BLIND',
+			'smallBlind' => 'SMALL_BLIND'
+		)
+	);
+
+	public function __construct ($id = null) {
+		parent::__construct();
+		// This is the order in which table instances are inserted to satisfy integrity constraint
+		static::$tableSchemas = array_merge(parent::$tableSchemas, self::$tableSchemas);
+
+		if (isset($id)) {
+			$this->id = $id;
+			$properties = $this->select();
+			$this->setProperties($properties);
+		}
+	}
+
+	protected $bigBlind;
+	protected $smallBlind;
 
 	public static function loadSavedGames($userId) {
 
@@ -109,27 +116,19 @@ class TournamentGame extends Game {
 		)
 	);
 
-	public function __construct () {
+	public function __construct ($id = null) {
 		parent::__construct();
 		// This is the order in which table instances are inserted to satisfy integrity constraint
 		static::$tableSchemas = array_merge(parent::$tableSchemas, self::$tableSchemas);
+
+		if (isset($id)) {
+			$this->id = $id;
+			$properties = $this->select();
+			$this->setProperties($properties);
+		}
 	}
 
 	protected $placeFinished;
-
-	public function setProperties($properties) {
-		foreach($properties as $key => $value) {
-			$this->{$key} = $value;
-		}
-	}
-
-	public function save() {
-		if (isset($this->id)) {
-			$this->update();
-		} else {
-			$this->insert();
-		}
-	}
 
 	public static function loadSavedGames($userId) {
 

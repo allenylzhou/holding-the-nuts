@@ -76,12 +76,11 @@ include 'game_class.php';
 			'amountOut' => $_POST['amountOut']
 		));
 
-		$newGame->erase();
+		$newGame->save();
 	}
 
-	$array = array();
-	$array[] = 5;
-	echo "hello $array[0]";
+	$oldGame = new CashGame(78);
+
 
 ?>
 	
