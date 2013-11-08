@@ -60,7 +60,7 @@ class CashGame extends Game {
 	}
 
 	public function save() {
-		if (isset($this->ID)) {
+		if (isset($this->id)) {
 			$this->update();
 		} else {
 			$this->insert();
@@ -120,7 +120,7 @@ class TournamentGame extends Game {
 	}
 
 	public function save() {
-		if (isset($this->ID)) {
+		if (isset($this->id)) {
 			$this->update();
 		} else {
 			$this->insert();

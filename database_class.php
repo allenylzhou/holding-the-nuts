@@ -1,7 +1,12 @@
 <?php
 
+define('USERNAME', 'ora_u4e7');
+define('PASSWORD', 'a71174098');
+define('DATABASE', 'ug');
+
 class Database {
 
+// TODO: use constants
 private static $USERNAME = 'ora_u4e7'; // 'project'; 
 private static $PASSWORD = 'a71174098'; //'project';
 private static $CONNECTSTRING = 'ug'; //'localhost:1521'; 
@@ -12,23 +17,34 @@ protected static $tableKey;
 
 protected function __construct () {}
 
+// TODO: use start() instead
 public static function getConnection(){
 	return OCILogon(self::$USERNAME, self::$PASSWORD, self::$CONNECTSTRING);
 }
 
+// TODO: use end($c) instead
 public static function closeConnection($c){
 	OCILogoff($c);
 }
 
-public function insert() {
-	if ($connection = oci_connect("ora_u4e7", "a71174098", "ug")) {
+protected function start(){
+	return oci_connect(constant('USERNAME'), constant('PASSWORD'), constant('DATABASE'));
+}
+
+protected function end($c){
+	oci_close($c);
+}
+
+protected function insert() {
+	try {
+		$connection = $this->start();
 		foreach(static::$tableSchemas as $name => $attributes) {
 
 			$columns = array();
 			$fields = array();
 			$bindings = array();
 
-			// Create placeholder for key
+			// Create placeholder for id
 			$columns[] = static::$tableKey; 
 			if (isset($this->id)) {
 				$fields[] = ":id";
@@ -64,45 +80,54 @@ public function insert() {
 				oci_bind_by_name($sqlStatement, $placeholder, $bindings[$placeholder]);
 			}
 
-			//echo $sqlString;
-			//print("<pre>".print_r($bindings, true)."</pre>");
-
-			if(oci_execute($sqlStatement)) {
-				echo "Successfully inserted into $name table: ID = $this->id.<br/>";
+			if (oci_execute($sqlStatement, OCI_NO_AUTO_COMMIT)) {
+				oci_commit($connection);
+				echo "$name INSERT SUCCESS; ID = $this->id<br/>";
 			} else {
-
+				$err = OCIError($sqlStatement)['code'];				
+				switch ($err) {
+					default:
+						throw new Exception("An unknown error has occured.");
+						break;
+				}
 			}
 		}
-		OCILogoff($connection);
-	} else {
-		$err = OCIError();
-		echo "Oracle Connect Error " . $err['message'];
+
+	} 
+	catch (Exception $exception) {
+		throw $exception;
+	}
+
+	if (isset($connection)) {
+		$this->end($connection);
 	}
 }
 
-public function update() {
-	if ($connection = oci_connect("ora_u4e7", "a71174098", "ug")) {
-
-		foreach(static::$tableSchemas as $name => $properties) {
+protected function update() {
+	try {
+		$connection = $this->start();
+		foreach(static::$tableSchemas as $name => $attributes) {
 
 			$sets = array();
-
-			// Create bind variable placeholders for each property
 			$bindings = array();
-			foreach($properties as $field => $column) {
 
-				if ($field == "ID") {
-					$where = "$column=".$this->{$field};
+			// Create placeholders for other fields
+			foreach($attributes as $property => $column) {
+
+				$placeholder = ":bv" . count($bindings);
+				if (strtotime($this->{$property})) {
+					// Wrap date and time placeholder
+					$sets[] = "$column = TO_DATE($placeholder, 'yyyy/mm/dd hh24:mi:ss')";
 				} else {
-					$placeholder = ":bv" . count($bindings);
 					$sets[] = "$column = $placeholder";	
-					$bindings[$placeholder] = $this->{$field};
 				}
+				$bindings[$placeholder] = $this->{$property};
 			}
 
 			$sets = implode(',', $sets);
 
 			// Prepare SQL statement
+			$where = static::$tableKey . "=" . $this->id;
 			$sqlString = "UPDATE $name SET $sets WHERE $where";
 			$sqlStatement = oci_parse($connection, $sqlString);
 
@@ -111,20 +136,28 @@ public function update() {
 				oci_bind_by_name($sqlStatement, $placeholder, $bindings[$placeholder]);
 			}
 
-			if(oci_execute($sqlStatement)) {
-				echo "Successfully updated $name table: ID = $this->ID.<br/>";
+			if (oci_execute($sqlStatement, OCI_NO_AUTO_COMMIT)) {
+				oci_commit($connection);
+				echo "$name UPDATE SUCCESS; ID = $this->id<br/>";
+			} else {
+				$err = OCIError($sqlStatement)['code'];				
+				switch ($err) {
+					default:
+						throw new Exception("An unknown error has occured.");
+						break;
+				}
 			}
 		}
+	} catch (Exception $exception) {
+		throw $exception;
+	}
 
-		OCILogoff($connection);
-
-	} else {
-		$err = OCIError();
-		echo "Oracle Connect Error " . $err['message'];
+	if (isset($connection)) {
+		$this->end($connection);
 	}
 }
 
-public function delete() {
+protected function delete() {
 	if ($c=OCILogon("ora_u4e7", "a71174098", "ug")) {
 		echo "Successfully connected to Oracle.\n";
 		OCILogoff($c);

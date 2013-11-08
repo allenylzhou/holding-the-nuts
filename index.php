@@ -68,6 +68,7 @@ include 'game_class.php';
 		}
 
 		$newGame->setProperties(array(
+			'id' => 77,
 			'userId' => 0,
 			'startDate' => $_POST['startDate'],
 			'endDate' => $_POST['endDate'],
