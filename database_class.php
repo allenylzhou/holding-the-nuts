@@ -6,26 +6,12 @@ define('DATABASE', 'ug');
 
 class Database {
 
-// TODO: use constants
-private static $USERNAME = 'ora_u4e7'; // 'project'; 
-private static $PASSWORD = 'a71174098'; //'project';
-private static $CONNECTSTRING = 'ug'; //'localhost:1521'; 
-
 protected static $tableSchemas;
 protected static $tableSequencer;
 protected static $tableKey;
 
 protected function __construct () {}
 
-// TODO: use start() instead
-public static function getConnection(){
-	return OCILogon(self::$USERNAME, self::$PASSWORD, self::$CONNECTSTRING);
-}
-
-// TODO: use end($c) instead
-public static function closeConnection($c){
-	OCILogoff($c);
-}
 
 protected function start(){
 	return oci_connect(constant('USERNAME'), constant('PASSWORD'), constant('DATABASE'));
@@ -85,12 +71,8 @@ protected function insert() {
 				oci_commit($connection);
 				echo "$name INSERT SUCCESS; ID = $this->id<br/>";
 			} else {
-				$err = OCIError($sqlStatement)['code'];				
-				switch ($err) {
-					default:
-						throw new Exception("An unknown error has occured.");
-						break;
-				}
+				$err = OCIError($sqlStatement)['code'];	
+				$this->handleError($err);
 			}
 		}
 
@@ -143,11 +125,7 @@ protected function update() {
 				echo "$name UPDATE SUCCESS; ID = $this->id<br/>";
 			} else {
 				$err = OCIError($sqlStatement)['code'];				
-				switch ($err) {
-					default:
-						throw new Exception("An unknown error has occured.");
-						break;
-				}
+				handleError($err);
 			}
 		}
 	} catch (Exception $exception) {
@@ -173,12 +151,8 @@ protected function delete() {
 				oci_commit($connection);
 				echo "$name DELETE SUCCESS; ID = $this->id<br/>";
 			} else {
-				$err = OCIError($sqlStatement)['code'];				
-				switch ($err) {
-					default:
-						throw new Exception("An unknown error has occured.");
-						break;
-				}
+				$err = OCIError($sqlStatement)['code'];		
+				handleError($err);
 			}
 		}
 	} catch (Exception $exception) {
@@ -212,11 +186,7 @@ protected function select() {
 				$properties = array_merge($properties, oci_fetch_assoc($sqlStatement));
 			} else {
 				$err = OCIError($sqlStatement)['code'];				
-				switch ($err) {
-					default:
-						throw new Exception("An unknown error has occured.");
-						break;
-				}
+				handleError($err);
 			}
 		}
 
@@ -236,6 +206,32 @@ protected function select() {
 	}
 }
 
+// if we're moving most of the sql queries to be auto generated, then we need generalized errors to be hand
+private function handleError($err){
+	switch ($err) {
+		case 1:
+			// Unique constraint violated
+			throw new ErrorCodeException("Unique constraint violated", 1);
+			break;
+		case 2290:
+			// Check constraint violated
+			throw new ErrorCodeException("Check constraint violated", 2290);
+			break;
+		default:
+			throw new ErrorCodeException("An unknown error has occured.", null);
+			break;
+	}
+}
+
+}
+
+class ErrorCodeException extends Exception { 
+	private $errorCode;
+	public function __construct($m, $c){
+		$this->message = $m;
+		$this->code = $c;
+	}
+	public function getErrorCode(){return $this->errorCode;}
 }
 
 ?>

@@ -47,8 +47,18 @@ include 'tbs_class.php';
 			$user->save();
 			echo 'Registration successful';
 		}
-		catch (Exception $exception) {
-			echo $exception->getMessage();
+		catch (ErrorCodeException $exception) {
+			switch ($exception->getErrorCode()) {
+				case 1:
+					echo "This username has already been claimed.";
+					break;
+				case 2290:
+					echo "Your username is invalid";
+					break;
+				default:
+					echo "An unknown error has occured";
+					break;
+			}
 		}
 	}
 	$TBS = new clsTinyButStrong;

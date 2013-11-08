@@ -60,7 +60,7 @@ class User extends Database {
 	// TODO: Use save() instead and perform try catch in register.php
 	public function register() {
 		try{
-			$connection = Database::getConnection();
+			$connection = Database::start();
 			$sqlString = 'INSERT INTO USERS (USER_ID, USERNAME, PASSWORD) 
 							VALUES (USERS_SEQUENCE.nextval, :username, :password)';
 			$stid = oci_parse($connection, $sqlString);
@@ -89,18 +89,20 @@ class User extends Database {
 			}	
 		}
 		catch (Exception $exception) {
+			if($connection != null){
+				Database::end($connection);	
+			}
 			throw $exception;
 		}
-		// Finally blocks are not supported by PHP Versions below 5.5
 		if($connection != null){
-			Database::closeConnection($connection);	
+			Database::end($connection);	
 		}
 	}
 	
 	
 	public function login() {
 		try{
-			$connection = Database::getConnection();
+			$connection = Database::start();
 			$sqlString = 'SELECT * 
 						FROM USERS
 						WHERE USERNAME = :username 
@@ -125,12 +127,13 @@ class User extends Database {
 			throw new Exception('Improper credentials supplied');
 		}
 		catch (Exception $exception) {
+			if($connection != null){
+				Database::end($connection);	
+			}
 			throw $exception;
 		}
-		// Finally blocks are not supported by PHP Versions below 5.5
 		if($connection != null){
-			oci_free_statement($stid);
-			Database::closeConnection($connection);	
+			Database::end($connection);	
 		}
 		
 	}
