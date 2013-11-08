@@ -80,6 +80,10 @@ class User extends Database {
 					$this->id = $userid;
 					$this->username = $username;
 					$this->password = $passwordHash;
+					
+					session_start();
+					$_SESSION['USER'] = $this;
+					session_write_close();
 					return;
 				}
 			}

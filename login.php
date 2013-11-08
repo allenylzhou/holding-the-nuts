@@ -34,9 +34,7 @@ include 'tbs_class.php';
 				'password' => $password
 			));
 			
-			$user->verify();
-			session_start();
-			$_SESSION['USER'] = $user;
+			$user->login();
 			header('Location: register.php') ;
 
 		}
