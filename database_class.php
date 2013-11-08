@@ -229,7 +229,7 @@ class ErrorCodeException extends Exception {
 	private $errorCode;
 	public function __construct($m, $c){
 		$this->message = $m;
-		$this->code = $c;
+		$this->errorCode = $c;
 	}
 	public function getErrorCode(){return $this->errorCode;}
 }
