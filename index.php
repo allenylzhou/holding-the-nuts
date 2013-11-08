@@ -69,14 +69,18 @@ include 'game_class.php';
 
 		$newGame->setProperties(array(
 			'userId' => 0,
-			// 'startDate' => $_POST['startDate'],
-			// 'endDate' => $_POST['endDate'],
+			'startDate' => $_POST['startDate'],
+			'endDate' => $_POST['endDate'],
 			'amountIn' => $_POST['amountIn'],
 			'amountOut' => $_POST['amountOut']
 		));
 
 		$newGame->save();
 	}
+
+	$array = array();
+	$array[] = 5;
+	echo "hello $array[0]";
 
 ?>
 	

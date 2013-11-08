@@ -7,7 +7,6 @@ abstract class Game extends Database {
 	// This maps model properties to database
 	protected static $tableSchemas = array(
 		'GAME' => array(
-			'ID' => 'GS_ID',
 			'userId' => 'USER_ID',
 			'startDate' => 'START_DATE',
 			'endDate' => 'END_DATE',
@@ -16,14 +15,14 @@ abstract class Game extends Database {
 			'locationName' => 'LOCATION_NAME'
 		)
 	);
-
 	protected static $tableSequencer = 'GAME_SEQUENCE';
+	protected static $tableKey = 'GS_ID';
 
 	protected function __construct () {
 		parent::__construct();
 	}
 
-	protected $ID;
+	protected $id;
 	protected $userId;
 	protected $startDate;
 	protected $endDate;
@@ -40,7 +39,6 @@ class CashGame extends Game {
 
 	protected static $tableSchemas = array(
 		'GAME_CASH' => array(
-			'ID' => 'GS_ID',
 			'bigBlind' => 'BIG_BLIND',
 			'smallBlind' => 'SMALL_BLIND'
 		)
@@ -103,7 +101,6 @@ class TournamentGame extends Game {
 
 	protected static $tableSchemas = array(
 		'GAME_TOURNAMENT' => array(
-			'ID' => 'GS_ID',
 			'placeFinished' => 'PLACED_FINISHED'
 		)
 	);
