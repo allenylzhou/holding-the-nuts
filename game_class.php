@@ -52,6 +52,11 @@ abstract class Game extends Database {
 	public function erase() {
 		$this->delete();
 	}
+
+	public function getAverageBuyIn() {
+		echo "Hi";
+		return $this->getAverage('AMOUNT_IN');
+	}
 }
 
 class CashGame extends Game {

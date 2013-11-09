@@ -28,7 +28,6 @@ class Statistics extends Database{
 			echo "Oracle Connect Error " . $err['message'];
 			
 		}
-	
 		return $returnData;
 	}
 

@@ -77,7 +77,10 @@ include 'game_class.php';
 			'amountOut' => $_POST['amountOut']
 		));
 
-		$newGame->save();
+		//$newGame->save();
+
+		$result = $newGame->getAverageBuyIn();
+		//print("<pre>" . print_r($result->getProperties(), true) . "</pre>");
 	}
 
 	$oldGame = new CashGame(78);
