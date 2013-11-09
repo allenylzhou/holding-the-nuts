@@ -99,8 +99,8 @@ class CashGame extends Game {
 		  	OCILogoff($connection);
 
 		} else {
-		  $err = OCIError();
-		  echo "Oracle Connect Error " . $err['message'];
+		  //$err = OCIError();
+		  //echo "Oracle Connect Error " . $err['message'];
 		}
 
 		return $returnData;
@@ -151,8 +151,8 @@ class TournamentGame extends Game {
 		  	OCILogoff($connection);
 
 		} else {
-		  $err = OCIError();
-		  echo "Oracle Connect Error " . $err['message'];
+		  //$err = OCIError();
+		  //echo "Oracle Connect Error " . $err['message'];
 		}
 
 		return $returnData;

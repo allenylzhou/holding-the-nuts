@@ -34,6 +34,7 @@
 </form>
 
 <?php
+	//echo "Hello world foo";
 
 include 'tbs_class.php';
 include 'game_class.php';

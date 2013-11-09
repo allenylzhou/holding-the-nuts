@@ -23,7 +23,9 @@ protected function end($c){
 
 protected function insert() {
 	try {
+
 		$connection = $this->start();
+
 		foreach(static::$tableSchemas as $name => $attributes) {
 
 			$columns = array();
@@ -71,11 +73,12 @@ protected function insert() {
 				oci_commit($connection);
 				echo "$name INSERT SUCCESS; ID = $this->id<br/>";
 			} else {
-				$err = OCIError($sqlStatement)['code'];	
+				$test = OCIError($sqlStatement);
+				$err = $test['code'];	
 				$this->handleError($err);
 			}
-		}
 
+		}
 	} 
 	catch (Exception $exception) {
 		throw $exception;
@@ -124,8 +127,9 @@ protected function update() {
 				oci_commit($connection);
 				echo "$name UPDATE SUCCESS; ID = $this->id<br/>";
 			} else {
-				$err = OCIError($sqlStatement)['code'];				
-				handleError($err);
+				$test = OCIError($sqlStatement);
+				$err = $test['code'];	
+				$this->handleError($err);
 			}
 		}
 	} catch (Exception $exception) {
@@ -151,7 +155,8 @@ protected function delete() {
 				oci_commit($connection);
 				echo "$name DELETE SUCCESS; ID = $this->id<br/>";
 			} else {
-				$err = OCIError($sqlStatement)['code'];		
+				$test = OCIError($sqlStatement);
+				$err = $test['code'];	
 				$this->handleError($err);
 			}
 		}
@@ -185,7 +190,8 @@ protected function select() {
 			if (oci_execute($sqlStatement)) {
 				$properties = array_merge($properties, oci_fetch_assoc($sqlStatement));
 			} else {
-				$err = OCIError($sqlStatement)['code'];				
+				$test = OCIError($sqlStatement);
+				$err = $test['code'];	
 				$this->handleError($err);
 			}
 		}
@@ -208,6 +214,7 @@ protected function select() {
 
 // if we're moving most of the sql queries to be auto generated, then we need generalized errors to be hand
 private function handleError($err){
+
 	switch ($err) {
 		case 1:
 			// Unique constraint violated
@@ -221,6 +228,7 @@ private function handleError($err){
 			throw new ErrorCodeException("An unknown error has occured.", null);
 			break;
 	}
+
 }
 
 }
