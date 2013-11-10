@@ -102,7 +102,7 @@ include 'backing_class.php';
 
 		switch($_POST['gsType']) {
 			case 'cash':
-				$newGame = new CashGame;
+				$newGame = new CashGame(array('gsId' => 60), true);
 				break;
 			case 'tournament':
 				$newGame = new TournamentGame;
@@ -111,20 +111,18 @@ include 'backing_class.php';
 				break;
 		}
 
+		/*
 		$newGame->setProperties(array(
 			'userId' => 0,
 			//'startDate' => $_POST['startDate'],
 			//'endDate' => $_POST['endDate'],
-			//'amountIn' => $_POST['amountIn'],
-			//'amountOut' => $_POST['amountOut']
+			'amountIn' => $_POST['amountIn'],
+			'amountOut' => $_POST['amountOut']
 		));
+		*/
 
-		try {
-			$newGame->save();
-		} catch (DatabaseException $exception) {
-			echo $exception->getStatement();
-		}
-		//$result = $newGame->getAverageBuyOut();
+		$result = $newGame->getAverageBuyOut(0);
+		echo 'AVG BUY OUT: ' . $result;
 		
 		
 		//print("<pre>" . print_r($result, true) . "</pre>");

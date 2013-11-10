@@ -230,6 +230,7 @@ class Database {
 				// Execute SQL statement
 				if (oci_execute($sqlStatement, OCI_NO_AUTO_COMMIT)) {
 					oci_commit($connection);
+					echo "UPDATE SUCCESSFULL";
 				} else {
 					$error = oci_error($sqlStatement);	
 					throw new DatabaseException($error['code'], $error['message'], NULL, $error['sqltext']);
@@ -259,7 +260,6 @@ class Database {
 				$bindings = array();
 
 				foreach ($keyAttributes as $name => $domain) {
-
 					// Add WHERE condition (values substituted by a binding variable placeholder)
 					$columnname = $this->underscore($name);
 					$placeholder = ":bv" . count($bindings);
@@ -281,8 +281,8 @@ class Database {
 				$sqlStatement = oci_parse($connection, $sqlString);
 
 				// Perform SQL injection (substitute binding variable placeholders with attribute values)
-				foreach($bindings as $placeholder => $value) {
-					oci_bind_by_name($sqlStatement, $placeholder, $bindings[$placeholder]);
+				foreach ($bindings as $placeholder => $name) {
+					oci_bind_by_name($sqlStatement, $placeholder, $this->{$name});
 				}
 
 				// Execute SQL statement
@@ -292,168 +292,182 @@ class Database {
 					$error = oci_error($sqlStatement);	
 					throw new DatabaseException($error['code'], $error['message'], NULL, $error['sqltext']);
 				}
-				
+			}
 		} catch (Exception $exception) {
 			throw $exception;
 		}
 
 		if (isset($connection)) {
+			// End database connection
 			$this->end($connection);
 		}
 	}
 
-	protected function select() {
+	protected function select($q = array()) {
 		try {
-			$connection = $this->start();
-			$properties = array();
-			foreach(static::$tableSchemas as $name => $attributes) {
-
-				$selects = array();
-				foreach($attributes as $property => $column) {
-					$selects[] = "$column";
-				}
-				$selects = implode(',', $selects);
-
-				// Prepare SQL statement
-				$where = static::$tableKey . "=" . $this->id;
-				$sqlString = "SELECT $selects FROM $name WHERE $where";
-				$sqlStatement = oci_parse($connection, $sqlString);
-
-				// Execute SQL statement
-				if (oci_execute($sqlStatement)) {
-					$properties = array_merge($properties, oci_fetch_assoc($sqlStatement));
-				} else {
-					$test = OCIError($sqlStatement);
-					$err = $test['code'];	
-					$this->handleError($err);
-				}
-			}
-
-			$keys = array();
-			foreach($properties as $key => $value) {
-				// Transforms an under_scored_string to a camelCasedOne
-				$keys[] = lcfirst(implode('', explode(' ', ucwords(implode(' ', explode('_', strtolower($key)))))));
-			}
-			$properties = array_combine($keys, array_values($properties));
-			return $properties;
-		} catch (Exception $exception) {
-			throw $exception;
-		}
-
-		if (isset($connection)) {
-			$this->end($connection);
-		}
-	}
-
-	// lcfirst(implode('', explode(' ', ucwords(implode(' ', explode('_', strtolower($key)))))))
-
-	protected function getAverage($column) {
-
-		try {
+			// Start database connection
 			$connection = $this->start();
 
-			$joins = array();
+			$selects = array();
 			$wheres = array();
+			$bindings = array();
 
-			foreach(static::$tableSchemas as $name => $attributes) {
-				$joins[] = array('name' => $name, 'variable' => "v" . count($joins));
-			}
-			
-			$newjoins = array();
-			foreach ($joins as $join) {
-				$newjoins[] = $join['name'] . " " . $join['variable'];
-			}
+			$results = array();
 
-			$wheres[] = $joins[0]['variable'] . "." . static::$tableKey . "=" . $joins[1]['variable'] . "." . static::$tableKey . " ";
-			//$wheres[] = $joins[0]['variable'] . "." . static::$tableKey . "=" . $this->id . " ";	
-			$wheres[] = $joins[0]['variable'] . "." . "USER_ID=" . $this->userId;	
+			if (empty($q)) {
+				// If no query is provided, select self
+				$keyAttributes = static::$tableKey;
+				$tableAttributes = static::$tableAttributes;
 
-			$newjoins = implode(',', $newjoins);
-			$wheres = implode('AND ', $wheres);
+				foreach ($tableAttributes as $table => $attributes) {
 
-			// Prepare SQL statement
-			$sqlString = "SELECT AVG($column) FROM $newjoins WHERE $wheres";
-			$sqlStatement = oci_parse($connection, $sqlString);
-			
-			echo "<br>";
-			echo $sqlString;
-			echo "<br>";
-			echo $sqlStatement;
+					foreach ($keyAttributes as $name => $domain) {
+						// Add SELECT attributes
+						$columnname = $this->underscore($name);
+						$selects[] = $columnname;
 
-			// Execute SQL statement
-			
-			if (oci_execute($sqlStatement)) {
-				$result = oci_fetch_assoc($sqlStatement);
-				
+						// Add WHERE conditions (values substituted by a binding variable placeholder)
+						$placeholder = ":bv" . count($bindings);
+						switch ($domain['type']) {
+							case DataType::DATE:
+								$wheres[] = "$columnname=TO_DATE($placeholder, 'yyyy/mm/dd hh24:mi:ss')";
+								break;
+							default:
+								$wheres[] = "$columnname=$placeholder";
+								break;
+						}
+						$bindings[$placeholder] = $name;
+					}
+
+					$selects = implode(',', $selects);
+					$wheres = implode(' AND ', $wheres);
+
+					$sqlString = "SELECT $selects FROM $table WHERE $wheres";
+					$sqlStatement = oci_parse($connection, $sqlString);
+
+					// Perform SQL injection (substitute binding variable placeholders with attribute values)
+					foreach ($bindings as $placeholder => $name) {
+						oci_bind_by_name($sqlStatement, $placeholder, $this->{$name});
+					}
+
+					// Execute SQL statement
+					if (oci_execute($sqlStatement)) {
+						foreach (oci_fetch_assoc($sqlStatement) as $key => $value) {
+							$results[$this->camelize($key)] = $value;
+						}
+					} else {
+						$error = oci_error($sqlStatement);	
+						throw new DatabaseException($error['code'], $error['message'], NULL, $error['sqltext']);
+					}
+					return $results;
+				}
 			} else {
-				$test = OCIError($sqlStatement);
-				$err = $test['code'];	
-				$this->handleError($err);
+				// TODO: Implement custom selects
 			}
-			
-
-			return $result;
-
 		} catch (Exception $exception) {
 			throw $exception;
 		}
 
 		if (isset($connection)) {
+			// End database connection
 			$this->end($connection);
 		}
-		
-
-
 	}
 
-	protected function getSum($column) {
+	protected function aggregate($o, $c, $q = array()) {
 		try {
+			// Start database connection
 			$connection = $this->start();
 
-			$joins = array();
-			$wheres = array();
+			$result = 0;
 
-			foreach(static::$tableSchemas as $name => $attributes) {
-				$joins[] = array('name' => $name, 'variable' => "v" . count($joins));
+			// WHERE conditions must be specified
+			if (!empty($q)) {
+
+				$wheres = array();
+				$bindings = array();
+
+				$keyAttributes = static::$tableKey;
+				$tableAttributes = static::$tableAttributes;
+
+				foreach($tableAttributes as $table => $attributes) {
+					if (array_key_exists($c, $attributes)) {
+
+						// Add aggregate operation on column name
+						$operation = strtoupper($o);
+						$columnname = $this->underscore($c);
+						$select = "$operation($columnname)";
+
+						foreach ($attributes as $name => $domain) {
+							if (isset($q[$name])) {		
+								// Add WHERE conditions (values substituted by a binding variable placeholder)
+								$columnname = $this->underscore($name);
+								$placeholder = ":bv" . count($bindings);
+								switch ($domain['type']) {
+									case DataType::DATE:
+										$wheres[] = "$columnname=TO_DATE($placeholder, 'yyyy/mm/dd hh24:mi:ss')";
+										break;
+									default:
+										$wheres[] = "$columnname=$placeholder";
+										break;
+								}
+								$bindings[$placeholder] = $q[$name];
+							}
+						}
+
+						$wheres = implode(' AND ', $wheres);
+
+						$sqlString = "SELECT $select FROM $table WHERE $wheres";
+						$sqlStatement = oci_parse($connection, $sqlString);
+
+						echo $sqlString;
+
+						// Perform SQL injection (substitute binding variable placeholders with attribute values)
+						foreach ($bindings as $placeholder => $value) {
+							oci_bind_by_name($sqlStatement, $placeholder, $bindings[$placeholder]);
+						}
+
+						// Execute SQL statement
+						if (oci_execute($sqlStatement)) {
+							$result = oci_fetch_assoc($sqlStatement);
+							$result = array_shift($result);
+						} else {
+							$error = oci_error($sqlStatement);	
+							throw new DatabaseException($error['code'], $error['message'], NULL, $error['sqltext']);
+						}
+					}
+				}
 			}
-			
-			$newjoins = array();
-			foreach ($joins as $join) {
-				$newjoins[] = $join['name'] . " " . $join['variable'];
-			}
-
-			$wheres[] = $joins[0]['variable'] . "." . static::$tableKey . "=" . $joins[1]['variable'] . "." . static::$tableKey;
-			$wheres[] = $joins[0]['variable'] . "." . static::$tableKey . "=" . $this->id;	
-
-			$newjoins = implode(',', $newjoins);
-			$wheres = implode('AND', $wheres);
-
-			// Prepare SQL statement
-			$sqlString = "SELECT SUM($column) FROM $newjoins WHERE $wheres";
-			$sqlStatement = oci_parse($connection, $sqlString);
-
-			// Execute SQL statement
-			if (oci_execute($sqlStatement)) {
-				$result = oci_fetch_assoc($sqlStatement);
-			} else {
-				$test = OCIError($sqlStatement);
-				$err = $test['code'];	
-				$this->handleError($err);
-			}
-
 			return $result;
-
-
 		} catch (Exception $exception) {
 			throw $exception;
 		}
 
 		if (isset($connection)) {
+			// End database connection
 			$this->end($connection);
 		}
 
-
 	}
+
+	public function save() {
+		try {
+			// Try insert
+			$this->insert();
+		} catch (Exception $exception) {
+			if($exception instanceof DatabaseException && $exception->getCode() == 1) {
+				// If unique constraint is violated, try update
+				try {
+					$this->update();
+				} catch (Exception $exception) {
+					throw $exception;
+				}
+			} else {
+				throw $exception;
+			}
+		}
+	}
+
 }
 
 ?>

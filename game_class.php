@@ -32,22 +32,15 @@ abstract class Game extends Database {
 	protected $amountOut;
 	protected $locationName;
 
-	public function getProperties() {
+	public function getAttributes() {
 		return get_object_vars($this);
 	}
 
-	public function setProperties($properties) {
-		unset($properties['id']);
-		foreach($properties as $key => $value) {
-			$this->{$key} = $value;
-		}
-	}
-
-	public function save() {
-		if (isset($this->id)) {
-			$this->update();
-		} else {
-			$this->insert();
+	public function setAttributes($attributes) {
+		foreach($attributes as $name => $value) {
+			if (!array_key_exists($name, static::$tableKey)) {
+				$this->{$name} = $value;
+			}
 		}
 	}
 
@@ -55,12 +48,12 @@ abstract class Game extends Database {
 		$this->delete();
 	}
 
-	public function getAverageBuyIn() {
-		return $this->getAverage('AMOUNT_IN');
-		
+	public function getAverageBuyIn($userId) {
+		return $this->aggregate('avg', 'amountIn', array('userId' => $userId));
 	}
-	public function getAverageBuyOut(){
-		return $this->getAverage('AMOUNT_OUT');
+
+	public function getAverageBuyOut($userId) {
+		return $this->aggregate('avg', 'amountOut', array('userId' => $userId));
 	}
 }
 
@@ -73,15 +66,19 @@ class CashGame extends Game {
 		)
 	);
 
-	public function __construct ($id = null) {
+	public function __construct ($key = array(), $select = false) {
 		parent::__construct();
 		// This is the order in which table instances are inserted to satisfy integrity constraint
 		static::$tableAttributes = array_merge(parent::$tableAttributes, self::$tableAttributes);
 
-		if (isset($id)) {
-			$this->id = $id;
-			$properties = $this->select();
-			$this->setProperties($properties);
+		foreach ($key as $name => $value) {
+			if (array_key_exists($name, static::$tableKey)) {
+				$this->{$name} = $value;
+			}
+		}
+
+		if ($select) {
+			$this->setAttributes($this->select());
 		}
 	}
 
@@ -128,15 +125,19 @@ class TournamentGame extends Game {
 		)
 	);
 
-	public function __construct ($id = null) {
+	public function __construct ($key = array(), $select = false) {
 		parent::__construct();
 		// This is the order in which table instances are inserted to satisfy integrity constraint
 		static::$tableAttributes = array_merge(parent::$tableAttributes, self::$tableAttributes);
 
-		if (isset($id)) {
-			$this->id = $id;
-			$properties = $this->select();
-			$this->setProperties($properties);
+		foreach ($key as $name => $value) {
+			if (array_key_exists($name, static::$tableKey)) {
+				$this->{$name} = $value;
+			}
+		}
+
+		if ($select) {
+			$this->setAttributes($this->select());
 		}
 	}
 
