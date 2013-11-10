@@ -7,6 +7,7 @@
 <form method="POST" action="index.php">
 	<input type="submit" value="See Cash Games" name="cash">
 	<input type="submit" value="See Tournament Games" name="tournament">
+	<input type="submit" value="See Backing Agreements" name="backingagreement">
 	<input type="hidden" name="userId" value="0"><br/>
 </form>
 
@@ -33,18 +34,58 @@
 	<input type="submit" value="Create" name="create">
 </form>
 
+<h2> Function 3: Create a Backing</h2>
+<form method="POST" action="index.php">
+	<label>HORSE ID: </label>
+	<input type="text" name="horse" value="" size="18"><br/>
+	<label>BACKER ID: </label>
+	<input type="text" name="backer" value="" size="18"><br/>
+	<label>BACKING_PERCENTAGE: </label>
+	<input type="text" name="percentage" value="" size="5"><br/>
+	
+	<input type="submit" value="Create Backing" name="create_backing">
+</form>
+
 <?php
-	//echo "Hello world foo";
 
 include 'tbs_class.php';
 include 'game_class.php';
+//include 'backing_class.php';
+/*
+	if (array_key_exists('cash', $_POST) || array_key_exists('tournament', $_POST)
+						|| array_key_exists('backingagreement', $_POST)){
 
-	if (array_key_exists('cash', $_POST) || array_key_exists('tournament', $_POST)) {
-
-		$gameType = array('cash' => isset($_POST['cash']), 'tournament' => isset($_POST['tournament']));
+		$gameType = array('cash' => isset($_POST['cash']), 
+				'tournament' => isset($_POST['tournament']),
+				'backingagreement' => isset($_POST['backingagreement']));
+				
 
 		if($gameType['cash']) {
 			$gameData = CashGame::loadSavedGames($_POST['userId']);
+		} else {
+			if($gameType['tournament']{
+				$gameData = TournamentGame::loadSavedGames($_POST['userId']);
+			} else {
+				$gameData = Backing_class::loadSavedBackings($_POST['userId']);
+			}
+		}
+
+		$TBS = new clsTinyButStrong;
+		$TBS->LoadTemplate('game-history.html');
+		$TBS->MergeBlock('gameData', $gameData);
+		$TBS->Show();
+		
+		
+	}
+	
+*/
+		if (array_key_exists('cash', $_POST) || array_key_exists('tournament', $_POST)){
+
+		$gameType = array('cash' => isset($_POST['cash']), 
+				'tournament' => isset($_POST['tournament']));
+		if($gameType['cash']) {
+			$gameData = CashGame::loadSavedGames($_POST['userId']);
+			
 		} else {
 			$gameData = TournamentGame::loadSavedGames($_POST['userId']);
 		}
@@ -53,6 +94,8 @@ include 'game_class.php';
 		$TBS->LoadTemplate('game-history.html');
 		$TBS->MergeBlock('gameData', $gameData);
 		$TBS->Show();
+		
+		
 	}
 
 	if (array_key_exists('create', $_POST)) {
@@ -69,7 +112,6 @@ include 'game_class.php';
 		}
 
 		$newGame->setProperties(array(
-			'id' => 77,
 			'userId' => 0,
 			'startDate' => $_POST['startDate'],
 			'endDate' => $_POST['endDate'],
@@ -77,14 +119,34 @@ include 'game_class.php';
 			'amountOut' => $_POST['amountOut']
 		));
 
-		//$newGame->save();
-
-		$result = $newGame->getAverageBuyIn();
-		//print("<pre>" . print_r($result->getProperties(), true) . "</pre>");
+		$newGame->save();
+		//$result = $newGame->getAverageBuyOut();
+		
+		
+		//print("<pre>" . print_r($result, true) . "</pre>");
+	}
+	
+	if (array_key_exists('create_backing', $_POST)) {
+		$newBacking = new BackingAgreement;
+		print("<pre>" . print_r($_POST, true) . "</pre>");
+		echo "testing2";
+		$newBacking->setProperties(array(
+			'horseId' => $_POST['horse'],
+			'backerId' => $_POST['backer'],
+			'flatFee' => 0,
+			'percentOfWin' => $_POST['percentage'],
+			'percentOfLoss' => $_POST['percentage'],
+			'overrideAmount' => 0
+			));
+		$newBacking->save();
+		
+	
 	}
 
-	$oldGame = new CashGame(78);
-	print("<pre>" . print_r($oldGame->getProperties(), true) . "</pre>");
+	//$oldGame = new CashGame(0);
+	//$result = $oldGame->getAverageBuyOut();
+	//print("<pre>" . print_r($result, true) . "</pre>");
+	//print("<pre>" . print_r($oldGame->getProperties(), true) . "</pre>");
 
 ?>
 	

@@ -54,8 +54,11 @@ abstract class Game extends Database {
 	}
 
 	public function getAverageBuyIn() {
-		echo "Hi";
 		return $this->getAverage('AMOUNT_IN');
+		
+	}
+	public function getAverageBuyOut(){
+		return $this->getAverage('AMOUNT_OUT');
 	}
 }
 
@@ -90,24 +93,26 @@ class CashGame extends Game {
 				FROM Game G, Game_Cash C
 				WHERE G.gs_id = C.gs_id AND G.user_id = (:userId)
 				ORDER BY G.GS_ID ASC';
-
+			echo $sqlString;
 			$sqlStatement = oci_parse($connection, $sqlString);
 			oci_bind_by_name($sqlStatement, ':userId', $userId);
 
 			oci_execute($sqlStatement);
 
-			$returnData = array();
+			$returnData = oci_fetch_assoc($sqlStatement);
+			/*
 			while ($row = oci_fetch_array($sqlStatement)) {
 
 				array_push($returnData, $row);
 			}
+			*/
 		  	OCILogoff($connection);
 
 		} else {
 		  //$err = OCIError();
 		  //echo "Oracle Connect Error " . $err['message'];
 		}
-
+print("<pre>" . print_r($returnData, true) . "</pre>");
 		return $returnData;
 	}
 

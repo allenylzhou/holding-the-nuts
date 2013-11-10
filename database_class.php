@@ -61,6 +61,8 @@ protected function insert() {
 			// Prepare SQL statement
 			$sqlString = "INSERT INTO $name ($columns) VALUES ($fields) RETURNING " . static::$tableKey . " INTO :id";
 			$sqlStatement = oci_parse($connection, $sqlString);
+			
+			echo $sqlString . "<br/>";
 
 			// Make bindings
 			oci_bind_by_name($sqlStatement, ":id", $this->id);
@@ -213,6 +215,7 @@ protected function select() {
 }
 
 protected function getAverage($column) {
+
 	try {
 		$connection = $this->start();
 
@@ -228,27 +231,35 @@ protected function getAverage($column) {
 			$newjoins[] = $join['name'] . " " . $join['variable'];
 		}
 
-		$wheres[] = $joins[0]['variable'] . "." . static::$tableKey . "=" . $joins[1]['variable'] . "." . static::$tableKey;
-		$wheres[] = $joins[0]['variable'] . "." . static::$tableKey . "=" . $this->id;	
+		$wheres[] = $joins[0]['variable'] . "." . static::$tableKey . "=" . $joins[1]['variable'] . "." . static::$tableKey . " ";
+		//$wheres[] = $joins[0]['variable'] . "." . static::$tableKey . "=" . $this->id . " ";	
+		$wheres[] = $joins[0]['variable'] . "." . "USER_ID=" . $this->userId;	
 
 		$newjoins = implode(',', $newjoins);
-		$wheres = implode('AND', $wheres);
+		$wheres = implode('AND ', $wheres);
 
 		// Prepare SQL statement
 		$sqlString = "SELECT AVG($column) FROM $newjoins WHERE $wheres";
 		$sqlStatement = oci_parse($connection, $sqlString);
+		
+		echo "<br>";
+		echo $sqlString;
+		echo "<br>";
+		echo $sqlStatement;
 
 		// Execute SQL statement
+		
 		if (oci_execute($sqlStatement)) {
 			$result = oci_fetch_assoc($sqlStatement);
+			
 		} else {
 			$test = OCIError($sqlStatement);
 			$err = $test['code'];	
 			$this->handleError($err);
 		}
+		
 
 		return $result;
-
 
 	} catch (Exception $exception) {
 		throw $exception;
@@ -257,6 +268,7 @@ protected function getAverage($column) {
 	if (isset($connection)) {
 		$this->end($connection);
 	}
+	
 
 
 }
