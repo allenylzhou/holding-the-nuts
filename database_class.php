@@ -261,6 +261,54 @@ protected function getAverage($column) {
 
 }
 
+protected function getSum($column) {
+	try {
+		$connection = $this->start();
+
+		$joins = array();
+		$wheres = array();
+
+		foreach(static::$tableSchemas as $name => $attributes) {
+			$joins[] = array('name' => $name, 'variable' => "v" . count($joins));
+		}
+		
+		$newjoins = array();
+		foreach ($joins as $join) {
+			$newjoins[] = $join['name'] . " " . $join['variable'];
+		}
+
+		$wheres[] = $joins[0]['variable'] . "." . static::$tableKey . "=" . $joins[1]['variable'] . "." . static::$tableKey;
+		$wheres[] = $joins[0]['variable'] . "." . static::$tableKey . "=" . $this->id;	
+
+		$newjoins = implode(',', $newjoins);
+		$wheres = implode('AND', $wheres);
+
+		// Prepare SQL statement
+		$sqlString = "SELECT SUM($column) FROM $newjoins WHERE $wheres";
+		$sqlStatement = oci_parse($connection, $sqlString);
+
+		// Execute SQL statement
+		if (oci_execute($sqlStatement)) {
+			$result = oci_fetch_assoc($sqlStatement);
+		} else {
+			$test = OCIError($sqlStatement);
+			$err = $test['code'];	
+			$this->handleError($err);
+		}
+
+		return $result;
+
+
+	} catch (Exception $exception) {
+		throw $exception;
+	}
+
+	if (isset($connection)) {
+		$this->end($connection);
+	}
+
+
+}
 // if we're moving most of the sql queries to be auto generated, then we need generalized errors to be hand
 private function handleError($err){
 
