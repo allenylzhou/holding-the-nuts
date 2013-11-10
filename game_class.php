@@ -1,28 +1,30 @@
 <?php
 
-include 'database_class.php';
+include_once 'database_class.php';
 	
 abstract class Game extends Database {
 
+	protected static $tableKey = array(
+		'gsId' => array('type' => DataType::NUMBER, 'sequence' => 'GAME_SEQUENCE')
+	);
+
 	// This maps model properties to database
-	protected static $tableSchemas = array(
+	protected static $tableAttributes = array(
 		'GAME' => array(
-			'userId' => 'USER_ID',
-			'startDate' => 'START_DATE',
-			'endDate' => 'END_DATE',
-			'amountIn' => 'AMOUNT_IN',
-			'amountOut' => 'AMOUNT_OUT',
-			'locationName' => 'LOCATION_NAME'
+			'userId' => array('type' => DataType::NUMBER),
+			'startDate' => array('type' => DataType::DATE),
+			'endDate' => array('type' => DataType::DATE),
+			'amountIn' => array('type' => DataType::NUMBER, 'default' => 0),
+			'amountOut' => array('type' => DataType::NUMBER, 'default' => 0),
+			'locationName' => array('type' => DataType::VARCHAR)
 		)
 	);
-	protected static $tableSequencer = 'GAME_SEQUENCE';
-	protected static $tableKey = 'GS_ID';
 
 	protected function __construct () {
 		parent::__construct();
 	}
 
-	protected $id;
+	protected $gsId;
 	protected $userId;
 	protected $startDate;
 	protected $endDate;
@@ -64,17 +66,17 @@ abstract class Game extends Database {
 
 class CashGame extends Game {
 
-	protected static $tableSchemas = array(
+	protected static $tableAttributes = array(
 		'GAME_CASH' => array(
-			'bigBlind' => 'BIG_BLIND',
-			'smallBlind' => 'SMALL_BLIND'
+			'bigBlind' => array('type' => DataType::NUMBER, 'default' => 0),
+			'smallBlind' => array('type' => DataType::NUMBER, 'default' => 0)
 		)
 	);
 
 	public function __construct ($id = null) {
 		parent::__construct();
 		// This is the order in which table instances are inserted to satisfy integrity constraint
-		static::$tableSchemas = array_merge(parent::$tableSchemas, self::$tableSchemas);
+		static::$tableAttributes = array_merge(parent::$tableAttributes, self::$tableAttributes);
 
 		if (isset($id)) {
 			$this->id = $id;
@@ -93,26 +95,26 @@ class CashGame extends Game {
 				FROM Game G, Game_Cash C
 				WHERE G.gs_id = C.gs_id AND G.user_id = (:userId)
 				ORDER BY G.GS_ID ASC';
-			echo $sqlString;
 			$sqlStatement = oci_parse($connection, $sqlString);
 			oci_bind_by_name($sqlStatement, ':userId', $userId);
 
 			oci_execute($sqlStatement);
 
-			$returnData = oci_fetch_assoc($sqlStatement);
-			/*
+			//$returnData = oci_fetch_assoc($sqlStatement);
+			
+			$returnData = array();
 			while ($row = oci_fetch_array($sqlStatement)) {
 
 				array_push($returnData, $row);
 			}
-			*/
+			
 		  	OCILogoff($connection);
 
 		} else {
 		  //$err = OCIError();
 		  //echo "Oracle Connect Error " . $err['message'];
 		}
-print("<pre>" . print_r($returnData, true) . "</pre>");
+		//print("<pre>" . print_r($returnData, true) . "</pre>");
 		return $returnData;
 	}
 
@@ -120,7 +122,7 @@ print("<pre>" . print_r($returnData, true) . "</pre>");
 
 class TournamentGame extends Game {
 
-	protected static $tableSchemas = array(
+	protected static $tableAttributes = array(
 		'GAME_TOURNAMENT' => array(
 			'placeFinished' => 'PLACED_FINISHED'
 		)
@@ -129,7 +131,7 @@ class TournamentGame extends Game {
 	public function __construct ($id = null) {
 		parent::__construct();
 		// This is the order in which table instances are inserted to satisfy integrity constraint
-		static::$tableSchemas = array_merge(parent::$tableSchemas, self::$tableSchemas);
+		static::$tableAttributes = array_merge(parent::$tableAttributes, self::$tableAttributes);
 
 		if (isset($id)) {
 			$this->id = $id;

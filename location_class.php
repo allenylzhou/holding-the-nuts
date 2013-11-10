@@ -4,24 +4,25 @@ include 'database_class.php';
 	
 class Location extends Database {
 
-	// This maps model properties to database
-	protected static $tableSchemas = array(
-		'GAME' => array(
-			'userId' => 'USER_ID',
-			'name' => 'NAME'
-		)
+	protected static $tableKey = array(
+		'userId' => array('type' => DataType::NUMBER),
+		'name' => array('type' => DataType::VARCHAR)
 	);
 
-	// TODO: Modify database_class.php to handle the case where there is no sequencer
-	//protected static $tableSequencer = 'GAME_SEQUENCE';
+	// This maps model properties to database
+	protected static $tableAttributes = array(
+		'LOCATION' => array(
+			'favourite' => array('type' => DataType::NUMBER)
+		)
+	);
 
 	protected function __construct () {
 		parent::__construct();
 	}
 
-	protected $ID;
 	protected $userId;
 	protected $name;
+	protected $favourite
 
 	public function setProperties($properties) {
 		foreach($properties as $key => $value) {

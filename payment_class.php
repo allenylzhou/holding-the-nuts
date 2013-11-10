@@ -1,6 +1,6 @@
 <?php
 
-include 'database_class.php';
+include_once 'database_class.php';
 	
 class PaymentPart extends Database {
 

@@ -1,6 +1,6 @@
 <?php
 
-include 'database_class.php';
+include_once 'database_class.php';
 	
 class BackingAgreement extends Database {
 
@@ -47,7 +47,7 @@ class BackingAgreement extends Database {
 	
 
 	public static function loadSavedBackings($horseId) {
-/*  fix here 
+
 		if ($connection = oci_connect("ora_u4e7", "a71174098", "ug")) {
 			$sqlString = 'SELECT *
 				FROM BACKING_AGREEMENT B
@@ -73,10 +73,9 @@ class BackingAgreement extends Database {
 
 		return $returnData;
 	}
-	*/ 
 
 }
-/*
+
 class Backing extends Database {
 
 	protected static $tableSchemas = array(
@@ -109,7 +108,7 @@ class Backing extends Database {
 		}
 	}
 }
-*/
+
 
 
 ?>

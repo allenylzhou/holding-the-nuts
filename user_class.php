@@ -4,16 +4,17 @@ include 'database_class.php';
 	
 class User extends Database {
 
+	protected static $tableKey = array(
+		'userId' => array('default' => 'USERS_SEQUENCE.NEXTVAL')
+	);
+
 	// This maps model properties to database
 	protected static $tableSchemas = array(
 		'USERS' => array(
-			'username' => 'USERNAME',
-			'password' => 'PASSWORD'
+			'username' => array('type' => DataType::VARCHAR),
+			'password' => array('type' => DataType::VARCHAR)
 		)
 	);
-
-	protected static $tableSequencer = 'USERS_SEQUENCE';
-	protected static $tableKey = 'USER_ID';
 
 	public function __construct ($id = null) {
 		parent::__construct();
@@ -25,7 +26,7 @@ class User extends Database {
 		}
 	}
 
-	protected $id;
+	protected $userId;
 	protected $username;
 	protected $password;
 
@@ -34,14 +35,8 @@ class User extends Database {
 	}
 
 	public function setProperties($properties) {
-		unset($properties['id']);
 		foreach($properties as $key => $value) {
 			$this->{$key} = $value;
-			// if($key == 'password'){						
-			// 	$Input=iconv('UTF-8','UTF-16LE',$value);
-			// 	$hash=bin2hex(mhash(MHASH_MD4,$Input));
-			// 	$this->{$key} = $hash;
-			// }
 		}
 	}
 

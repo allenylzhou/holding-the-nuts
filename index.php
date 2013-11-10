@@ -50,7 +50,7 @@
 
 include 'tbs_class.php';
 include 'game_class.php';
-//include 'backing_class.php';
+include 'backing_class.php';
 /*
 	if (array_key_exists('cash', $_POST) || array_key_exists('tournament', $_POST)
 						|| array_key_exists('backingagreement', $_POST)){
@@ -113,13 +113,17 @@ include 'game_class.php';
 
 		$newGame->setProperties(array(
 			'userId' => 0,
-			'startDate' => $_POST['startDate'],
-			'endDate' => $_POST['endDate'],
-			'amountIn' => $_POST['amountIn'],
-			'amountOut' => $_POST['amountOut']
+			//'startDate' => $_POST['startDate'],
+			//'endDate' => $_POST['endDate'],
+			//'amountIn' => $_POST['amountIn'],
+			//'amountOut' => $_POST['amountOut']
 		));
 
-		$newGame->save();
+		try {
+			$newGame->save();
+		} catch (DatabaseException $exception) {
+			echo $exception->getStatement();
+		}
 		//$result = $newGame->getAverageBuyOut();
 		
 		
