@@ -1,58 +1,48 @@
 <?php
 
-include 'database_class.php';
+include_once 'database_class.php';
 	
 class User extends Database {
 
 	protected static $tableKey = array(
-		'userId' => array('default' => 'USERS_SEQUENCE.NEXTVAL')
+		'userId' => array('type' => DataType::NUMBER, 'sequence' => 'USERS_SEQUENCE')
 	);
 
-	// This maps model properties to database
-	protected static $tableSchemas = array(
+	protected static $tableAttributes = array(
 		'USERS' => array(
 			'username' => array('type' => DataType::VARCHAR),
 			'password' => array('type' => DataType::VARCHAR)
 		)
 	);
 
-	public function __construct ($id = null) {
-		parent::__construct();
-
-		if (isset($id)) {
-			$this->id = $id;
-			$properties = $this->select();
-			$this->setProperties($properties);
-		}
-	}
-
 	protected $userId;
 	protected $username;
 	protected $password;
 
-	public function getProperties() {
-		return get_object_vars($this);
-	}
+	public function __construct ($key = array(), $select = false) {
+		parent::__construct();
 
-	public function setProperties($properties) {
-		foreach($properties as $key => $value) {
-			$this->{$key} = $value;
+		foreach ($key as $name => $value) {
+			if (array_key_exists($name, static::$tableKey)) {
+				$this->{$name} = $value;
+			}
+		}
+
+		if ($select) {
+			$this->setAttributes($this->select());
 		}
 	}
 
-	public function save() {
-		if (isset($this->id)) {
-			$this->update();
-		} else {
-			$this->insert();
-		}
-	}
+	public function getUserId() { return $this->userId; }
+	public function getUsername() { return $this->username; }
 
-	
-	public function erase() {
-		$this->delete();
-	}
-	
+	public function setAttributes($attributes) {
+		foreach($attributes as $name => $value) {
+			if (!array_key_exists($name, static::$tableKey)) {
+				$this->{$name} = $value;
+			}
+		}
+	}	
 	
 	public function login() {
 		try{

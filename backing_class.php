@@ -4,24 +4,20 @@ include_once 'database_class.php';
 	
 class BackingAgreement extends Database {
 
-	// This maps model properties to database
-	protected static $tableSchemas = array(
-		'BACKING_AGREEMENT' => array(
-			'horseId' => 'HORSE_ID',
-			'backerId' => 'BACKER_ID',
-			'flatFee' => 'FLAT_FEE',
-			'percentOfWin' => 'PERCENT_OF_WIN',
-			'percentOfLoss' => 'PERCENT_OF_LOSS',
-			'overrideAmount' => 'OVERRIDE_AMOUNT'
-		)
+	protected static $tableKey = array(
+		'id' => array('type' => DataType::NUMBER, 'sequence' => 'BACKING_AGREEMENT_SEQUENCE')
 	);
 
-	protected static $tableSequencer = 'BACKING_AGREEMENT_SEQUENCE';
-	protected static $tableKey = 'ID';
-
-	public function __construct () {
-		parent::__construct();
-	}
+	protected static $tableAttributes = array(
+		'BACKING_AGREEMENT' => array(
+			'horseId' => array('type' => DataType::NUMBER),
+			'backerId' => array('type' => DataType::NUMBER),
+			'flatFee' => array('type' => DataType::NUMBER),
+			'percentOfWin' => array('type' => DataType::NUMBER),
+			'percentOfLoss' => array('type' => DataType::NUMBER),
+			'overrideAmount' => array('type' => DataType::NUMBER)
+		)
+	);
 
 	protected $id;
 	protected $horseId;
@@ -31,21 +27,36 @@ class BackingAgreement extends Database {
 	protected $percentOfLoss;
 	protected $overrideAmount;
 
-	public function setProperties($properties) {
-		foreach($properties as $key => $value) {
-			$this->{$key} = $value;
+	public function __construct ($key = array(), $select = false) {
+		parent::__construct();
+
+		foreach ($key as $name => $value) {
+			if (array_key_exists($name, static::$tableKey)) {
+				$this->{$name} = $value;
+			}
+		}
+
+		if ($select) {
+			$this->setAttributes($this->select());
 		}
 	}
 
-	public function save() {
-		if (isset($this->id)) {
-			$this->update();
-		} else {
-			$this->insert();
+	public function getId() { return $this->id; }
+	public function getHorseId() { return $this->horseId; }
+	public function getBackerId() { return $this->backerId; }
+	public function getFlatFee() { return $this->flatFee; }
+	public function getPercentOfWin() { return $this->percentOfWin; }
+	public function getPercentOfLoss() { return $this->percentOfLoss; }
+	public function getOverrideAmount() { return $this->overrideAmount; }
+
+	public function setAttributes($attributes) {
+		foreach($attributes as $name => $value) {
+			if (!array_key_exists($name, static::$tableKey)) {
+				$this->{$name} = $value;
+			}
 		}
 	}
 	
-
 	public static function loadSavedBackings($horseId) {
 
 		if ($connection = oci_connect("ora_u4e7", "a71174098", "ug")) {

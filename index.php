@@ -2,6 +2,8 @@
 <body>
 <h1>Welcome to 304!</h1>
 
+
+
 <h2>Function 1: Show Game History by User ID</h2>
 
 <form method="POST" action="index.php">
@@ -51,6 +53,7 @@
 include 'tbs_class.php';
 include 'game_class.php';
 include 'backing_class.php';
+include 'location_class.php';
 /*
 	if (array_key_exists('cash', $_POST) || array_key_exists('tournament', $_POST)
 						|| array_key_exists('backingagreement', $_POST)){
@@ -129,20 +132,20 @@ include 'backing_class.php';
 	}
 	
 	if (array_key_exists('create_backing', $_POST)) {
-		$newBacking = new BackingAgreement;
-		print("<pre>" . print_r($_POST, true) . "</pre>");
-		echo "testing2";
-		$newBacking->setProperties(array(
-			'horseId' => $_POST['horse'],
-			'backerId' => $_POST['backer'],
-			'flatFee' => 0,
-			'percentOfWin' => $_POST['percentage'],
-			'percentOfLoss' => $_POST['percentage'],
-			'overrideAmount' => 0
-			));
+		$newBacking = new Location(array('userId'=>0, 'name'=>'Edgewater'), true);
+
+		$newBacking->setAttributes(array('favourite' => 100));
+
+		//$newBacking->setAttributes(array(
+			// 'horseId' => $_POST['horse'],
+			// 'backerId' => $_POST['backer'],
+			// 'flatFee' => 0,
+			// 'percentOfWin' => $_POST['percentage'],
+			// 'percentOfLoss' => $_POST['percentage'],
+			// 'overrideAmount' => 0
+			// ));
 		$newBacking->save();
 		
-	
 	}
 
 	//$oldGame = new CashGame(0);

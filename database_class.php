@@ -17,7 +17,7 @@ class DatabaseException extends Exception {
 	protected $statement;
 
 	public function __construct($message, $code, Exception $previous = NULL, $statement = NULL) {
-		parent::__construct($code, $message);
+		parent::__construct($message, $code);
 		$this->code = $code;
 		$this->message = $message;
 		$this->statement = $statement;
@@ -153,7 +153,7 @@ class Database {
 					oci_commit($connection);
 				} else {
 					$error = oci_error($sqlStatement);	
-					throw new DatabaseException($error['code'], $error['message'], NULL, $error['sqltext']);
+					throw new DatabaseException($error['message'], $error['code'], NULL, $error['sqltext']);
 				}
 
 			}
@@ -199,24 +199,26 @@ class Database {
 				}
 
 				foreach ($attributes as $name => $domain) {
-					// Add SET assignment (values substituted by a binding variable placeholder)
-					$columnname = $this->underscore($name);
-					$placeholder = ":bv" . count($bindings);
-					switch ($domain['type']) {
-						case DataType::DATE:
-							$sets[] = "$columnname=TO_DATE($placeholder, 'yyyy/mm/dd hh24:mi:ss')";
-							break;
-						default:
-							$sets[] = "$columnname=$placeholder";
-							break;
+					if (isset($this->{$name})) {
+						// Add SET assignment (values substituted by a binding variable placeholder)
+						$columnname = $this->underscore($name);
+						$placeholder = ":bv" . count($bindings);
+						switch ($domain['type']) {
+							case DataType::DATE:
+								$sets[] = "$columnname=TO_DATE($placeholder, 'yyyy/mm/dd hh24:mi:ss')";
+								break;
+							default:
+								$sets[] = "$columnname=$placeholder";
+								break;
+						}
+						$bindings[$placeholder] = $name;
 					}
-					$bindings[$placeholder] = $name;
 				}
 
 
 				// Implode assignments and conditions into comma separated strings
 				$sets = implode(',', $sets);
-				$wheres = implode(',', $wheres);
+				$wheres = implode(' AND ', $wheres);
 
 				// Prepare SQL statement
 				$sqlString = "UPDATE $table SET $sets WHERE $wheres";
@@ -230,10 +232,9 @@ class Database {
 				// Execute SQL statement
 				if (oci_execute($sqlStatement, OCI_NO_AUTO_COMMIT)) {
 					oci_commit($connection);
-					echo "UPDATE SUCCESSFULL";
 				} else {
 					$error = oci_error($sqlStatement);	
-					throw new DatabaseException($error['code'], $error['message'], NULL, $error['sqltext']);
+					throw new DatabaseException($error['message'], $error['code'], NULL, $error['sqltext']);
 				}
 			}
 		} catch (Exception $exception) {
@@ -275,7 +276,7 @@ class Database {
 				}
 
 				// Implode where conditions into comma separated string
-				$wheres = implode(',', $wheres);
+				$wheres = implode(' AND ', $wheres);
 
 				$sqlString = "DELETE FROM $table WHERE $wheres";
 				$sqlStatement = oci_parse($connection, $sqlString);
@@ -290,7 +291,7 @@ class Database {
 					oci_commit($connection);
 				} else {
 					$error = oci_error($sqlStatement);	
-					throw new DatabaseException($error['code'], $error['message'], NULL, $error['sqltext']);
+					throw new DatabaseException($error['message'], $error['code'], NULL, $error['sqltext']);
 				}
 			}
 		} catch (Exception $exception) {
@@ -357,7 +358,7 @@ class Database {
 						}
 					} else {
 						$error = oci_error($sqlStatement);	
-						throw new DatabaseException($error['code'], $error['message'], NULL, $error['sqltext']);
+						throw new DatabaseException($error['message'], $error['code'], NULL, $error['sqltext']);
 					}
 					return $results;
 				}
@@ -433,7 +434,7 @@ class Database {
 							$result = array_shift($result);
 						} else {
 							$error = oci_error($sqlStatement);	
-							throw new DatabaseException($error['code'], $error['message'], NULL, $error['sqltext']);
+							throw new DatabaseException($error['message'], $error['code'], NULL, $error['sqltext']);
 						}
 					}
 				}
@@ -454,7 +455,7 @@ class Database {
 		try {
 			// Try insert
 			$this->insert();
-		} catch (Exception $exception) {
+		} catch (Exception $exception) {		
 			if($exception instanceof DatabaseException && $exception->getCode() == 1) {
 				// If unique constraint is violated, try update
 				try {

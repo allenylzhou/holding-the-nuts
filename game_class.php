@@ -8,7 +8,6 @@ abstract class Game extends Database {
 		'gsId' => array('type' => DataType::NUMBER, 'sequence' => 'GAME_SEQUENCE')
 	);
 
-	// This maps model properties to database
 	protected static $tableAttributes = array(
 		'GAME' => array(
 			'userId' => array('type' => DataType::NUMBER),
@@ -32,9 +31,13 @@ abstract class Game extends Database {
 	protected $amountOut;
 	protected $locationName;
 
-	public function getAttributes() {
-		return get_object_vars($this);
-	}
+	public function getGsId() { return $this->gsId; }
+	public function getUserId() { return $this->userId; }
+	public function getStartDate() { return $this->startDate; }
+	public function getEndDate() { return $this->endDate; }
+	public function getAmountIn() { return $this->amountIn; }
+	public function getAmountOut() { return $this->amountOut; }
+	public function getLocationName() { return $this->locationName; }
 
 	public function setAttributes($attributes) {
 		foreach($attributes as $name => $value) {
@@ -66,6 +69,9 @@ class CashGame extends Game {
 		)
 	);
 
+	protected $bigBlind;
+	protected $smallBlind;
+
 	public function __construct ($key = array(), $select = false) {
 		parent::__construct();
 		// This is the order in which table instances are inserted to satisfy integrity constraint
@@ -82,8 +88,8 @@ class CashGame extends Game {
 		}
 	}
 
-	protected $bigBlind;
-	protected $smallBlind;
+	public function getBigBlind() { return $this->bigBlind; }
+	public function getSmallBlind() { return $this->smallBlind; }
 
 	public static function loadSavedGames($userId) {
 
@@ -121,9 +127,11 @@ class TournamentGame extends Game {
 
 	protected static $tableAttributes = array(
 		'GAME_TOURNAMENT' => array(
-			'placeFinished' => 'PLACED_FINISHED'
+			'placeFinished' => array('type' => DataType::NUMBER)
 		)
 	);
+
+	protected $placedFinished;
 
 	public function __construct ($key = array(), $select = false) {
 		parent::__construct();
@@ -141,7 +149,9 @@ class TournamentGame extends Game {
 		}
 	}
 
-	protected $placeFinished;
+	public function getPlacedFinished() { return $this->placeFinished; }
+
+
 
 	public static function loadSavedGames($userId) {
 
