@@ -86,10 +86,10 @@ include 'location_class.php';
 		$gameType = array('cash' => isset($_POST['cash']), 
 				'tournament' => isset($_POST['tournament']));
 		if($gameType['cash']) {
-			$gameData = CashGame::loadSavedGames($_POST['userId']);
+			$gameData = CashGame::loadActiveGames($_POST['userId']);
 			
 		} else {
-			$gameData = TournamentGame::loadSavedGames($_POST['userId']);
+			$gameData = TournamentGame::loadFinishedGames($_POST['userId']);
 		}
 
 		$TBS = new clsTinyButStrong;

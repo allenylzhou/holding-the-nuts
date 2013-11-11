@@ -34,13 +34,13 @@ class Database {
 	protected function __construct() {}
 
 	// This function converts COLUMN_NAME into propertyName
-	private static function camelize($s)
+	protected static function camelize($s)
 	{
 	    return lcfirst(implode('', explode(' ', ucwords(implode(' ', explode('_', strtolower($s)))))));
 	}
 
 	// This function converts propertyName into COLUMN_NAME
-	private static function underscore($s)
+	protected static function underscore($s)
 	{
 	    $words = array();
 	    $split = preg_split('/([A-Z])/', ucfirst($s), -1, PREG_SPLIT_DELIM_CAPTURE|PREG_SPLIT_NO_EMPTY);
@@ -59,11 +59,10 @@ class Database {
 	}
 
 	protected static function aggregate($o, $c, $q = array()) {
+		$result = 0;
 		try {
 			// Start database connection
 			$connection = static::start();
-
-			$result = 0;
 
 			// WHERE conditions must be specified
 			if (!empty($q)) {
@@ -120,7 +119,6 @@ class Database {
 					}
 				}
 			}
-			return $result;
 		} catch (Exception $exception) {
 			throw $exception;
 		}
@@ -129,10 +127,13 @@ class Database {
 			// End database connection
 			static::end($connection);
 		}
+
+		return $result;
 	}
 
-	// TODO: chagne this to a static function
+	// TODO: change this to a static function
 	protected function select($q = array()) {
+		$results = array();
 		try {
 			// Start database connection
 			$connection = static::start();
@@ -140,8 +141,6 @@ class Database {
 			$selects = array();
 			$wheres = array();
 			$bindings = array();
-
-			$results = array();
 
 			if (empty($q)) {
 				// If no query is provided, select self
@@ -188,7 +187,6 @@ class Database {
 						$error = oci_error($sqlStatement);	
 						throw new DatabaseException($error['message'], $error['code'], NULL, $error['sqltext']);
 					}
-					return $results;
 				}
 			} else {
 				// TODO: Implement custom selects
@@ -201,6 +199,7 @@ class Database {
 			// End database connection
 			static::end($connection);
 		}
+		return $results;
 	}
 
 	protected function insert() {
@@ -392,7 +391,7 @@ class Database {
 		}
 	}
 
-	protected function delete() {
+	public function delete() {
 		try {
 			// Start database connection
 			$connection = static::start();

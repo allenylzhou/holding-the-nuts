@@ -47,16 +47,33 @@ abstract class Game extends Database {
 		}
 	}
 
-	public function erase() {
-		$this->delete();
-	}
+	protected static function loadGames($userId, $gameType, $active = false) {
+		$results = array();
+		$connection = static::start();
 
-	public function getAverageBuyIn($userId) {
-		return $this->aggregate('avg', 'amountIn', array('userId' => $userId));
-	}
+		$where = "P.GS_ID = C.GS_ID AND P.USER_ID = (:userId)";
+		if ($active) {
+			$where .= " AND P.END_DATE IS NULL";
+		}
 
-	public function getAverageBuyOut($userId) {
-		return $this->aggregate('avg', 'amountOut', array('userId' => $userId));
+		$sqlString = "SELECT *
+				FROM GAME P, $gameType C
+				WHERE $where
+				ORDER BY P.GS_ID ASC";
+
+		$sqlStatement = oci_parse($connection, $sqlString);
+		oci_bind_by_name($sqlStatement, ':userId', $userId);
+
+		echo $sqlString;
+
+		if(oci_execute($sqlStatement)) {
+			while ($row = oci_fetch_assoc($sqlStatement)) {
+				array_push($results, $row);
+			}
+		}
+		static::end($connection);
+
+		return $results;
 	}
 }
 
@@ -91,36 +108,13 @@ class CashGame extends Game {
 	public function getBigBlind() { return $this->bigBlind; }
 	public function getSmallBlind() { return $this->smallBlind; }
 
-	public static function loadSavedGames($userId) {
-
-		if ($connection = oci_connect("ora_u4e7", "a71174098", "ug")) {
-			$sqlString = 'SELECT *
-				FROM Game G, Game_Cash C
-				WHERE G.gs_id = C.gs_id AND G.user_id = (:userId)
-				ORDER BY G.GS_ID ASC';
-			$sqlStatement = oci_parse($connection, $sqlString);
-			oci_bind_by_name($sqlStatement, ':userId', $userId);
-
-			oci_execute($sqlStatement);
-
-			//$returnData = oci_fetch_assoc($sqlStatement);
-			
-			$returnData = array();
-			while ($row = oci_fetch_array($sqlStatement)) {
-
-				array_push($returnData, $row);
-			}
-			
-		  	OCILogoff($connection);
-
-		} else {
-		  //$err = OCIError();
-		  //echo "Oracle Connect Error " . $err['message'];
-		}
-		//print("<pre>" . print_r($returnData, true) . "</pre>");
-		return $returnData;
+	public static function loadActiveGames($userId) {
+		return static::loadGames($userId, 'GAME_CASH', true);
 	}
 
+	public static function loadFinishedGames() {
+		return static::loadGames($userId, 'GAME_CASH');
+	}
 }
 
 class TournamentGame extends Game {
@@ -151,32 +145,12 @@ class TournamentGame extends Game {
 
 	public function getPlacedFinished() { return $this->placeFinished; }
 
-	public static function loadSavedGames($userId) {
+	public static function loadActiveGames($userId) {
+		return static::loadGames($userId, 'GAME_TOURNAMENT', true);
+	}
 
-		if ($connection = oci_connect("ora_u4e7", "a71174098", "ug")) {
-			$sqlString = 'SELECT *
-				FROM Game G, Game_Tournament T
-				WHERE G.GS_ID = T.GS_ID AND G.USER_ID = (:userId)
-				ORDER BY G.GS_ID ASC';
-
-			$sqlStatement = oci_parse($connection, $sqlString);
-			oci_bind_by_name($sqlStatement, ':userId', $userId);
-
-			oci_execute($sqlStatement);
-
-			$returnData = array();
-			while ($row = oci_fetch_array($sqlStatement)) {
-
-				array_push($returnData, $row);
-			}
-		  	OCILogoff($connection);
-
-		} else {
-		  //$err = OCIError();
-		  //echo "Oracle Connect Error " . $err['message'];
-		}
-
-		return $returnData;
+	public static function loadFinishedGames($userId) {
+		return static::loadGames($userId, 'GAME_TOURNAMENT');
 	}
 }
 
