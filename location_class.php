@@ -29,7 +29,7 @@ class Location extends Database {
 		}
 
 		if ($select) {
-			$this->setAttributes($this->select());
+			$this->setAttributes($this->load());
 		}
 	}
 

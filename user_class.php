@@ -29,7 +29,7 @@ class User extends Database {
 		}
 
 		if ($select) {
-			$this->setAttributes($this->select());
+			$this->setAttributes($this->load());
 		}
 	}
 
@@ -89,6 +89,12 @@ class User extends Database {
 	public static function hash($p){
 		$input=iconv('UTF-8','UTF-16LE',$p);
         return bin2hex(mhash(MHASH_MD4,$input));
+	}
+
+	public function getTotalProfit() {
+		$amountOut = Game::sum('amountOut', array('userId' => $this->userId));
+		$amountIn = Game::sum('amountIn', array('userId' => $this->userId));
+		return $amountIn;
 	}
 }
 

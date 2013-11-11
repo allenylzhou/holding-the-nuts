@@ -84,7 +84,7 @@ class CashGame extends Game {
 		}
 
 		if ($select) {
-			$this->setAttributes($this->select());
+			$this->setAttributes($this->load());
 		}
 	}
 
@@ -145,13 +145,11 @@ class TournamentGame extends Game {
 		}
 
 		if ($select) {
-			$this->setAttributes($this->select());
+			$this->setAttributes($this->load());
 		}
 	}
 
 	public function getPlacedFinished() { return $this->placeFinished; }
-
-
 
 	public static function loadSavedGames($userId) {
 

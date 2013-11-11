@@ -37,7 +37,7 @@ class BackingAgreement extends Database {
 		}
 
 		if ($select) {
-			$this->setAttributes($this->select());
+			$this->setAttributes($this->load());
 		}
 	}
 
@@ -89,33 +89,40 @@ class BackingAgreement extends Database {
 
 class Backing extends Database {
 
-	protected static $tableSchemas = array(
-		'GAME_CASH' => array(
-			'ID' => 'ID',
-			'gsId' => 'GS_ID'
-		)
+	protected static $tableKey = array(
+		'id' => array('type' => DataType::NUMBER),
+		'gsId' => array('type' => DataType::NUMBER)
 	);
 
-	// TODO: Modify database_class.php to handle the case where there is no sequencer
-	//protected static $tableSequencer = 'GAME_SEQUENCE';
+	protected static $tableAttributes = array(
+		'BACKING' => array()
+	);
 
-	public function __construct () {
-		parent::__construct();
-	}
-
+	protected $id;
 	protected $gsId;
 
-	public function setProperties($properties) {
-		foreach($properties as $key => $value) {
-			$this->{$key} = $value;
+	public function __construct ($key = array(), $select = false) {
+		parent::__construct();
+
+		foreach ($key as $name => $value) {
+			if (array_key_exists($name, static::$tableKey)) {
+				$this->{$name} = $value;
+			}
+		}
+
+		if ($select) {
+			$this->setAttributes($this->load());
 		}
 	}
 
-	public function save() {
-		if (isset($this->ID)) {
-			$this->update();
-		} else {
-			$this->insert();
+	public function getId() { return $this->id; }
+	public function getGsId() { return $this->gsId; }
+
+	public function setAttributes($attributes) {
+		foreach($attributes as $name => $value) {
+			if (!array_key_exists($name, static::$tableKey)) {
+				$this->{$name} = $value;
+			}
 		}
 	}
 }

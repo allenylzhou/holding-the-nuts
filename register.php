@@ -25,7 +25,6 @@ include 'tbs_class.php';
 		echo 'Please fill in all of the form please';
 	}
 	else {
-		$connection;
 		try {
 			$username = $_POST['username'];                                        
             $password = User::hash($_POST['password']);
