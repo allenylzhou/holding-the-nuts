@@ -31,7 +31,7 @@ class Statistics extends Database{
 		return $returnData;
 	}
 	
-	
+	/* may or may not keep
 	public function getBestPerformingDayOfWeek($userId) {
 		$dayOfWeek = array();
 		try{
@@ -68,8 +68,9 @@ class Statistics extends Database{
 		}
 		return $dayOfWeek;
 	}
+	*/
 	
-	
+	// NESTED AGGREGATE
 	public function getBestPerformingDay($userId) {
 		$day = array();
 		try{
@@ -92,7 +93,7 @@ class Statistics extends Database{
 			oci_execute($stid);
 			
 			while (oci_fetch($stid)) {
-				$days[((string) $day)] = $winnings; 
+				$day[((string) $day)] = $winnings; 
 			}
 		}
 		catch (Exception $exception) {
@@ -104,7 +105,7 @@ class Statistics extends Database{
 		if($connection != null){
 			Database::end($connection);	
 		}
-		return $dayOfWeek;
+		return $day;
 	}
 
 
