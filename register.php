@@ -7,6 +7,8 @@
 	<input type="text" name="username">
 	<label>Password:</label>
 	<input type="password" name="password">
+	<label>Email:</label>
+	<input type="text" name="email">
 	<input type="submit" name="" value="Register Me" >
 </form>
 
@@ -15,24 +17,32 @@
 include 'user_class.php';
 include 'tbs_class.php';
 	
-	if (!array_key_exists('username', $_POST) && !array_key_exists('password', $_POST)) {
+	if (!array_key_exists('username', $_POST) 
+		&& !array_key_exists('password', $_POST)
+		&& !array_key_exists('email', $_POST)) {
 		
 	}
-	else if (!array_key_exists('username', $_POST) || !array_key_exists('password', $_POST)) {
+	else if (!array_key_exists('username', $_POST) 
+			|| !array_key_exists('password', $_POST)
+			|| !array_key_exists('email', $_POST)) {
 		echo 'Please fill in the registration form.';
 	}
-	else if($_POST['username'] == '' || $_POST['password'] == ''){
+	else if($_POST['username'] == '' 
+		|| $_POST['password'] == ''
+		|| $_POST['email'] == ''){
 		echo 'Please fill in all of the form please';
 	}
 	else {
 		try {
 			$username = $_POST['username'];                                        
             $password = User::hash($_POST['password']);
+			$email = $_POST['email'];
 			
 			$user = new User;
 			$user->setAttributes(array(
 				'username' => $username,
-				'password' => $password
+				'password' => $password,
+				'email' => $email
 			));
 			
 			//$user->register();
@@ -46,7 +56,7 @@ include 'tbs_class.php';
 					echo "This username has already been claimed.";
 					break;
 				case 2290:
-					echo "Your username is invalid";
+					echo "Your username is invalid, or your email is already being used";
 					break;
 				default:
 					echo "An unknown error has occured";

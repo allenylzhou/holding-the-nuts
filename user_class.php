@@ -11,13 +11,15 @@ class User extends Database {
 	protected static $tableAttributes = array(
 		'USERS' => array(
 			'username' => array('type' => DataType::VARCHAR),
-			'password' => array('type' => DataType::VARCHAR)
+			'password' => array('type' => DataType::VARCHAR),
+			'email' => array('type' => DataType::VARCHAR)
 		)
 	);
 
 	protected $userId;
 	protected $username;
 	protected $password;
+	protected $email;
 
 	public function __construct ($key = array(), $select = false) {
 		parent::__construct();
@@ -35,6 +37,7 @@ class User extends Database {
 
 	public function getUserId() { return $this->userId; }
 	public function getUsername() { return $this->username; }
+	public function getEmail() { return $this->email; }
 
 	public function setAttributes($attributes) {
 		foreach($attributes as $name => $value) {
@@ -86,6 +89,8 @@ class User extends Database {
 	}
 	
 	
+	// TODO
+	// WEIRD EMAIL LOGIC IN CASE BACKERS DON'T EXIST
 	public function addBacker($backerId) {
 		try{
 			$connection = Database::start();

@@ -32,7 +32,7 @@ class Statistics extends Database{
 	}
 	
 	
-	public function getBestPerformingDay($userId) {
+	public function getBestPerformingDayOfWeek($userId) {
 		$dayOfWeek = array();
 		try{
 			$connection = Database::start();
@@ -69,6 +69,43 @@ class Statistics extends Database{
 		return $dayOfWeek;
 	}
 	
+	
+	public function getBestPerformingDay($userId) {
+		$day = array();
+		try{
+			$connection = Database::start();
+			$sqlString = "WITH USER_WINNING_ON_DAY AS (
+							  SELECT TRUNC(START_DATE) AS GAME_DAY,
+                                     AVG(AMOUNT_OUT-AMOUNT_IN) as WINNINGS
+							  FROM   GAME
+							  WHERE  USER_ID = :userId
+							  GROUP BY TRUNC(START_DATE))
+							SELECT GAME_DAY, WINNINGS
+							FROM   USER_WINNING_ON_DAY
+							WHERE  WINNINGS >= ALL (SELECT MAX(A.WINNINGS)
+													FROM USER_WINNING_ON_DAY A)";
+			$stid = oci_parse($connection, $sqlString);
+			oci_bind_by_name($stid, ':userId', $userId, 20);
+			
+			oci_define_by_name($stid, 'GAME_DAY', $day);
+			oci_define_by_name($stid, 'WINNINGS', $winnings);
+			oci_execute($stid);
+			
+			while (oci_fetch($stid)) {
+				$days[((string) $day)] = $winnings; 
+			}
+		}
+		catch (Exception $exception) {
+			if($connection != null){
+				Database::end($connection);	
+			}
+			throw $exception;
+		}
+		if($connection != null){
+			Database::end($connection);	
+		}
+		return $dayOfWeek;
+	}
 
 
 
