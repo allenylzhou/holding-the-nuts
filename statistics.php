@@ -30,6 +30,43 @@ class Statistics extends Database{
 		}
 		return $returnData;
 	}
+	
+	
+	public function getTopWinnersOnDay($day) {
+		$winners = array();
+		try{
+			$connection = Database::start();
+			$sqlString = 'WITH USER_WINNING_ON_DAY AS (
+							  SELECT USER_ID, SUM(AMOUNT_OUT-AMOUNT_IN) as WINNINGS
+							  FROM   GAME
+							  GROUP BY USER_ID)
+							SELECT USER_ID, WINNINGS
+							FROM   USER_WINNING_ON_DAY
+							WHERE  trunc(START_DATE) = trunc(:date)
+							and WINNINGS >= ALL (SELECT MAX(A.WINNINGS)
+													FROM USER_WINNING_ON_DAY A)';
+			$stid = oci_parse($connection, $sqlString);
+			oci_bind_by_name($stid, ':date', $day, 20);
+			
+			oci_define_by_name($stid, 'USER_ID', $userid);
+			oci_define_by_name($stid, 'WINNINGS', $winnings);
+			oci_execute($stid);
+			
+			while (oci_fetch($stid)) {
+				$winners[((string) $userid)] = $winnings; 
+			}
+		}
+		catch (Exception $exception) {
+			if($connection != null){
+				Database::end($connection);	
+			}
+			throw $exception;
+		}
+		if($connection != null){
+			Database::end($connection);	
+		}
+	}
+	
 
 
 

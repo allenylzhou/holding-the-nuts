@@ -83,7 +83,59 @@ class User extends Database {
 		if($connection != null){
 			Database::end($connection);	
 		}
-		
+	}
+	
+	
+	public function addBacker($backerId) {
+		try{
+			$connection = Database::start();
+			$sqlString = 'INSERT INTO HORSE_BACKERS (HORSE, BACKER) VALUES (:userId, :backerId);';
+			$stid = oci_parse($connection, $sqlString);
+			oci_bind_by_name($stid, ':userId', $this->userId, 20);
+			oci_bind_by_name($stid, ':backerId', $backerId, 20);
+			oci_execute($stid);
+		}
+		catch (Exception $exception) {
+			if($connection != null){
+				Database::end($connection);	
+			}
+			throw $exception;
+		}
+		if($connection != null){
+			Database::end($connection);	
+		}
+	}
+	
+	
+	public function getBackers() {
+		$backers = array();   
+		try{
+			$connection = Database::start();
+			$sqlString = 'SELECT * 
+						FROM HORSE_BACKERS
+						WHERE HORSE = :user_id';
+			$stid = oci_parse($connection, $sqlString);
+			oci_bind_by_name($stid, ':username', $this->userId, 20);
+			
+			oci_define_by_name($stid, 'backer', $backerId);
+			oci_execute($stid);
+			
+			while (oci_fetch($stid)) {
+				if($userid != null){
+					$backers[] = $backerId;
+				}
+			}
+		}
+		catch (Exception $exception) {
+			if($connection != null){
+				Database::end($connection);	
+			}
+			throw $exception;
+		}
+		if($connection != null){
+			Database::end($connection);	
+		}
+		return $backers;
 	}
 	
 	public static function hash($p){
