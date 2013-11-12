@@ -32,29 +32,29 @@ class Statistics extends Database{
 	}
 	
 	
-	public function getTopWinnersOnDay($day) {
-		$winners = array();
+	public function getBestPerformingDay($userId) {
+		$dayOfWeek = array();
 		try{
 			$connection = Database::start();
-			$sqlString = 'WITH USER_WINNING_ON_DAY AS (
-							  SELECT USER_ID, SUM(AMOUNT_OUT-AMOUNT_IN) as WINNINGS
+			$sqlString = "WITH USER_WINNING_ON_DAY AS (
+							  SELECT TRUNC(START_DATE) - TRUNC(START_DATE, 'D') AS DAY_OF_WEEK,
+                                     AVG(AMOUNT_OUT-AMOUNT_IN) as WINNINGS
 							  FROM   GAME
-							  WHERE trunc(START_DATE) = TRUNC(:date)
-							  GROUP BY USER_ID)
-							SELECT U.USERNAME, UWD.WINNINGS
-							FROM   USER_WINNING_ON_DAY UWD, USERS U
-							WHERE  UWD.USER_ID = U.USER_ID
-							and UWD.WINNINGS >= ALL (SELECT MAX(A.WINNINGS)
-													FROM USER_WINNING_ON_DAY A)';
+							  WHERE  USER_ID = :userId
+							  GROUP BY TRUNC(START_DATE) - TRUNC(START_DATE, 'D'))
+							SELECT DAY_OF_WEEK, WINNINGS
+							FROM   USER_WINNING_ON_DAY
+							WHERE  WINNINGS >= ALL (SELECT MAX(A.WINNINGS)
+													FROM USER_WINNING_ON_DAY A)";
 			$stid = oci_parse($connection, $sqlString);
-			oci_bind_by_name($stid, ':date', $day, 20);
+			oci_bind_by_name($stid, ':userId', $userId, 20);
 			
-			oci_define_by_name($stid, 'USERNAME', $username);
+			oci_define_by_name($stid, 'DAY_OF_WEEK', $dayOfWeek);
 			oci_define_by_name($stid, 'WINNINGS', $winnings);
 			oci_execute($stid);
 			
 			while (oci_fetch($stid)) {
-				$winners[((string) $username)] = $winnings; 
+				$dayOfWeek[((string) $dayOfWeek)] = $winnings; 
 			}
 		}
 		catch (Exception $exception) {
@@ -66,7 +66,7 @@ class Statistics extends Database{
 		if($connection != null){
 			Database::end($connection);	
 		}
-		return $winners;
+		return $dayOfWeek;
 	}
 	
 
