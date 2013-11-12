@@ -39,21 +39,22 @@ class Statistics extends Database{
 			$sqlString = 'WITH USER_WINNING_ON_DAY AS (
 							  SELECT USER_ID, SUM(AMOUNT_OUT-AMOUNT_IN) as WINNINGS
 							  FROM   GAME
+							  WHERE trunc(START_DATE) = TRUNC(:date)
 							  GROUP BY USER_ID)
-							SELECT USER_ID, WINNINGS
-							FROM   USER_WINNING_ON_DAY
-							WHERE  trunc(START_DATE) = trunc(:date)
-							and WINNINGS >= ALL (SELECT MAX(A.WINNINGS)
+							SELECT U.USERNAME, UWD.WINNINGS
+							FROM   USER_WINNING_ON_DAY UWD, USERS U
+							WHERE  UWD.USER_ID = U.USER_ID
+							and UWD.WINNINGS >= ALL (SELECT MAX(A.WINNINGS)
 													FROM USER_WINNING_ON_DAY A)';
 			$stid = oci_parse($connection, $sqlString);
 			oci_bind_by_name($stid, ':date', $day, 20);
 			
-			oci_define_by_name($stid, 'USER_ID', $userid);
+			oci_define_by_name($stid, 'USERNAME', $username);
 			oci_define_by_name($stid, 'WINNINGS', $winnings);
 			oci_execute($stid);
 			
 			while (oci_fetch($stid)) {
-				$winners[((string) $userid)] = $winnings; 
+				$winners[((string) $username)] = $winnings; 
 			}
 		}
 		catch (Exception $exception) {
@@ -65,6 +66,7 @@ class Statistics extends Database{
 		if($connection != null){
 			Database::end($connection);	
 		}
+		return $winners;
 	}
 	
 
