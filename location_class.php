@@ -1,42 +1,49 @@
 <?php
 
-include 'database_class.php';
+include_once 'database_class.php';
 	
 class Location extends Database {
 
-	// This maps model properties to database
-	protected static $tableSchemas = array(
-		'GAME' => array(
-			'userId' => 'USER_ID',
-			'name' => 'NAME'
+	protected static $tableKey = array(
+		'userId' => array('type' => DataType::NUMBER),
+		'name' => array('type' => DataType::VARCHAR)
+	);
+
+	protected static $tableAttributes = array(
+		'LOCATION' => array(
+			'favourite' => array('type' => DataType::NUMBER)
 		)
 	);
 
-	// TODO: Modify database_class.php to handle the case where there is no sequencer
-	//protected static $tableSequencer = 'GAME_SEQUENCE';
-
-	protected function __construct () {
-		parent::__construct();
-	}
-
-	protected $ID;
 	protected $userId;
 	protected $name;
+	protected $favourite;
 
-	public function setProperties($properties) {
-		foreach($properties as $key => $value) {
-			$this->{$key} = $value;
+	public function __construct ($key = array(), $select = false) {
+		parent::__construct();
+
+		foreach ($key as $name => $value) {
+			if (array_key_exists($name, static::$tableKey)) {
+				$this->{$name} = $value;
+			}
+		}
+
+		if ($select) {
+			$this->setAttributes($this->load());
 		}
 	}
 
-	public function save() {
-		if (isset($this->ID)) {
-			$this->update();
-		} else {
-			$this->insert();
+	public function getUserId() { return $this->userId; }
+	public function getName() { return $this->name; }
+	public function getFavourite() { return $this->favourite; }
+
+	public function setAttributes($attributes) {
+		foreach($attributes as $name => $value) {
+			if (!array_key_exists($name, static::$tableKey)) {
+				$this->{$name} = $value;
+			}
 		}
 	}
-
 }
 
 ?>

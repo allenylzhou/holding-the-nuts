@@ -1,63 +1,48 @@
 <?php
 
-include 'database_class.php';
+include_once 'database_class.php';
 	
 class User extends Database {
 
-	// This maps model properties to database
-	protected static $tableSchemas = array(
+	protected static $tableKey = array(
+		'userId' => array('type' => DataType::NUMBER, 'sequence' => 'USERS_SEQUENCE')
+	);
+
+	protected static $tableAttributes = array(
 		'USERS' => array(
-			'username' => 'USERNAME',
-			'password' => 'PASSWORD'
+			'username' => array('type' => DataType::VARCHAR),
+			'password' => array('type' => DataType::VARCHAR)
 		)
 	);
 
-	protected static $tableSequencer = 'USERS_SEQUENCE';
-	protected static $tableKey = 'USER_ID';
-
-	public function __construct ($id = null) {
-		parent::__construct();
-
-		if (isset($id)) {
-			$this->id = $id;
-			$properties = $this->select();
-			$this->setProperties($properties);
-		}
-	}
-
-	protected $id;
+	protected $userId;
 	protected $username;
 	protected $password;
 
-	public function getProperties() {
-		return get_object_vars($this);
-	}
+	public function __construct ($key = array(), $select = false) {
+		parent::__construct();
 
-	public function setProperties($properties) {
-		unset($properties['id']);
-		foreach($properties as $key => $value) {
-			$this->{$key} = $value;
-			// if($key == 'password'){						
-			// 	$Input=iconv('UTF-8','UTF-16LE',$value);
-			// 	$hash=bin2hex(mhash(MHASH_MD4,$Input));
-			// 	$this->{$key} = $hash;
-			// }
+		foreach ($key as $name => $value) {
+			if (array_key_exists($name, static::$tableKey)) {
+				$this->{$name} = $value;
+			}
+		}
+
+		if ($select) {
+			$this->setAttributes($this->load());
 		}
 	}
 
-	public function save() {
-		if (isset($this->id)) {
-			$this->update();
-		} else {
-			$this->insert();
-		}
-	}
+	public function getUserId() { return $this->userId; }
+	public function getUsername() { return $this->username; }
 
-	
-	public function erase() {
-		$this->delete();
-	}
-	
+	public function setAttributes($attributes) {
+		foreach($attributes as $name => $value) {
+			if (!array_key_exists($name, static::$tableKey)) {
+				$this->{$name} = $value;
+			}
+		}
+	}	
 	
 	public function login() {
 		try{
@@ -104,6 +89,12 @@ class User extends Database {
 	public static function hash($p){
 		$input=iconv('UTF-8','UTF-16LE',$p);
         return bin2hex(mhash(MHASH_MD4,$input));
+	}
+
+	public function getTotalProfit() {
+		$amountOut = Game::sum('amountOut', array('userId' => $this->userId));
+		$amountIn = Game::sum('amountIn', array('userId' => $this->userId));
+		return $amountIn;
 	}
 }
 

@@ -1,0 +1,37 @@
+----GET TOTAL PROFIT
+select SUM(AMOUNT_OUT - AMOUNT_IN)
+from Game
+where USER_ID = 0
+
+--- GET PROFIT BY MONTH FOR A USER_ID
+select extract(month from START_DATE) as mon, extract(year from START_DATE) as year, SUM(AMOUNT_OUT - AMOUNT_IN)
+from Game
+where USER_ID = 0
+group by extract(year from START_DATE), extract(month from START_DATE)
+order by 1, 2;
+
+
+---- GET TOTAL HOURS FOR MONTH
+
+select extract(month from START_DATE) as mon, SUM(extract(hour from cast(END_DATE as timestamp)) - extract(hour from cast(START_DATE as timestamp))) as numhours
+from Game
+where USER_ID = 0
+group by extract(year from START_DATE), extract(month from START_DATE)
+order by 1, 2;
+
+
+---- GET TOTAL MINUTES FOR MONTH
+select extract(month from START_DATE) as mon, SUM(extract(minute from cast(END_DATE as timestamp)) - extract(minute from cast(START_DATE as timestamp))) as numminutes
+from Game
+where USER_ID = 0
+group by extract(year from START_DATE), extract(month from START_DATE)
+order by 1, 2;
+
+
+---- GET TOTAL PROFIT BY DAY OF WEEK
+select to_char(to_date(START_DATE, 'DD/MM/YYYY'), 'DAY'), SUM(AMOUNT_OUT - AMOUNT_IN)
+from Game
+where USER_ID = 0
+group by to_char(to_date(START_DATE, 'DD/MM/YYYY'), 'DAY');
+
+

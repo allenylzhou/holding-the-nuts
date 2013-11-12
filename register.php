@@ -15,13 +15,6 @@
 include 'user_class.php';
 include 'tbs_class.php';
 	
-	echo "Testing if you can load users by passing in an id in constructor...\n";
-	$user1 = new User(1);
-	print("<pre>" . print_r($user1->getProperties(), true) . "</pre>");
-
-	$user2 = new User(2);
-	print("<pre>" . print_r($user2->getProperties(), true) . "</pre>");
-
 	if (!array_key_exists('username', $_POST) && !array_key_exists('password', $_POST)) {
 		
 	}
@@ -32,13 +25,12 @@ include 'tbs_class.php';
 		echo 'Please fill in all of the form please';
 	}
 	else {
-		$connection;
 		try {
 			$username = $_POST['username'];                                        
             $password = User::hash($_POST['password']);
 			
 			$user = new User;
-			$user->setProperties(array(
+			$user->setAttributes(array(
 				'username' => $username,
 				'password' => $password
 			));
