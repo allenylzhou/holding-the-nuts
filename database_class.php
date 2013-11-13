@@ -28,9 +28,6 @@ class DatabaseException extends Exception {
 
 class Database {
 
-	protected static $tableKey;
-	protected static $tableAttributes;
-
 	protected function __construct() {}
 
 	// This function converts COLUMN_NAME into propertyName
@@ -138,16 +135,16 @@ class Database {
 			// Start database connection
 			$connection = static::start();
 
-			$selects = array();
-			$wheres = array();
-			$bindings = array();
-
 			if (empty($q)) {
 				// If no query is provided, select self
 				$keyAttributes = static::$tableKey;
 				$tableAttributes = static::$tableAttributes;
 
 				foreach ($tableAttributes as $table => $attributes) {
+
+					$selects = array();
+					$wheres = array();
+					$bindings = array();
 
 					foreach ($keyAttributes as $name => $domain) {
 						// Add SELECT attributes
@@ -326,7 +323,6 @@ class Database {
 				$wheres = array();
 				$bindings = array();
 
-
 				foreach ($keyAttributes as $name => $domain) {
 					// Add WHERE condition (values substituted by a binding variable placeholder)
 					$columnname = static::underscore($name);
@@ -359,26 +355,27 @@ class Database {
 					}
 				}
 
+				if (count($sets) > 0) {
+					// Implode assignments and conditions into comma separated strings
+					$sets = implode(',', $sets);
+					$wheres = implode(' AND ', $wheres);
 
-				// Implode assignments and conditions into comma separated strings
-				$sets = implode(',', $sets);
-				$wheres = implode(' AND ', $wheres);
+					// Prepare SQL statement
+					$sqlString = "UPDATE $table SET $sets WHERE $wheres";
+					$sqlStatement = oci_parse($connection, $sqlString);
 
-				// Prepare SQL statement
-				$sqlString = "UPDATE $table SET $sets WHERE $wheres";
-				$sqlStatement = oci_parse($connection, $sqlString);
+					// Perform SQL injection (substitute binding variable placeholders with attribute values)
+					foreach ($bindings as $placeholder => $name) {
+						oci_bind_by_name($sqlStatement, $placeholder, $this->{$name});
+					}
 
-				// Perform SQL injection (substitute binding variable placeholders with attribute values)
-				foreach ($bindings as $placeholder => $name) {
-					oci_bind_by_name($sqlStatement, $placeholder, $this->{$name});
-				}
-
-				// Execute SQL statement
-				if (oci_execute($sqlStatement, OCI_NO_AUTO_COMMIT)) {
-					oci_commit($connection);
-				} else {
-					$error = oci_error($sqlStatement);	
-					throw new DatabaseException($error['message'], $error['code'], NULL, $error['sqltext']);
+					//Execute SQL statement
+					if (oci_execute($sqlStatement, OCI_NO_AUTO_COMMIT)) {
+						oci_commit($connection);
+					} else {
+						$error = oci_error($sqlStatement);	
+						throw new DatabaseException($error['message'], $error['code'], NULL, $error['sqltext']);
+					}
 				}
 			}
 		} catch (Exception $exception) {

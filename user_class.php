@@ -29,7 +29,7 @@ class User extends Database {
 		}
 
 		if ($select) {
-			$this->setAttributes($this->load());
+			$this->setAttributes($this->select());
 		}
 	}
 
@@ -94,7 +94,7 @@ class User extends Database {
 	public function getTotalProfit() {
 		$amountOut = Game::sum('amountOut', array('userId' => $this->userId));
 		$amountIn = Game::sum('amountIn', array('userId' => $this->userId));
-		return $amountIn;
+		return $amountOut - $amountIn;
 	}
 }
 
