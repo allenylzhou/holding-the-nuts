@@ -5,7 +5,7 @@ include_once 'database_class.php';
 class BackingAgreement extends Database {
 
 	protected static $tableKey = array(
-		'id' => array('type' => DataType::NUMBER, 'sequence' => 'BACKING_AGREEMENT_SEQUENCE')
+		'ba_id' => array('type' => DataType::NUMBER, 'sequence' => 'BACKING_AGREEMENT_SEQUENCE')
 	);
 
 	protected static $tableAttributes = array(
@@ -19,7 +19,7 @@ class BackingAgreement extends Database {
 		)
 	);
 
-	protected $id;
+	protected $ba_id;
 	protected $horseId;
 	protected $backerId;
 	protected $flatFee;
@@ -41,7 +41,7 @@ class BackingAgreement extends Database {
 		}
 	}
 
-	public function getId() { return $this->id; }
+	public function getId() { return $this->ba_id; }
 	public function getHorseId() { return $this->horseId; }
 	public function getBackerId() { return $this->backerId; }
 	public function getFlatFee() { return $this->flatFee; }
@@ -61,9 +61,10 @@ class BackingAgreement extends Database {
 
 		if ($connection = oci_connect("ora_u4e7", "a71174098", "ug")) {
 			$sqlString = 'SELECT *
-				FROM BACKING_AGREEMENT B
-				WHERE  B.HORSE_ID = (:horseId)
-				ORDER BY B.BACKER_ID ASC';
+				FROM BACKING_AGREEMENT BA, BACKING B
+				WHERE  BA.HORSE_ID = (:horseId)
+				AND BA.BA_ID = B.BA_ID
+				ORDER BY BA.BACKER_ID ASC';
 
 			$sqlStatement = oci_parse($connection, $sqlString);
 			oci_bind_by_name($sqlStatement, ':horseId', $horseId);
@@ -90,7 +91,7 @@ class BackingAgreement extends Database {
 class Backing extends Database {
 
 	protected static $tableKey = array(
-		'id' => array('type' => DataType::NUMBER),
+		'ba_id' => array('type' => DataType::NUMBER),
 		'gsId' => array('type' => DataType::NUMBER)
 	);
 
@@ -98,7 +99,7 @@ class Backing extends Database {
 		'BACKING' => array()
 	);
 
-	protected $id;
+	protected $ba_id;
 	protected $gsId;
 
 	public function __construct ($key = array(), $select = false) {
@@ -115,7 +116,7 @@ class Backing extends Database {
 		}
 	}
 
-	public function getId() { return $this->id; }
+	public function getId() { return $this->ba_id; }
 	public function getGsId() { return $this->gsId; }
 
 	public function setAttributes($attributes) {
