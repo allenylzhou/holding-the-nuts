@@ -11,13 +11,15 @@ class User extends Database {
 	protected static $tableAttributes = array(
 		'USERS' => array(
 			'username' => array('type' => DataType::VARCHAR),
-			'password' => array('type' => DataType::VARCHAR)
+			'password' => array('type' => DataType::VARCHAR),
+			'email' => array('type' => DataType::VARCHAR)
 		)
 	);
 
 	protected $userId;
 	protected $username;
 	protected $password;
+	protected $email;
 
 	public function __construct ($key = array(), $select = false) {
 		parent::__construct();
@@ -35,6 +37,7 @@ class User extends Database {
 
 	public function getUserId() { return $this->userId; }
 	public function getUsername() { return $this->username; }
+	public function getEmail() { return $this->email; }
 
 	public function setAttributes($attributes) {
 		foreach($attributes as $name => $value) {
@@ -83,8 +86,101 @@ class User extends Database {
 		if($connection != null){
 			Database::end($connection);	
 		}
-		
 	}
+	
+	
+	// TODO
+	// WEIRD EMAIL LOGIC IN CASE BACKERS DON'T EXIST
+	public function addBacker($backerId) {
+		try{
+			$connection = Database::start();
+			$sqlString = 'INSERT INTO HORSE_BACKERS (HORSE, BACKER) VALUES (:userId, :backerId);';
+			$stid = oci_parse($connection, $sqlString);
+			oci_bind_by_name($stid, ':userId', $this->userId, 20);
+			oci_bind_by_name($stid, ':backerId', $backerId, 20);
+			oci_execute($stid);
+		}
+		catch (Exception $exception) {
+			if($connection != null){
+				Database::end($connection);	
+			}
+			throw $exception;
+		}
+		if($connection != null){
+			Database::end($connection);	
+		}
+	}
+	
+	// SELECT AND PROJECT
+	public function getBackers() {
+		$backers = array();   
+		try{
+			$connection = Database::start();
+			$sqlString = 'SELECT BACKER as myBackers
+						FROM HORSE_BACKERS
+						WHERE HORSE = :user_id';
+			$stid = oci_parse($connection, $sqlString);
+			oci_bind_by_name($stid, ':user_id', $this->userId, 20);
+			
+			oci_define_by_name($stid, 'myBackers', $backerId);
+			oci_execute($stid);
+			
+			while (oci_fetch($stid)) {
+				if($userid != null){
+					$backers[] = $backerId;
+				}
+			}
+		}
+		catch (Exception $exception) {
+			if($connection != null){
+				Database::end($connection);	
+			}
+			throw $exception;
+		}
+		if($connection != null){
+			Database::end($connection);	
+		}
+		return $backers;
+	}
+	
+	// DIVISION
+	public function getUsersWithSameBackers() {
+		$otherUsers = array();   
+		try{
+			$connection = Database::start();
+			$sqlString = 'select distinct(hb.horse) as otherUser
+							from horse_backers hb
+							where not exists (select distinct(hb1.backer)
+											from horse_backers hb1
+											where hb1.horse = :userId
+											minus
+											select distinct(hb2.backer) 
+											from horse_backers hb2
+											where hb2.horse = hb.horse)';
+			$stid = oci_parse($connection, $sqlString);
+			oci_bind_by_name($stid, ':userId', $this->userId, 20);
+			
+			oci_define_by_name($stid, 'otherUser', $otherUser);
+			oci_execute($stid);
+			
+			while (oci_fetch($stid)) {
+				if($userid != null){
+					$otherUsers[] = $otherUser;
+				}
+			}
+		}
+		catch (Exception $exception) {
+			if($connection != null){
+				Database::end($connection);	
+			}
+			throw $exception;
+		}
+		if($connection != null){
+			Database::end($connection);	
+		}
+		return $otherUser;
+	}
+	
 	
 	public static function hash($p){
 		$input=iconv('UTF-8','UTF-16LE',$p);

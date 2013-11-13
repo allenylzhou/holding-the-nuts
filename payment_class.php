@@ -7,9 +7,8 @@ class PaymentPart extends Database {
 	// This maps model properties to database
 	protected static $tableSchemas = array(
 		'GAME' => array(
-			'ID' => 'ID',
+			'ppID' => 'PP_ID',
 			'gsId' => 'GS_ID',
-			'paymentSubpart' => 'PAYMENT_SUBPART',
 			'amount' => 'AMOUNT'
 		)
 	);
@@ -20,7 +19,7 @@ class PaymentPart extends Database {
 		parent::__construct();
 	}
 
-	protected $ID;
+	protected $ppID;
 	protected $gsId;
 	protected $paymentSubpart;
 	protected $amount;
@@ -32,7 +31,7 @@ class PaymentPart extends Database {
 	}
 
 	public function save() {
-		if (isset($this->ID)) {
+		if (isset($this->ppID)) {
 			$this->update();
 		} else {
 			$this->insert();
