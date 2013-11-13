@@ -35,3 +35,44 @@ where USER_ID = 0
 group by to_char(to_date(START_DATE, 'DD/MM/YYYY'), 'DAY');
 
 
+---- NESTED AGGREGATE
+---- GET BEST AVERAGE DAY OF THE WEEK FOR BETTING
+WITH USER_WINNING_ON_DAY AS (
+	SELECT to_char(to_date(START_DATE, 'DD/MM/YYYY'), 'DAY') AS DAY_OF_WEEK,
+        AVG(AMOUNT_OUT-AMOUNT_IN) as WINNINGS
+	FROM   GAME
+	WHERE  USER_ID = :userId
+	GROUP BY to_char(to_date(START_DATE, 'DD/MM/YYYY'), 'DAY'))
+SELECT DAY_OF_WEEK, WINNINGS
+FROM   USER_WINNING_ON_DAY
+WHERE  WINNINGS >= ALL (SELECT MAX(A.WINNINGS)
+						FROM USER_WINNING_ON_DAY A)
+
+		
+---- NESTED AGGREGATE				
+---- GET BEST DAY SO FAR
+WITH USER_WINNING_ON_DAY AS (
+  SELECT TRUNC(START_DATE) AS GAME_DAY,
+		 AVG(AMOUNT_OUT-AMOUNT_IN) as WINNINGS
+  FROM   GAME
+  WHERE  USER_ID = :userId
+  GROUP BY TRUNC(START_DATE))
+SELECT GAME_DAY, WINNINGS
+FROM   USER_WINNING_ON_DAY
+WHERE  WINNINGS >= ALL (SELECT MAX(A.WINNINGS)
+						FROM USER_WINNING_ON_DAY A)
+						
+						
+---- DIVSION		
+---- GET PEOPLE WHO HAVE THE SAME BACKER
+select distinct(hb.horse) as otherUser
+from horse_backers hb
+where not exists (select distinct(hb1.backer)
+				from horse_backers hb1
+				where hb1.horse = :userId
+				minus
+				select distinct(hb2.backer) 
+				from horse_backers hb2
+				where hb2.horse = hb.horse)
+
+

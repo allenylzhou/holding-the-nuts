@@ -37,11 +37,11 @@ class Statistics extends Database{
 		try{
 			$connection = Database::start();
 			$sqlString = "WITH USER_WINNING_ON_DAY AS (
-							  SELECT TRUNC(START_DATE) - TRUNC(START_DATE, 'D') AS DAY_OF_WEEK,
+							  SELECT to_char(to_date(START_DATE, 'DD/MM/YYYY'), 'DAY') AS DAY_OF_WEEK,
                                      AVG(AMOUNT_OUT-AMOUNT_IN) as WINNINGS
 							  FROM   GAME
 							  WHERE  USER_ID = :userId
-							  GROUP BY TRUNC(START_DATE) - TRUNC(START_DATE, 'D'))
+							  GROUP BY to_char(to_date(START_DATE, 'DD/MM/YYYY'), 'DAY'))
 							SELECT DAY_OF_WEEK, WINNINGS
 							FROM   USER_WINNING_ON_DAY
 							WHERE  WINNINGS >= ALL (SELECT MAX(A.WINNINGS)
