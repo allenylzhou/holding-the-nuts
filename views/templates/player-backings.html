@@ -1,0 +1,80 @@
+<html>
+<body>
+
+<h2>Function 2: Create Game Session</h2>
+<form method="POST" action="">
+	<label>GS_TYPE:</label>
+	<select name="gsType">
+		<option value="cash">Cash</option>
+		<option value="tournament">Tournament</option>
+	</select><br/>
+
+	<label>START_TIME:</label>
+	<input type="date" name="startDate"><br/>
+
+	<label>END_TIME:</label>
+	<input type="date" name="endDate"><br/>
+
+	<label>AMOUNT_IN:</label>
+	<input type="text" name="amountIn" value="0" size="1"><br/>
+
+	<label>AMOUNT_OUT:</label>
+	<input type="text" name="amountOut" value="0" size="1"><br/>
+
+	<input type="submit" value="Create" name="create">
+</form>
+
+<h2> Function 3: Create a Backing</h2>
+<form method="POST" action="">
+	<label>HORSE ID: </label>
+	<input type="text" name="horse" value="" size="18"><br/>
+	<label>BACKER ID: </label>
+	<input type="text" name="backer" value="" size="18"><br/>
+	<label>BACKING_PERCENTAGE: </label>
+	<input type="text" name="percentage" value="" size="5"><br/>
+	
+	<input type="submit" value="Create Backing" name="create_backing">
+</form>
+
+
+
+<table>
+	<tr style="background-color:#CACACA">
+		<td><strong>Start Date</strong></td>
+		<td><strong>Start Time</strong></td>
+		<td><strong>End Time</strong></td>
+		<td><strong>Buy In</strong></td>
+		<td><strong>Buy Out</strong></td>
+		<td><strong>Location</strong></td>
+		<td><strong>Big Blind</strong></td>
+		<td><strong>Small Blind</strong></td>
+	</tr>
+	<tr style="background-color:#F0F0F0">
+		<td>[activeGames.START_DATE;block=tr;frm='mmm dd yyyy']</td>
+		<td>[activeGames.START_DATE;frm='hh:nn:ss']</td>
+		<td>[activeGames.END_DATE;frm='hh:nn:ss']</td>
+		<td>[activeGames.AMOUNT_IN;frm='$ 0,000.00']</td>
+		<td>[activeGames.AMOUNT_OUT;frm='$ 0,000.00']</td>
+		<td>[activeGames.LOCATION_NAME;frm='$ 0,000.00']</td>
+		<td>[activeGames.BIG_BLIND]</td>
+		<td>[activeGames.SMALL_BLIND]</td>
+	</tr>
+	<tr style="background-color:#E6E6E6">
+		<td>[activeGames.START_DATE;block=tr;frm='mmm dd yyyy']</td>
+		<td>[activeGames.START_DATE;frm='hh:nn:ss']</td>
+		<td>[activeGames.END_DATE;frm='hh:nn:ss']</td>
+		<td>[activeGames.AMOUNT_IN;frm='$ 0,000.00']</td>
+		<td>[activeGames.AMOUNT_OUT;frm='$ 0,000.00']</td>
+		<td>[activeGames.LOCATION_NAME;frm='$ 0,000.00']</td>
+		<td>[activeGames.BIG_BLIND]</td>
+		<td>[activeGames.SMALL_BLIND]</td>
+	</tr>
+
+	<tr style="background-color:#FFCFB9">
+		[activeGames;block=tr;nodata]
+		<td colspan="7">No history available.</td>
+	</tr>
+</table>
+
+</body>
+</html>

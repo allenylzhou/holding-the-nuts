@@ -7,6 +7,8 @@ include 'backing_class.php';
 include 'location_class.php';
 
 $guest = new User(array('userId'=>0), true);
+//echo $guest->getUsername();
+
 $guest->login();
 
 if (isset($_SESSION['USER'])) {
@@ -19,10 +21,26 @@ if (isset($_SESSION['USER'])) {
 	$finishedGames = CashGame::loadFinishedGames($user->getUserId());
 
 	$TBS = new clsTinyButStrong;
-	$TBS->LoadTemplate('cash-games.html');
+	$TBS->LoadTemplate('views/templates/cash-games.html');
 	$TBS->MergeBlock('activeGames', $activeGames);
 	$TBS->MergeBlock('finishedGames', $finishedGames);
 	$TBS->Show();
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 } else {
 	//header('Location: ./register.php');
 }

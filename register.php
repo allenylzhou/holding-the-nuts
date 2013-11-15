@@ -50,7 +50,7 @@ include 'tbs_class.php';
 			$user->login();
 			echo 'Registration successful';
 		}
-		catch (ErrorCodeException $exception) {
+		catch (DatabaseException $exception) {
 			switch ($exception->getErrorCode()) {
 				case 1:
 					echo "This username has already been claimed.";
