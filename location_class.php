@@ -44,6 +44,32 @@ class Location extends Database {
 			}
 		}
 	}
+
+	public static function loadLocationsByUserId($userId) {
+		$results = array();
+		$connection = static::start();
+
+		$sqlString = "SELECT *
+				FROM LOCATION
+				WHERE USER_ID = (:userId)
+				ORDER BY NAME ASC";
+
+		$sqlStatement = oci_parse($connection, $sqlString);
+		oci_bind_by_name($sqlStatement, ':userId', $userId);
+
+		if(oci_execute($sqlStatement)) {
+			while ($row = oci_fetch_assoc($sqlStatement)) {
+				array_push($results, $row);
+			}
+		}
+		static::end($connection);
+
+		return $results;
+	}
+
+	public static function loadFavouriteLocationsByUserId($userId) {
+		
+	}
 }
 
 ?>

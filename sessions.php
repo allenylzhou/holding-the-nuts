@@ -21,7 +21,7 @@ if (isset($_SESSION['USER'])) {
 	$finishedGames = CashGame::loadFinishedGames($user->getUserId());
 
 	$TBS = new clsTinyButStrong;
-	$TBS->LoadTemplate('views/templates/cash-games.html');
+	$TBS->LoadTemplate('views/templates/cash-sessions.html');
 	$TBS->MergeBlock('activeGames', $activeGames);
 	$TBS->MergeBlock('finishedGames', $finishedGames);
 	$TBS->Show();

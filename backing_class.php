@@ -56,34 +56,50 @@ class BackingAgreement extends Database {
 			}
 		}
 	}
-	
-	public static function loadSavedBackings($horseId) {
 
-		if ($connection = oci_connect("ora_u4e7", "a71174098", "ug")) {
-			$sqlString = 'SELECT *
-				FROM BACKING_AGREEMENT BA, BACKING B
-				WHERE  BA.HORSE_ID = (:horseId)
-				AND BA.baId = B.baId
-				ORDER BY BA.BACKER_ID ASC';
+	public static function loadBackersByHorseId($userId) {
+		$results = array();
+		$connection = static::start();
 
-			$sqlStatement = oci_parse($connection, $sqlString);
-			oci_bind_by_name($sqlStatement, ':horseId', $horseId);
+		$sqlString = "SELECT *
+				FROM BACKING_AGREEMENT BA, USERS U
+				WHERE BA.HORSE_ID = U.USER_ID AND U.USER_ID = (:userId)
+				ORDER BY U.USERNAME ASC";
 
-			oci_execute($sqlStatement);
+		$sqlStatement = oci_parse($connection, $sqlString);
+		oci_bind_by_name($sqlStatement, ':userId', $userId);
 
-			$returnData = array();
-			while ($row = oci_fetch_array($sqlStatement)) {
-
-				array_push($returnData, $row);
+		if(oci_execute($sqlStatement)) {
+			while ($row = oci_fetch_assoc($sqlStatement)) {
+				array_push($results, $row);
 			}
-		  	OCILogoff($connection);
-
-		} else {
-		  //$err = OCIError();
-		  //echo "Oracle Connect Error " . $err['message'];
 		}
+		static::end($connection);
 
-		return $returnData;
+		return $results;
+	}
+	
+	public static function loadBackingsByHorseId($userId) {
+		$results = array();
+		$connection = static::start();
+
+		$sqlString = 'SELECT *
+			FROM BACKING_AGREEMENT BA, BACKING B
+			WHERE  BA.HORSE_ID = (:userId)
+			AND BA.baId = B.baId
+			ORDER BY BA.BACKER_ID ASC';
+
+		$sqlStatement = oci_parse($connection, $sqlString);
+		oci_bind_by_name($sqlStatement, ':userId', $userId);
+
+		if(oci_execute($sqlStatement)) {
+			while ($row = oci_fetch_assoc($sqlStatement)) {
+				array_push($results, $row);
+			}
+		}
+		static::end($connection);
+
+		return $results;
 	}
 
 }

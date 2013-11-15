@@ -1,8 +1,0 @@
-<html>
-<body>
-<h1>Statistics</h1>
-
-
-
-</body>
-</html>
