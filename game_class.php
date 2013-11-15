@@ -64,8 +64,6 @@ abstract class Game extends Database {
 		$sqlStatement = oci_parse($connection, $sqlString);
 		oci_bind_by_name($sqlStatement, ':userId', $userId);
 
-		echo $sqlString;
-
 		if(oci_execute($sqlStatement)) {
 			while ($row = oci_fetch_assoc($sqlStatement)) {
 				array_push($results, $row);
@@ -112,7 +110,7 @@ class CashGame extends Game {
 		return static::loadGames($userId, 'GAME_CASH', true);
 	}
 
-	public static function loadFinishedGames() {
+	public static function loadFinishedGames($userId) {
 		return static::loadGames($userId, 'GAME_CASH');
 	}
 }
@@ -121,7 +119,7 @@ class TournamentGame extends Game {
 
 	protected static $tableAttributes = array(
 		'GAME_TOURNAMENT' => array(
-			'placeFinished' => array('type' => DataType::NUMBER)
+			'placedFinished' => array('type' => DataType::NUMBER)
 		)
 	);
 
