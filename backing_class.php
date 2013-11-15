@@ -5,7 +5,7 @@ include_once 'database_class.php';
 class BackingAgreement extends Database {
 
 	protected static $tableKey = array(
-		'ba_id' => array('type' => DataType::NUMBER, 'sequence' => 'BACKING_AGREEMENT_SEQUENCE')
+		'baId' => array('type' => DataType::NUMBER, 'sequence' => 'BACKING_AGREEMENT_SEQUENCE')
 	);
 
 	protected static $tableAttributes = array(
@@ -19,7 +19,7 @@ class BackingAgreement extends Database {
 		)
 	);
 
-	protected $ba_id;
+	protected $baId;
 	protected $horseId;
 	protected $backerId;
 	protected $flatFee;
@@ -41,7 +41,7 @@ class BackingAgreement extends Database {
 		}
 	}
 
-	public function getId() { return $this->ba_id; }
+	public function getId() { return $this->baId; }
 	public function getHorseId() { return $this->horseId; }
 	public function getBackerId() { return $this->backerId; }
 	public function getFlatFee() { return $this->flatFee; }
@@ -63,7 +63,7 @@ class BackingAgreement extends Database {
 			$sqlString = 'SELECT *
 				FROM BACKING_AGREEMENT BA, BACKING B
 				WHERE  BA.HORSE_ID = (:horseId)
-				AND BA.BA_ID = B.BA_ID
+				AND BA.baId = B.baId
 				ORDER BY BA.BACKER_ID ASC';
 
 			$sqlStatement = oci_parse($connection, $sqlString);
@@ -91,7 +91,7 @@ class BackingAgreement extends Database {
 class Backing extends Database {
 
 	protected static $tableKey = array(
-		'ba_id' => array('type' => DataType::NUMBER),
+		'baId' => array('type' => DataType::NUMBER),
 		'gsId' => array('type' => DataType::NUMBER)
 	);
 
@@ -99,7 +99,7 @@ class Backing extends Database {
 		'BACKING' => array()
 	);
 
-	protected $ba_id;
+	protected $baId;
 	protected $gsId;
 
 	public function __construct ($key = array(), $select = false) {
@@ -116,7 +116,7 @@ class Backing extends Database {
 		}
 	}
 
-	public function getId() { return $this->ba_id; }
+	public function getId() { return $this->baId; }
 	public function getGsId() { return $this->gsId; }
 
 	public function setAttributes($attributes) {

@@ -2,26 +2,26 @@
 
 include_once 'database_class.php';
 	
-class PaymentPart extends Database {
+class Payment extends Database {
 
 	// This maps model properties to database
 	protected static $tableSchemas = array(
-		'GAME' => array(
-			'ppID' => 'PP_ID',
-			'gsId' => 'GS_ID',
+			'ppId' => 'PP_ID',
+			'payerId' => 'PAYER_ID',
+			'payeeId' => 'PAYEE_ID',
+			'paymentDate' => 'PAYMENT_DATE',
 			'amount' => 'AMOUNT'
 		)
 	);
-
-	protected static $tableSequencer = 'PAYMENT_PART_SEQUENCE';
 
 	protected function __construct () {
 		parent::__construct();
 	}
 
-	protected $ppID;
-	protected $gsId;
-	protected $paymentSubpart;
+	protected $ppId;
+	protected $payerId;
+	protected $payeeId;
+	protected $paymentDate;
 	protected $amount;
 
 	public function setProperties($properties) {
@@ -31,7 +31,7 @@ class PaymentPart extends Database {
 	}
 
 	public function save() {
-		if (isset($this->ppID)) {
+		if (isset($this->ppId)) {
 			$this->update();
 		} else {
 			$this->insert();
