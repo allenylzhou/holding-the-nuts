@@ -2,14 +2,13 @@
 
 include_once 'database_class.php';
 	
-class PaymentPart extends Database {
+class Payment extends Database {
 
 	// This maps model properties to database
 	protected static $tableSchemas = array(
-		'GAME' => array(
-			'baId' => 'BA_ID',
-			'gsId' => 'GS_ID',
-			'paymentSubpart' => 'PAYMENT_SUBPART',
+			'ppId' => 'PP_ID',
+			'payerId' => 'PAYER_ID',
+			'payeeId' => 'PAYEE_ID',
 			'paymentDate' => 'PAYMENT_DATE',
 			'amount' => 'AMOUNT'
 		)
@@ -19,9 +18,9 @@ class PaymentPart extends Database {
 		parent::__construct();
 	}
 
-	protected $baId;
-	protected $gsId;
-	protected $paymentSubpart;
+	protected $ppId;
+	protected $payerId;
+	protected $payeeId;
 	protected $paymentDate;
 	protected $amount;
 
@@ -32,7 +31,7 @@ class PaymentPart extends Database {
 	}
 
 	public function save() {
-		if (isset($this->baId)) {
+		if (isset($this->ppId)) {
 			$this->update();
 		} else {
 			$this->insert();
