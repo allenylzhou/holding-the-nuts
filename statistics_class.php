@@ -2,9 +2,9 @@
 
 <?php
 
-include 'database_class.php';
+include_once 'database_class.php';
 
-class Statistics extends Database{
+class Statistics {
 
 	public static function getAverageCashBuyIn($userId){
 		if ($connection = oci_connect("ora_u4e7", "a71174098", "ug")){
@@ -14,7 +14,6 @@ class Statistics extends Database{
 		
 			$sqlStatement = oci_parse($connection, $sqlString);
 			oci_bind_by_name($sqlStatement, ':userId', $userId);
-			s
 			oci_execute($sqlStatement);
 			
 			$returnData = array();
@@ -71,7 +70,7 @@ class Statistics extends Database{
 	*/
 	
 	// NESTED AGGREGATE
-	public function getBestPerformingDay($userId) {
+	public static function getBestPerformingDay($userId) {
 		$day = array();
 		try{
 			$connection = Database::start();
@@ -107,8 +106,6 @@ class Statistics extends Database{
 		}
 		return $day;
 	}
-
-
 
 }
 

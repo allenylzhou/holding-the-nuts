@@ -47,11 +47,11 @@ class Database {
 	    return strtoupper(implode('_', $words));
 	}
 
-	protected static function start(){
+	public static function start(){
 		return oci_connect(constant('USERNAME'), constant('PASSWORD'), constant('DATABASE'));
 	}
 
-	protected static function end($c){
+	public static function end($c){
 		oci_close($c);
 	}
 
@@ -172,8 +172,11 @@ class Database {
 
 					// Execute SQL statement
 					if (oci_execute($sqlStatement)) {
-						foreach (oci_fetch_assoc($sqlStatement) as $key => $value) {
-							$results[static::camelize($key)] = $value;
+						$result = oci_fetch_array($sqlStatement);
+						if($result) {
+							foreach ($result as $key => $value) {
+								$results[static::camelize($key)] = $value;
+							}
 						}
 					} else {
 						$error = oci_error($sqlStatement);	

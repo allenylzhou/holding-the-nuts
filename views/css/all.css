@@ -48,11 +48,9 @@ body {
 	font-size: 18px;
 }
 
-
 #appMenu li{
 	list-style-type: none;
 }
-
 
 #appView {
 	margin:0;
@@ -62,6 +60,10 @@ body {
 	min-height: 768px;
 	border: #CCCCCC;
 	background-color: white;
+}
+
+#appView .content{
+	padding: 10px;
 }
 
 #newSessionForm h1{
