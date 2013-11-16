@@ -39,7 +39,7 @@ else {
 		//$user->register();
 		$user->save();
 		$user->login();
-		echo 'Registration successful';
+		$error[] = 'Registration successful';
 	}
 	catch (DatabaseException $exception) {
 		switch ($exception->getErrorCode()) {
@@ -58,7 +58,7 @@ else {
 
 $TBS = new clsTinyButStrong;
 $TBS->LoadTemplate('views/templates/app-container.html');
-$TBS->MergeBlock('registrationErrors', $error);
+$TBS->MergeBlock('messages', $error);
 $TBS->Show();
 
 ?>
