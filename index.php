@@ -1,4 +1,11 @@
-<html>
+<?php
+
+include "error_reporting.php";
+
+?>
+
+
+<!-- <html>
 <body>
 <h1>Track your Poker Sessions</h1>
 
@@ -12,4 +19,4 @@
 </ol>
 	
 </body>
-</html>
+</html> -->
