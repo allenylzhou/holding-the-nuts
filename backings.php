@@ -5,7 +5,7 @@ include 'tbs_class.php';
 
 include 'user_class.php';
 
-$template = "views/templates/player-statistics.html";
+$template = "views/templates/player-backings.html";
 
 $TBS = new clsTinyButStrong;
 $TBS->LoadTemplate('views/templates/app-container.html');

@@ -6,6 +6,8 @@ include 'game_class.php';
 include 'backing_class.php';
 include 'location_class.php';
 
+$template = 'views/templates/cash-sessions.html';
+
 $guest = new User(array('userId'=>0), true);
 //echo $guest->getUsername();
 
@@ -21,23 +23,10 @@ if (isset($_SESSION['USER'])) {
 	$finishedGames = CashGame::loadFinishedGames($user->getUserId());
 
 	$TBS = new clsTinyButStrong;
-	$TBS->LoadTemplate('views/templates/cash-sessions.html');
+	$TBS->LoadTemplate('views/templates/app-container.html');
 	$TBS->MergeBlock('activeGames', $activeGames);
 	$TBS->MergeBlock('finishedGames', $finishedGames);
 	$TBS->Show();
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

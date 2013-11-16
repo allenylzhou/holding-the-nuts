@@ -9,10 +9,13 @@ body {
 }
 
 #appHeader h1 {
+	color: white;
+	text-shadow: 2px 2px #000000;
 	margin: 10px 0px;
+	padding: 10px;
 	text-align: center;
-	border: 20px groove red;
-	background-color: green;
+	border: 20px groove #003300;
+	background-color: #003300;
 }
 
 #appMenu {
