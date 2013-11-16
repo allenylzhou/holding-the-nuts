@@ -24,6 +24,7 @@ class DatabaseException extends Exception {
 	}
 
 	public function getStatement() {return $this->statement;}
+	public function getErrorCode() {return $this->code;}
 }
 
 class Database {
