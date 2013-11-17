@@ -25,11 +25,14 @@ if (isset($_SESSION['USER'])) {
 	$tempMinutes = array_values($totalMinutesPlayed[0]);
 	
 	$totalHours = ($tempHours[0] * 60 + $tempMinutes[0]) / 60;
+	$totalHours = number_format((float)$totalHours, 2, '.', '');
 	
 	
 	$hourly = $totalProfit / $totalHours;
+	$hourly = number_format((float)$hourly, 2, '.', '');
 	
 	$averageBuyin = Statistics::getAverageCashBuyIn($user->getUserId());
+	$averageBuyin = number_format((float)$averageBuyin, 2, '.', '');
 	$bestPerformingDay = Statistics::getBestPerformingDay($user->getUserId());
 	$profitByMonths = Statistics::getProfitByMonth($user->getUserId());
 	$profitByDay = Statistics::getProfitByDayOfWeek($user->getUserId());
