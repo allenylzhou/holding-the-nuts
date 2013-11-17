@@ -18,13 +18,29 @@ if (isset($_SESSION['USER'])) {
 	$user = $_SESSION['USER'];
 
 	$totalProfit = $user->getTotalProfit();
+	$totalHoursPlayed = Statistics::getTotalHoursPlayed($user->getUserId());
+	$totalMinutesPlayed = Statistics::getTotalMinutesPlayed($user->getUserId());
+	
+	$tempHours = array_values($totalHoursPlayed[0]);
+	$tempMinutes = array_values($totalMinutesPlayed[0]);
+	
+	$totalHours = ($tempHours[0] * 60 + $tempMinutes[0]) / 60;
+	
+	
+	$hourly = $totalProfit / $totalHours;
 	
 	$averageBuyin = Statistics::getAverageCashBuyIn($user->getUserId());
 	$bestPerformingDay = Statistics::getBestPerformingDay($user->getUserId());
+	$profitByMonths = Statistics::getProfitByMonth($user->getUserId());
+	$profitByDay = Statistics::getProfitByDayOfWeek($user->getUserId());
+
 
 	$TBS = new clsTinyButStrong;
 	$TBS->LoadTemplate('views/templates/app-container.html');
+	$TBS->MergeBlock('totalHours', $totalHoursPlayed);
 	$TBS->MergeBlock('bestPerformingDays', $bestPerformingDay);
+	$TBS->MergeBlock('profitByMonth', $profitByMonths );
+	$TBS->MergeBlock('profitByDOW',$profitByDay);
 	$TBS->Show();
 } else {
 	header('Location: ./login.php?redirect=1');

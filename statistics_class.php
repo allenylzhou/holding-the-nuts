@@ -108,6 +108,114 @@ class Statistics {
 		return $day;
 	}
 
+	public static function getProfitByMonth($userId){
+		$months = array();		
+		try{
+			$connection = Database::start();
+			$sqlString = "SELECT to_char(to_date(START_DATE, 'DD/MM/YYYY'), 'MONTH') as mon, extract(year from START_DATE) as year, SUM(AMOUNT_OUT - AMOUNT_IN) as am 
+				 	FROM Game 
+					where USER_ID = :userId
+					group by extract(year from START_DATE), to_char(to_date(START_DATE, 'DD/MM/YYYY'), 'MONTH')
+					order by 1, 2";
+			$stid = oci_parse($connection, $sqlString);
+			oci_bind_by_name($stid, ':userId', $userId, 20);
+
+			if (oci_execute($stid)) {
+				while ($row = oci_fetch_assoc($stid)) {
+					array_push($months, $row);
+				}
+			}
+		}
+		catch (Exception $exception) {
+			if($connection != null){
+				Database::end($connection);	
+			}
+			throw $exception;
+		}
+		return $months;
+	}
+
+	public static function getTotalHoursPlayed($userId){
+		try{
+			$connection = Database::start();
+			$sqlString = "select SUM(extract(hour from cast(END_DATE as timestamp)) - extract(hour from cast(START_DATE as timestamp))) as numhours
+					from Game
+					where USER_ID = :userId";
+			$stid = oci_parse($connection, $sqlString);
+			oci_bind_by_name($stid, ':userId', $userId, 20);
+			oci_execute($stid);
+			
+			$hours = array();
+			while ($row = oci_fetch_array($stid)) {
+				array_push($hours, $row);
+			}
+		}
+		catch (Exception $exception) {
+			if($connection != null){
+				Database::end($connection);	
+			}
+			throw $exception;
+		}
+		if($connection != null){
+			Database::end($connection);	
+		}
+		return $hours;
+	}
+	
+	public static function getTotalMinutesPlayed($userId){
+		try{
+			$connection = Database::start();
+			$sqlString = "select SUM(extract(minute from cast(END_DATE as timestamp)) - extract(minute from cast(START_DATE as timestamp))) as numminutes
+					from Game
+					where USER_ID = :userId";
+			$stid = oci_parse($connection, $sqlString);
+			oci_bind_by_name($stid, ':userId', $userId, 20);
+			oci_execute($stid);
+			
+			$minutes = array();
+			while ($row = oci_fetch_array($stid)) {
+				array_push($minutes, $row);
+			}
+		}
+		catch (Exception $exception) {
+			if($connection != null){
+				Database::end($connection);	
+			}
+			throw $exception;
+		}
+		if($connection != null){
+			Database::end($connection);	
+		}
+		return $minutes;
+
+	}
+	public static function getProfitByDayOfWeek($userId){
+		$results = array();		
+		try{
+			$connection = Database::start();
+			$sqlString = "select to_char(to_date(START_DATE, 'DD/MM/YYYY'), 'DAY') as day, SUM(AMOUNT_OUT - AMOUNT_IN) as amount
+					from Game
+					where USER_ID = :userId
+					group by to_char(to_date(START_DATE, 'DD/MM/YYYY'), 'DAY')";
+			$stid = oci_parse($connection, $sqlString);
+			oci_bind_by_name($stid, ':userId', $userId, 20);
+
+			if (oci_execute($stid)) {
+				while ($row = oci_fetch_assoc($stid)) {
+					array_push($results, $row);
+				}
+			}
+		}
+		catch (Exception $exception) {
+			if($connection != null){
+				Database::end($connection);	
+			}
+			throw $exception;
+		}
+		return $results;
+
+	}
+
 }
 
 ?>
