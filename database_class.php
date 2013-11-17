@@ -473,6 +473,9 @@ class Database {
 			// Try insert
 			$this->insert();
 		} catch (Exception $exception) {		
+			throw $exception;
+			// it is not always necessary the case that it should auto update when a constraint is violated.
+			// eg: when a username is taken
 			if($exception instanceof DatabaseException && $exception->getCode() == 1) {
 				// If unique constraint is violated, try update
 				try {

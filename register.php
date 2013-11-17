@@ -36,23 +36,26 @@ else {
 			'email' => $email
 		));
 		
-		//$user->register();
 		$user->save();
 		$user->login();
 		$error[] = 'Registration successful';
 	}
 	catch (DatabaseException $exception) {
+		echo $exception->getMessage();
 		switch ($exception->getErrorCode()) {
 			case 1:
-				$error[] =  "This username has already been claimed.";
+				$error[] =  "This username has already been claimed, or the email has already been claimed";
 				break;
 			case 2290:
-				$error[] =  "Your username is invalid, or your email is already being used";
+				$error[] =  "Your username is invalid, or your email is invalid";
 				break;
 			default:
 				$error[] =  "An unknown error has occured";
 				break;
 		}
+	}
+	catch (Exception $exception) {
+		$error[] = $exception->getMessage();
 	}
 }
 
