@@ -7,27 +7,30 @@ include_once 'database_class.php';
 class Statistics {
 
 	public static function getAverageCashBuyIn($userId){
-		if ($connection = oci_connect("ora_u4e7", "a71174098", "ug")){
-			$sqlString = 'SELECT AVG(AMOUNT_IN) as AMOUNT
+		$val;
+		try{
+			$connection = Database::start();
+				$sqlString = 'SELECT AVG(AMOUNT_IN) as AMOUNT
 				FROM Game G, Game_Cash C
 				Where G.gs_id = C.gs_id And G.user_id = (:userID)';
-		
 			$sqlStatement = oci_parse($connection, $sqlString);
 			oci_bind_by_name($sqlStatement, ':userId', $userId);
 			oci_execute($sqlStatement);
-			
-			$returnData = array();
+
 			while($row = oci_fetch_array($sqlStatement)){
-			
-				array_push($returnData, $row);
+				$val = $row['AMOUNT'];
 			}
-			OCILogoff($connection);
-		}else{
-			$err = OCIError();
-			echo "Oracle Connect Error " . $err['message'];
-			
 		}
-		return $returnData;
+		catch (Exception $exception) {
+			if($connection != null){
+				Database::end($connection);	
+			}
+			throw $exception;
+		}
+		if($connection != null){
+			Database::end($connection);	
+		}
+		return $val;
 	}
 	
 	/* may or may not keep
@@ -71,7 +74,6 @@ class Statistics {
 	
 	// NESTED AGGREGATE
 	public static function getBestPerformingDay($userId) {
-		$day = array();
 		try{
 			$connection = Database::start();
 			$sqlString = "WITH USER_WINNING_ON_DAY AS (
@@ -86,13 +88,12 @@ class Statistics {
 													FROM USER_WINNING_ON_DAY A)";
 			$stid = oci_parse($connection, $sqlString);
 			oci_bind_by_name($stid, ':userId', $userId, 20);
-			
-			oci_define_by_name($stid, 'GAME_DAY', $day);
-			oci_define_by_name($stid, 'WINNINGS', $winnings);
 			oci_execute($stid);
 			
-			while (oci_fetch($stid)) {
-				$day[((string) $day)] = $winnings; 
+			$day = array();
+			while ($row = oci_fetch_array($stid)) {
+				$val = $row['GAME_DAY'];
+				array_push($day, $val);
 			}
 		}
 		catch (Exception $exception) {

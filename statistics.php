@@ -24,6 +24,7 @@ if (isset($_SESSION['USER'])) {
 
 	$TBS = new clsTinyButStrong;
 	$TBS->LoadTemplate('views/templates/app-container.html');
+	$TBS->MergeBlock('bestPerformingDays', $bestPerformingDay);
 	$TBS->Show();
 } else {
 	header('Location: ./login.php?redirect=1');
