@@ -2,12 +2,27 @@
 	<h1>Statistics</h1>
 	<ul>
 		<li>Total Profit: $[var.totalProfit]</li>
-		<li>Average Buyin: [var.averageBuyin]</li>
+		<li>Total Hours Played: [var.totalHours]</li>
+		<li>Hourly: $[var.hourly]</li> 
+		<li>Average Buyin: $[var.averageBuyin]</li>
 		<li>Best Performing Days: <ul>
 									<li>
 										[bestPerformingDays.val;block=li;]
 									</li>
 								</ul>
 		</li>
+		<li>Profit By Month:<ul>
+			<li>
+				[profitByMonth.MON;block=li;]/[profitByMonth.YEAR;block=li] = [profitByMonth.AM;block=li]
+			</li>
+			</ul>
+		</li>
+		<li>Profit By Day Of Week:<ul>
+			<li>
+				[profitByDOW.DAY;block=li;] = [profitByDOW.AMOUNT;block=li]
+			</li>
+			</ul>
+		</li>
+		
 	</ul>
 </div>
