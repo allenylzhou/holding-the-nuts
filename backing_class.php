@@ -61,17 +61,30 @@ class BackingAgreement extends Database {
 		$results = array();
 		$connection = static::start();
 
-		$sqlString = "SELECT HB.BACKER AS BACKER_ID
-				FROM HORSE_BACKERS HB, USERS U
-				WHERE HB.HORSE = U.USER_ID AND U.USER_ID = (:userId)
-				ORDER BY U.USERNAME ASC";
+		$sqlString = "WITH OWES AS(
+						SELECT DECODE(DS.HORSE_ID, U.USER_ID, DS.BACKER_ID, DS.HORSE_ID) AS OTHER_USER,
+							   SUM(DECODE(DS.HORSE_ID, U.USER_ID, DS.OWED - DS.PAYED, DS.PAYED - DS.OWED)) AS OWED
+						FROM V_DEBT_STATUS DS,USERS U
+						WHERE (DS.HORSE_ID = U.USER_ID OR DS.BACKER_ID = U.USER_ID)
+						AND U.USER_ID = :userId
+						GROUP BY DECODE(DS.HORSE_ID, U.USER_ID, DS.BACKER_ID, DS.HORSE_ID)
+					)
+					SELECT u.user_id as BACKER_ID, u.username AS USERNAME, O.OWED AS OWED
+					FROM HORSE_BACKERS HB, OWES O, users U
+					WHERE HB.HORSE = :userId
+					and u.user_id = hb.backer
+					and HB.BACKER = O.OTHER_USER (+)";
 
 		$sqlStatement = oci_parse($connection, $sqlString);
 		oci_bind_by_name($sqlStatement, ':userId', $userId);
 
 		if(oci_execute($sqlStatement)) {
 			while ($row = oci_fetch_assoc($sqlStatement)) {
-				array_push($results, $row);
+				$rowTemp = array();
+				$rowTemp['BACKER_ID'] = $row['BACKER_ID'];
+				$rowTemp['USERNAME'] = $row['USERNAME'];
+				$rowTemp['OWED'] = $row['OWED'];
+				$results[] = $rowTemp;
 			}
 		}
 		static::end($connection);
@@ -79,15 +92,21 @@ class BackingAgreement extends Database {
 		return $results;
 	}
 	
-	public static function loadBackingsByHorseId($userId) {
+	public static function loadBackingAgreementsByHorseId($userId) {
 		$results = array();
 		$connection = static::start();
 
-		$sqlString = 'SELECT *
-			FROM BACKING_AGREEMENT BA, BACKING B
-			WHERE  BA.HORSE_ID = (:userId)
-			AND BA.baId = B.baId
-			ORDER BY BA.BACKER_ID ASC';
+		$sqlString = 'SELECT BA.BA_ID, 
+							BA.BACKER_ID, 
+							U.USERNAME,
+							FLAT_FEE, 
+							PERCENT_OF_WIN, 
+							PERCENT_OF_LOSS, 
+							OVERRIDE_AMOUNT
+						FROM BACKING_AGREEMENT BA, USERS U
+						WHERE  BA.HORSE_ID = (:userId)
+						AND U.USER_ID = BA.BACKER_ID
+						ORDER BY BA.BACKER_ID ASC';
 
 		$sqlStatement = oci_parse($connection, $sqlString);
 		oci_bind_by_name($sqlStatement, ':userId', $userId);

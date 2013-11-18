@@ -66,7 +66,7 @@ class Location extends Database {
 		$sqlStatement = oci_parse($connection, $sqlString);
 		oci_bind_by_name($sqlStatement, ':userId', $userId);
 		
-		$val = 0
+		$val = 0;
 		if($favoritesOnly){
 			$val = 1;
 		}
