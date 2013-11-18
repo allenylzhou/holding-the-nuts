@@ -40,8 +40,9 @@
 				<tr>
 					<td class="leftColumn"><label for="sessionBacker">Backer:</label></td>
 					<td class="rightColumn">
-						<select id="sessionBacker" name="backerId" onchange="checkBackerNamePercentage();">
-							<option value="[backers.USER_ID;block=option;]">[backers.USERNAME] - [backers.PERCENT_OF_WIN]%</option>
+						<select id="sessionBacker" name="backingAgreementId" onchange="checkBackerNamePercentage();">
+							<option value="-1">No Backer</option>
+							<option value="[backers.BA_ID;block=option;]">[backers.USERNAME] - [backers.PERCENT_OF_WIN]%</option>
 							<option value="">New Backer</option>
 						</select>
 						<span id="newBackingAgreement" style="display:none;">
@@ -57,17 +58,16 @@
 			</table>
 
 			<input id="sessionSave" type="submit" value="Save" name="submit">
-
 		</form>
 
 		<script>
-
 			checkLocationName();
 			checkBackerNamePercentage();
 
 			function checkLocationName() {
 				// Hide input
 				document.getElementById("newLocation").style.display = "none";
+				document.getElementById("sessionNewLocation").value = "";
 
 				var dropdownList = document.getElementById("sessionLocation");
 				if(dropdownList.options[dropdownList.selectedIndex].value == "") {
@@ -79,6 +79,8 @@
 			function checkBackerNamePercentage() {
 				// Hide input
 				document.getElementById("newBackingAgreement").style.display = "none";
+				document.getElementById("sessionNewBackerName").value = "";
+				document.getElementById("sessionNewBackerPercentage").value = "";
 
 				var dropdownList = document.getElementById("sessionBacker");
 				if(dropdownList.options[dropdownList.selectedIndex].value == "") {

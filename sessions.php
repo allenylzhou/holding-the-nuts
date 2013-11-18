@@ -35,5 +35,4 @@ if (isset($_SESSION['USER'])) {
 	header('Location: ./login.php?redirect=1');
 }
 
-
 ?>
