@@ -188,7 +188,7 @@ class User extends Database {
 			oci_execute($stid);
 			
 			while (oci_fetch($stid)) {
-				if($userid != null){
+				if($otherUser != null){
 					$otherUsers[] = $otherUser;
 				}
 			}
@@ -202,7 +202,7 @@ class User extends Database {
 		if($connection != null){
 			Database::end($connection);	
 		}
-		return $otherUser;
+		return $otherUsers;
 	}
 	
 	

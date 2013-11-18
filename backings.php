@@ -11,6 +11,8 @@ $template = "views/templates/player-backings.html";
 $guest = new User(array('userId'=>0), true);
 $guest->login();
 
+$error = array();
+	
 if (isset($_SESSION['USER'])) {
 
 	$user = $_SESSION['USER'];
@@ -20,12 +22,18 @@ if (isset($_SESSION['USER'])) {
 		&& $_POST['pow'] != ''
 		&& $_POST['pol'] != ''
 		&& $_POST['oa'] != ''){
-		addBackingAgreement($user->getUserId(), $_POST['username'], $_POST['flatfee'], $_POST['pow'], $_POST['pol'], $_POST['oa']);
+		try{
+			addBackingAgreement($user->getUserId(), $_POST['username'], $_POST['flatfee'], $_POST['pow'], $_POST['pol'], $_POST['oa']);
+		}
+		catch(Exception $e){
+			$error[] = $e->getMessage();
+		}
 	}
 	
 	$backingAgreement = BackingAgreement::loadBackingAgreementsByHorseId($user->getUserId());
 	$backers = BackingAgreement::loadBackersByHorseId($user->getUserId());
 	$backings = BackingAgreement::loadBackingsByHorseId($user->getUserId());
+	$sameBackers = $user->getUsersWithSameBackers();
 
 	
 	$TBS = new clsTinyButStrong;
@@ -33,6 +41,8 @@ if (isset($_SESSION['USER'])) {
 	$TBS-> MergeBlock('backers', $backers);
 	$TBS-> MergeBlock('backingAgreement', $backingAgreement);
 	$TBS-> MergeBlock('backings', $backings);
+	$TBS-> MergeBlock('sameBackers', $sameBackers);
+	$TBS->MergeBlock('messages', $error);
 	$TBS->Show();
 	
 	
@@ -59,22 +69,8 @@ function addBackingAgreement($horseId, $username, $flatFee, $pow, $pol, $oa){
 		
 		$backingAgreement->save();
 	}
-	catch (DatabaseException $exception) {
-		echo $exception->getMessage();
-		switch ($exception->getErrorCode()) {
-		/*	case 1:
-				$error[] =  "This username has already been claimed, or the email has already been claimed";
-				break;
-			case 2290:
-				$error[] =  "Your username is invalid, or your email is invalid";
-				break;
-*/			default:
-				$error[] =  "An unknown error has occured";
-				break;
-		}
-	}
 	catch (Exception $exception) {
-		$error[] = $exception->getMessage();
+		throw $exception;
 	}
 }
 
