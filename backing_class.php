@@ -121,6 +121,29 @@ class BackingAgreement extends Database {
 		return $results;
 	}
 	
+	public static function loadBackingsByHorseId($userId) {
+			$results = array();
+			$connection = static::start();
+
+			$sqlString = 'SELECT *
+					FROM BACKING_AGREEMENT BA, BACKING B
+					WHERE  BA.HORSE_ID = (:userId)
+					AND BA.ba_Id = B.ba_Id
+					ORDER BY BA.BACKER_ID ASC';
+
+			$sqlStatement = oci_parse($connection, $sqlString);
+			oci_bind_by_name($sqlStatement, ':userId', $userId);
+
+			if(oci_execute($sqlStatement)) {
+					while ($row = oci_fetch_assoc($sqlStatement)) {
+							array_push($results, $row);
+					}
+			}
+			static::end($connection);
+
+			return $results;
+	}
+	
 	// new
 	public static function getUsername($userId){ 
 		$results = array();

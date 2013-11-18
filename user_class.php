@@ -87,6 +87,31 @@ class User extends Database {
 		}
 	}
 	
+	public static function findUserId($username){
+		try{
+			$connection = Database::start();
+			$sqlString = 'SELECT USER_ID FROM USERS WHERE USERNAME = :username';
+			$stid = oci_parse($connection, $sqlString);
+			oci_bind_by_name($stid, ':username', $username, 20);
+			oci_execute($stid);
+			
+			while ($row = oci_fetch_array($stid)) {
+				$userId = $row['USER_ID'];
+				return $userId;
+			}
+			
+			throw new Exception('No user found');
+		}
+		catch (Exception $exception) {
+			if($connection != null){
+				Database::end($connection);	
+			}
+			throw $exception;
+		}
+		if($connection != null){
+			Database::end($connection);	
+		}
+	}	
 	
 	// TODO
 	// WEIRD EMAIL LOGIC IN CASE BACKERS DON'T EXIST
