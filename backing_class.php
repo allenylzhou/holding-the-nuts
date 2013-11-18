@@ -61,9 +61,9 @@ class BackingAgreement extends Database {
 		$results = array();
 		$connection = static::start();
 
-		$sqlString = "SELECT *
-				FROM BACKING_AGREEMENT BA, USERS U
-				WHERE BA.HORSE_ID = U.USER_ID AND U.USER_ID = (:userId)
+		$sqlString = "SELECT HB.BACKER AS BACKER_ID
+				FROM HORSE_BACKERS HB, USERS U
+				WHERE HB.HORSE = U.USER_ID AND U.USER_ID = (:userId)
 				ORDER BY U.USERNAME ASC";
 
 		$sqlStatement = oci_parse($connection, $sqlString);

@@ -46,17 +46,32 @@ class Location extends Database {
 	}
 
 	public static function loadLocationsByUserId($userId) {
+		return $loadLocations($userId, false);
+	}
+
+	public static function loadFavouriteLocationsByUserId($userId) {
+		return $loadLocations($userId, true);
+	}
+	
+	private static function loadLocations($userId, $favoritesOnly) {
 		$results = array();
 		$connection = static::start();
 
 		$sqlString = "SELECT *
 				FROM LOCATION
 				WHERE USER_ID = (:userId)
+				AND FAVOURITE >= :favorite
 				ORDER BY NAME ASC";
 
 		$sqlStatement = oci_parse($connection, $sqlString);
 		oci_bind_by_name($sqlStatement, ':userId', $userId);
-
+		
+		$val = 0
+		if($favoritesOnly){
+			$val = 1;
+		}
+		oci_bind_by_name($sqlStatement, ':favorite', $val);
+		
 		if(oci_execute($sqlStatement)) {
 			while ($row = oci_fetch_assoc($sqlStatement)) {
 				array_push($results, $row);
@@ -65,10 +80,6 @@ class Location extends Database {
 		static::end($connection);
 
 		return $results;
-	}
-
-	public static function loadFavouriteLocationsByUserId($userId) {
-		
 	}
 }
 
