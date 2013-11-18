@@ -1,7 +1,7 @@
 <?php
 
 include 'error_reporting.php';
-include 'tbs_class.php';
+include_once 'tbs_class.php';
 
 include 'user_class.php';
 include 'game_class.php';
@@ -15,6 +15,7 @@ $guest = new User(array('userId'=>0), true);
 $guest->login();
 
 if (isset($_SESSION['USER'])) {
+
 	$user = $_SESSION['USER'];
 
 	//Show active games
@@ -28,9 +29,11 @@ if (isset($_SESSION['USER'])) {
 	$TBS->MergeBlock('activeGames', $activeGames);
 	$TBS->MergeBlock('finishedGames', $finishedGames);
 	$TBS->Show();
+	
 
 } else {
 	header('Location: ./login.php?redirect=1');
 }
+
 
 ?>

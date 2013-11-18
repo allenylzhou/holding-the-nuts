@@ -1,7 +1,7 @@
 <?php
 
 include 'error_reporting.php';
-include 'tbs_class.php';
+include_once 'tbs_class.php';
 
 include 'user_class.php';
 
