@@ -13,18 +13,13 @@ $template = "views/templates/player-backings.html";
 $error = array();
 	
 if (isset($_SESSION['USER'])) {
-
 	$user = $_SESSION['USER'];
 	
-	if(    isset($_POST['backerId']) && $_POST['backerId'] != '' 
-		&& $_POST['flatfee'] != ''
-		&& $_POST['pow'] != ''
-		&& $_POST['pol'] != ''
-		&& $_POST['oa'] != ''){
+	if(isset($_POST['backerToAdd'])){
 		try{
-			addBackingAgreement($user->getUserId(), $_POST['backerId'], $_POST['flatfee'], $_POST['pow'], $_POST['pol'], $_POST['oa']);
+			$user->addBacker(User::findUserId($_POST['backerToAdd']));
 		}
-		catch(DataBaseException $e){
+		catch(Exception $e){
 			$error[] = $e->getMessage();
 		}
 	}
@@ -40,7 +35,6 @@ if (isset($_SESSION['USER'])) {
 		$val = $v['USERNAME'];
 		$backerList[$key] = $val;
 	}
-	
 	$TBS = new clsTinyButStrong;
 	$TBS->LoadTemplate('views/templates/app-container.html');
 	$TBS-> MergeBlock('backers', $backers);
@@ -55,31 +49,6 @@ if (isset($_SESSION['USER'])) {
 } else {
 	header('Location: ./login.php?redirect=1');
 }
-
-function addBackingAgreement($horseId, $backerId, $flatFee, $pow, $pol, $oa){
-	try {
-		$backingAgreement = new BackingAgreement();
-		
-		if($oa == ''){
-			$oa = null;
-		}
-		
-		$backingAgreement->setAttributes(array(
-			'horseId' => $horseId,
-			'backerId' => $backerId,
-			'flatFee' => $flatFee,
-			'percentOfWin' => $pow,
-			'percentOfLoss' => $pol,
-			'overrideAmount' =>$oa
-		));		
-		
-		$backingAgreement->save();
-	}
-	catch (Exception $exception) {
-		throw $exception;
-	}
-}
-
 
 
 ?>

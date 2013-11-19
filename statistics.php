@@ -24,7 +24,9 @@ if (isset($_SESSION['USER'])) {
 	$totalHours = ($tempHours[0] * 60 + $tempMinutes[0]) / 60;
 	$totalHours = number_format((float)$totalHours, 2, '.', '');
 	
-	
+	if($totalHours == 0){
+		$totalHours = 1;
+	}
 	$hourly = $totalProfit / $totalHours;
 	$hourly = number_format((float)$hourly, 2, '.', '');
 	

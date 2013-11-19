@@ -119,7 +119,7 @@ class User extends Database {
 	public function addBacker($backerId) {
 		try{
 			$connection = Database::start();
-			$sqlString = 'INSERT INTO HORSE_BACKERS (HORSE, BACKER) VALUES (:userId, :backerId);';
+			$sqlString = 'INSERT INTO HORSE_BACKERS (HORSE, BACKER) VALUES (:userId, :backerId)';
 			$stid = oci_parse($connection, $sqlString);
 			oci_bind_by_name($stid, ':userId', $this->userId, 20);
 			oci_bind_by_name($stid, ':backerId', $backerId, 20);
@@ -173,25 +173,22 @@ class User extends Database {
 		$otherUsers = array();   
 		try{
 			$connection = Database::start();
-			$sqlString = 'select distinct(hb.horse) as otherUser
-							from horse_backers hb
+			$sqlString = 'select distinct(u.username) as OTHER_USER
+							from horse_backers hb, users u
 							where not exists (select distinct(hb1.backer)
 											from horse_backers hb1
 											where hb1.horse = :userId
 											minus
 											select distinct(hb2.backer) 
 											from horse_backers hb2
-											where hb2.horse = hb.horse)';
+											where hb2.horse = hb.horse)
+							and u.user_id = hb.horse';
 			$stid = oci_parse($connection, $sqlString);
 			oci_bind_by_name($stid, ':userId', $this->userId, 20);
-			
-			oci_define_by_name($stid, 'otherUser', $otherUser);
 			oci_execute($stid);
 			
-			while (oci_fetch($stid)) {
-				if($otherUser != null){
-					$otherUsers[] = $otherUser;
-				}
+			while ($row = oci_fetch_array($stid)) {
+				$otherUsers[] = $row['OTHER_USER'];;
 			}
 		}
 		catch (Exception $exception) {
