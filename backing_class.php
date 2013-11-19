@@ -96,6 +96,54 @@ class BackingAgreement extends Database {
 		return $results;
 	}
 	
+	public static function loadHorsesByBackerId($userId, $getEmail, $owesAtLeast) {
+		$results = array();
+		$connection = static::start();
+
+		$sqlString = "WITH OWES AS(
+						SELECT DECODE(DS.HORSE_ID, U.USER_ID, DS.BACKER_ID, DS.HORSE_ID) AS OTHER_USER,
+							   SUM(DECODE(DS.HORSE_ID, U.USER_ID, DS.OWED - DS.PAYED, DS.PAYED - DS.OWED)) AS OWED
+						FROM V_DEBT_STATUS DS,USERS U
+						WHERE (DS.HORSE_ID = U.USER_ID OR DS.BACKER_ID = U.USER_ID)
+						AND U.USER_ID = :userId
+						GROUP BY DECODE(DS.HORSE_ID, U.USER_ID, DS.BACKER_ID, DS.HORSE_ID)
+					)
+					SELECT u.user_id as HORSE_ID, 
+							decode(:getEmail, 1, u.email, u.username) AS VALUE, 
+							NVL(O.OWED,0) AS OWED
+					FROM HORSE_BACKERS HB, OWES O, users U
+					WHERE HB.backer = :userId
+					and u.user_id = hb.horse
+					and NVL(O.OWED,0) >= :owesAtLeast
+					and HB.horse = O.OTHER_USER (+)";
+
+		$sqlStatement = oci_parse($connection, $sqlString);
+		oci_bind_by_name($sqlStatement, ':userId', $userId);
+		oci_bind_by_name($sqlStatement, ':owesAtLeast', $owesAtLeast);
+		$switch = 0;
+		if($getEmail){
+			$switch = 1;
+		}
+		oci_bind_by_name($sqlStatement, ':getEmail', $getEmail);
+
+		if(oci_execute($sqlStatement)) {
+			while ($row = oci_fetch_assoc($sqlStatement)) {
+				$rowTemp = array();
+				$rowTemp['HORSE_ID'] = $row['HORSE_ID'];
+				$rowTemp['VAL'] = $row['VALUE'];
+				$val = $row['OWED'];
+				if($row['OWED'] == '' || $row['OWED'] == null){
+					$val = 0;
+				}
+				$rowTemp['OWED'] = $val;
+				$results[] = $rowTemp;
+			}
+		}
+		static::end($connection);
+
+		return $results;
+	}
+	
 	public static function loadBackingAgreementsByHorseId($userId) {
 		$results = array();
 		$connection = static::start();
