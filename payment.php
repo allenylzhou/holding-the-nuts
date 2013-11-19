@@ -13,6 +13,14 @@ if (!isset($_SESSION['USER'])){
 	header('Location: ./login.php?redirect=1');
 }
 
+$payeeUsername ='';
+$payeeAmount = 0;
+if (array_key_exists('payeeUsername', $_POST) &&
+    (array_key_exists('payeeAmount', $_POST))){
+	$payeeUsername = $_POST['payeeUsername'];
+	$payeeAmount = $_POST['payeeAmount'];
+}
+
 if (   !array_key_exists('username', $_POST) 
 	|| !array_key_exists('amount', $_POST)) {
 }
@@ -54,6 +62,8 @@ $from = Payment::getPaymentsFrom($user->getUserId());
 $TBS = new clsTinyButStrong;
 $TBS->LoadTemplate('views/templates/app-container.html');
 $TBS-> MergeBlock('to', $to);
+$TBS-> MergeField('payeeUsername', $payeeUsername);
+$TBS-> MergeField('payeeAmount', $payeeAmount);
 $TBS-> MergeBlock('from', $from);
 $TBS->MergeBlock('messages', $error);
 $TBS->Show();

@@ -83,7 +83,11 @@ class BackingAgreement extends Database {
 				$rowTemp = array();
 				$rowTemp['BACKER_ID'] = $row['BACKER_ID'];
 				$rowTemp['USERNAME'] = $row['USERNAME'];
-				$rowTemp['OWED'] = $row['OWED'];
+				$val = $row['OWED'];
+				if($row['OWED'] == '' || $row['OWED'] == null){
+					$val = 0;
+				}
+				$rowTemp['OWED'] = $val;
 				$results[] = $rowTemp;
 			}
 		}

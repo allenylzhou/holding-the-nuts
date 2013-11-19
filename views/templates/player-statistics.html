@@ -5,12 +5,6 @@
 		<li>Total Hours Played: [var.totalHours]</li>
 		<li>Hourly: $[var.hourly]</li> 
 		<li>Average Buyin: $[var.averageBuyin]</li>
-		<li>Best Performing Days: <ul>
-									<li>
-										[bestPerformingDays.val;block=li;]
-									</li>
-								</ul>
-		</li>
 		<li>Profit By Month:<ul>
 			<li>
 				[profitByMonth.MON;block=li;]/[profitByMonth.YEAR;block=li] = [profitByMonth.AM;block=li]
@@ -23,6 +17,20 @@
 			</li>
 			</ul>
 		</li>
-		
+		<li>[bestWorst] Performing Days: 
+			<ul>
+				<li>
+					[bestWorstPerformingDays.val;block=li;]
+				</li>
+			</ul>
+		</li>
 	</ul>
+
+<form method="POST" action="statistics.php">	
+	<input type="radio" name="bestWorst" value="best" checked="checked" >Best<br>
+	<input type="radio" name="bestWorst" value="worst">Worst
+	<input type="submit" value="Show">
+</form>
+
+	
 </div>

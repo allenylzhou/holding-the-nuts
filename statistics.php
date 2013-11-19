@@ -9,7 +9,7 @@ include 'statistics_class.php';
 
 session_start();
 $template = "views/templates/player-statistics.html";
-
+$bestWorst = 'Best';
 if (isset($_SESSION['USER'])) {
 
 	$user = $_SESSION['USER'];
@@ -32,15 +32,24 @@ if (isset($_SESSION['USER'])) {
 	
 	$averageBuyin = Statistics::getAverageCashBuyIn($user->getUserId());
 	$averageBuyin = number_format((float)$averageBuyin, 2, '.', '');
-	$bestPerformingDay = Statistics::getBestPerformingDay($user->getUserId());
 	$profitByMonths = Statistics::getProfitByMonth($user->getUserId());
 	$profitByDay = Statistics::getProfitByDayOfWeek($user->getUserId());
 
+	
+	if(isset($_POST['bestWorst']) && $_POST['bestWorst'] == 'worst'){
+		$bestWorstPerformingDays = Statistics::getWorstPerformingDays($user->getUserId());
+		$bestWorst = 'Worst';
+	}
+	else{
+		$bestWorst = 'Best';
+		$bestWorstPerformingDays = Statistics::getBestPerformingDays($user->getUserId());
+	}
 
 	$TBS = new clsTinyButStrong;
 	$TBS->LoadTemplate('views/templates/app-container.html');
+	$TBS->MergeField('bestWorst', $bestWorst);
 	$TBS->MergeBlock('totalHours', $totalHoursPlayed);
-	$TBS->MergeBlock('bestPerformingDays', $bestPerformingDay);
+	$TBS->MergeBlock('bestWorstPerformingDays', $bestWorstPerformingDays);
 	$TBS->MergeBlock('profitByMonth', $profitByMonths );
 	$TBS->MergeBlock('profitByDOW',$profitByDay);
 	$TBS->Show();

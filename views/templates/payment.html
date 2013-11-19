@@ -23,7 +23,7 @@
 <table style="width:100%;">
 	<tr style="background-color:#CACACA">
 		<td><strong>From</strong></td>
-		<td><strong>DATE</strong></td>
+		<td><strong>When</strong></td>
 		<td><strong>Amount</strong></td>
 	</tr>
 	<tr style="background-color:#F0F0F0">
@@ -48,11 +48,11 @@
 <form method="POST" action="payment.php">
 	<div>
 		<label>Username:</label>
-		<input type="text" name="username">
+		<input type="text" name="username" value="[payeeUsername]">
 	</div>	
 	<div>
 		<label>Amount:</label>
-		<input type="number" name="amount" value=0>
+		<input type="number" name="amount" value=[payeeAmount]>
 	</div>	
 	<div>
 		<label>Date:</label>

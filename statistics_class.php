@@ -73,7 +73,7 @@ class Statistics {
 	*/
 	
 	// NESTED AGGREGATE
-	public static function getBestPerformingDay($userId) {
+	public static function getBestPerformingDays($userId) {
 		try{
 			$connection = Database::start();
 			$sqlString = "WITH USER_WINNING_ON_DAY AS (
@@ -85,6 +85,42 @@ class Statistics {
 							SELECT GAME_DAY, WINNINGS
 							FROM   USER_WINNING_ON_DAY
 							WHERE  WINNINGS >= ALL (SELECT MAX(A.WINNINGS)
+													FROM USER_WINNING_ON_DAY A)";
+			$stid = oci_parse($connection, $sqlString);
+			oci_bind_by_name($stid, ':userId', $userId, 20);
+			oci_execute($stid);
+			
+			$day = array();
+			while ($row = oci_fetch_array($stid)) {
+				$val = $row['GAME_DAY'];
+				array_push($day, $val);
+			}
+		}
+		catch (Exception $exception) {
+			if($connection != null){
+				Database::end($connection);	
+			}
+			throw $exception;
+		}
+		if($connection != null){
+			Database::end($connection);	
+		}
+		return $day;
+	}
+	
+	// NESTED AGGREGATE
+	public static function getWorstPerformingDays($userId) {
+		try{
+			$connection = Database::start();
+			$sqlString = "WITH USER_WINNING_ON_DAY AS (
+							  SELECT TRUNC(START_DATE) AS GAME_DAY,
+                                     AVG(AMOUNT_OUT-AMOUNT_IN) as WINNINGS
+							  FROM   GAME
+							  WHERE  USER_ID = :userId
+							  GROUP BY TRUNC(START_DATE))
+							SELECT GAME_DAY, WINNINGS
+							FROM   USER_WINNING_ON_DAY
+							WHERE  WINNINGS >= ALL (SELECT MIN(A.WINNINGS)
 													FROM USER_WINNING_ON_DAY A)";
 			$stid = oci_parse($connection, $sqlString);
 			oci_bind_by_name($stid, ':userId', $userId, 20);

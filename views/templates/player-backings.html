@@ -11,12 +11,24 @@
 	<tr style="background-color:#F0F0F0">
 		<td>[backers.USERNAME;block=tr;]</td>
 		<td>[backers.OWED]</td>
-		<td><button id = "Pay Off" name=\"button\" >Pay Off BACKER_ID</button></td>
+		<td>
+			<form method="POST" action="payment.php">	
+				<input type="hidden" name="payeeUsername" value="[backers.USERNAME]" >
+				<input type="hidden" name="payeeAmount" value="[backers.OWED]" >
+				<input id = "Pay Off" type="submit" value="Pay Off">
+			</form>
+		</td>
 	</tr>
 	<tr style="background-color:#E6E6E6">
 		<td>[backers.USERNAME;block=tr;]</td>
 		<td>[backers.OWED]</td>
-		<td><button id = "Pay Off" name=\"button\" >Pay Off BACKER_ID</button></td>
+		<td>
+			<form method="POST" action="payment.php">	
+				<input type="hidden" name="payeeUsername" value="[backers.USERNAME]" >
+				<input type="hidden" name="payeeAmount" value="[backers.OWED]" >
+				<input id = "Pay Off" type="submit" value="Pay Off">
+			</form>
+		</td>
 	</tr>
 </table>
 
