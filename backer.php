@@ -18,6 +18,20 @@ if (isset($_SESSION['USER'])) {
 	if(isset($_POST['backerToAdd'])){
 		try{
 			$user->addBacker(User::findUserId($_POST['backerToAdd']));
+			echo 'aaaa';
+		}
+		catch(DataBaseException $e){
+			switch ($e->getCode()) {
+			case 1:
+				$m = 'You already have this backer added.';
+				break;
+			case 2290:
+				$m = "I think you just tried to add yourself.";
+				break;
+			default:
+				$m = "Something bad happened.";
+			}
+			$error[] = $m;
 		}
 		catch(Exception $e){
 			$error[] = $e->getMessage();

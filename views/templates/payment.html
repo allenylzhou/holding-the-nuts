@@ -45,17 +45,17 @@
 	[messages.val;block=p;]
 </p>
 
-<h1>Backing Agreement Form</h1>
+<h1>Add a Payment</h1>
 
 
 <form method="POST" action="payment.php">
 	<div>
 		<label>Username:</label>
-		<input type="text" name="username" value="[payeeUsername]">
+		<input type="text" name="username" value="[payeeUsername]" required>
 	</div>	
 	<div>
 		<label>Amount:</label>
-		<input type="number" name="amount" value=[payeeAmount]>
+		<input type="number" name="amount" value=[payeeAmount] required min=1>
 	</div>	
 	<div>
 		<label>Date:</label>

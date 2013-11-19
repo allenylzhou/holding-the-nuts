@@ -77,7 +77,7 @@
 <form method="POST" action="backer.php">
 	<div>
 		<label>Username:</label>
-		<input type="text" name="backerToAdd">
+		<input type="text" name="backerToAdd" required>
 	</div>		
 	<input type="submit" name="" value="Add" >
 </form>
@@ -87,7 +87,7 @@
 <form method="POST" action="backings.php">
 	<div>
 		<label>Username:</label>
-		<select name="backerId">
+		<select name="backerId" required>
 			<option value="[backerList.key]">[backerList.val;block=option]</option> 
 		</select>
 	</div>	
