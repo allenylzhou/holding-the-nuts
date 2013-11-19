@@ -282,7 +282,7 @@ class Database {
 				// Prepare SQL statement
 				$sqlString = "INSERT INTO $table ($columns) VALUES ($values) RETURNING $returnColumns INTO $returnValues";
 				$sqlStatement = oci_parse($connection, $sqlString);
-
+				
 				// Perform SQL injection (substitute binding variable placeholders with attribute values)
 				foreach ($bindings as $placeholder => $name) {
 					oci_bind_by_name($sqlStatement, $placeholder, $this->{$name});
