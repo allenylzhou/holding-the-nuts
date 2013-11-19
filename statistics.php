@@ -35,15 +35,13 @@ if (isset($_SESSION['USER'])) {
 	$profitByMonths = Statistics::getProfitByMonth($user->getUserId());
 	$profitByDay = Statistics::getProfitByDayOfWeek($user->getUserId());
 
-	
+	$bestWorst = 'Best';
+	$getMin = false;
 	if(isset($_POST['bestWorst']) && $_POST['bestWorst'] == 'worst'){
-		$bestWorstPerformingDays = Statistics::getWorstPerformingDays($user->getUserId());
+		$getMin = true;
 		$bestWorst = 'Worst';
 	}
-	else{
-		$bestWorst = 'Best';
-		$bestWorstPerformingDays = Statistics::getBestPerformingDays($user->getUserId());
-	}
+	$bestWorstPerformingDays = Statistics::getPerformingDays($user->getUserId(), $getMin);
 
 	$TBS = new clsTinyButStrong;
 	$TBS->LoadTemplate('views/templates/app-container.html');
