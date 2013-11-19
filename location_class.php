@@ -46,11 +46,11 @@ class Location extends Database {
 	}
 
 	public static function loadLocationsByUserId($userId) {
-		return $loadLocations($userId, false);
+		return Location::loadLocations($userId, false);
 	}
 
 	public static function loadFavouriteLocationsByUserId($userId) {
-		return $loadLocations($userId, true);
+		return Location::loadLocations($userId, true);
 	}
 	
 	private static function loadLocations($userId, $favoritesOnly) {

@@ -38,6 +38,10 @@ class User extends Database {
 	public function getUserId() { return $this->userId; }
 	public function getUsername() { return $this->username; }
 	public function getEmail() { return $this->email; }
+	
+	public function setPassword($v) { $this->password = $v; }
+	public function setUsername($v) { $this->username = $v; }
+	public function setEmail($v) { $this->email = $v; }
 
 	public function setAttributes($attributes) {
 		foreach($attributes as $name => $value) {
@@ -61,18 +65,15 @@ class User extends Database {
 
 			while ($row = oci_fetch_array($stid)) {
 				$val = $row['USER_ID'];
-				if($val != null){
-					$this->userId = $val;
-					$val = $row['USERNAME'];
-					$this->username = $val;
-					$val = $row['PASSWORD'];
-					$this->password = $val;
-					
-					session_start();
-					$_SESSION['USER'] = $this;
-					session_write_close();
-					return;
-				}
+				$this->userId = $val;
+				$val = $row['USERNAME'];
+				$this->username = $val;
+				$val = $row['PASSWORD'];
+				$this->password = $val;
+				
+				$_SESSION['USER'] = $this;
+				session_write_close();
+				return;
 			}
 			throw new Exception('Improper credentials supplied');
 		}

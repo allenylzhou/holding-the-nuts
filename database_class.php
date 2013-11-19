@@ -467,16 +467,21 @@ class Database {
 	public function load() {
 		return $this->select();
 	}
-
+	
 	public function save() {
+		$this->_save(false);
+	}
+	
+	public function save2($autoUpdate) {
+		$this->_save($autoUpdate);
+	}
+	
+	private function _save($autoUpdate) {
 		try {
 			// Try insert
 			$this->insert();
-		} catch (Exception $exception) {		
-			throw $exception;
-			// it is not always necessary the case that it should auto update when a constraint is violated.
-			// eg: when a username is taken
-			if($exception instanceof DatabaseException && $exception->getCode() == 1) {
+		} catch (Exception $exception) {
+			if($exception instanceof DatabaseException && $exception->getCode() == 1 && $autoUpdate) {
 				// If unique constraint is violated, try update
 				try {
 					$this->update();

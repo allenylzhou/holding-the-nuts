@@ -8,11 +8,9 @@ include 'game_class.php';
 include 'backing_class.php';
 include 'location_class.php';
 
+session_start();
 $template = 'views/templates/cash-sessions.html';
 
-// TODO: remove this later
-$guest = new User(array('userId'=>0), true);
-$guest->login();
 
 if (isset($_SESSION['USER'])) {
 

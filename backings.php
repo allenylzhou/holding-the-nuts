@@ -5,11 +5,10 @@ include_once 'tbs_class.php';
 include 'backing_class.php';
 include 'user_class.php';
 
+session_start();
+
 $template = "views/templates/player-backings.html";
 
-// TODO: remove this later
-$guest = new User(array('userId'=>0), true);
-$guest->login();
 
 $error = array();
 	
@@ -25,7 +24,7 @@ if (isset($_SESSION['USER'])) {
 		try{
 			addBackingAgreement($user->getUserId(), $_POST['username'], $_POST['flatfee'], $_POST['pow'], $_POST['pol'], $_POST['oa']);
 		}
-		catch(Exception $e){
+		catch(DataBaseException $e){
 			$error[] = $e->getMessage();
 		}
 	}
