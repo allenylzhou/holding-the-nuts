@@ -12,7 +12,7 @@
 		<td>[backers.USERNAME;block=tr;]</td>
 		<td>[backers.OWED]</td>
 		<td>
-			<form method="POST" action="payment.php">	
+			<form method="POST" action="index.php?action=payment">	
 				<input type="hidden" name="payeeUsername" value="[backers.USERNAME]" >
 				<input type="hidden" name="payeeAmount" value="[backers.OWED]" >
 				<input id = "Pay Off" type="submit" value="Pay Off">
@@ -23,7 +23,7 @@
 		<td>[backers.USERNAME;block=tr;]</td>
 		<td>[backers.OWED]</td>
 		<td>
-			<form method="POST" action="payment.php">	
+			<form method="POST" action="index.php?action=payment">	
 				<input type="hidden" name="payeeUsername" value="[backers.USERNAME]" >
 				<input type="hidden" name="payeeAmount" value="[backers.OWED]" >
 				<input id = "Pay Off" type="submit" value="Pay Off">
@@ -72,7 +72,7 @@
 </p>
 
 <h1>Add a Backer</h1>
-<form method="POST" action="backer.php">
+<form method="POST" action="index.php?action=backer">
 	<div>
 		<label>Username:</label>
 		<input type="text" name="backerToAdd" required>
@@ -82,7 +82,7 @@
 
 
 <h1>Add a Backing Agreement</h1>
-<form method="POST" action="backings.php">
+<form method="POST" action="index.php?action=backings">
 	<div>
 		<label>Username:</label>
 		<select name="backerId" required>

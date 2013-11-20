@@ -22,7 +22,7 @@
 
 	// Show view
 	session_start();
-	$view = (isset($_GET['view'])) ? $_GET['view'] : 'login';
+	$view = (isset($_GET['action'])) ? $_GET['action'] : 'login';
 	include "$view.php";
 
 ?>

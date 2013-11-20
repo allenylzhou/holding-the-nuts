@@ -44,7 +44,8 @@ if (isset($_SESSION['USER'])) {
 	$TBS->MergeBlock('profitByDOW',$profitByDay);
 	$TBS->Show();
 } else {
-	header('Location: ./login.php?redirect=1');
+	echo "wtf";
+	//header('Location: ./index.php?action=login');
 }
 
 ?>

@@ -57,7 +57,7 @@ if (isset($_SESSION['USER'])) {
 	
 	
 } else {
-	header('Location: ./login.php?redirect=1');
+	header('Location: ./index.php?action=login');
 }
 
 function addBackingAgreement($horseId, $backerId, $flatFee, $pow, $pol, $oa){

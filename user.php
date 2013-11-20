@@ -4,7 +4,7 @@ $template = "views/templates/user-profile.html";
 
 $error = array();
 if (!isset($_SESSION['USER'])){
-	header('Location: ./login.php?redirect=1');
+	header('Location: ./index.php?action=login');
 }
 
 $user = $_SESSION['USER'];

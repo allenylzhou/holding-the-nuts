@@ -60,7 +60,7 @@ abstract class Game extends Database {
 			$where .= " AND P.END_DATE IS NULL";
 		}
 
-		$sqlString = "SELECT P.GS_ID, START_DATE, LOCATION_NAME, START_DATE - END_DATE AS DURATION, AMOUNT_IN - AMOUNT_OUT AS PROFIT, BIG_BLIND, SMALL_BLIND
+		$sqlString = "SELECT P.GS_ID, START_DATE, LOCATION_NAME, START_DATE - END_DATE AS DURATION, AMOUNT_OUT - AMOUNT_IN AS PROFIT, BIG_BLIND, SMALL_BLIND
 				FROM GAME P, $gameType C
 				WHERE $where
 				ORDER BY P.GS_ID ASC";
@@ -72,6 +72,28 @@ abstract class Game extends Database {
 			while ($row = oci_fetch_assoc($sqlStatement)) {
 				array_push($results, $row);
 			}
+		}
+		static::end($connection);
+
+		return $results;
+	}
+
+	public function loadBacking() {
+		$results = array();
+		$connection = static::start();
+
+		$sqlString = 'SELECT *
+				FROM BACKING_AGREEMENT BA, BACKING B, GAME G, USERS U
+				WHERE  BA.HORSE_ID = (:userId)
+				AND BA.ba_Id = B.ba_Id AND B.GS_ID = G.GS_ID AND BA.BACKER_ID = U.USER_ID
+				ORDER BY BA.BACKER_ID ASC';
+
+		$sqlStatement = oci_parse($connection, $sqlString);
+		$userId = $this->getUserId();
+		oci_bind_by_name($sqlStatement, ':userId', $userId);
+
+		if(oci_execute($sqlStatement)) {
+			$results = oci_fetch_assoc($sqlStatement);
 		}
 		static::end($connection);
 

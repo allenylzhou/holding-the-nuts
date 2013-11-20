@@ -32,13 +32,12 @@ if (isset($_SESSION['USER'])) {
 			$newBacking->save();
 		}
 
-		header('Location: ./sessions.php');
+		header('Location: ./index.php?action=sessions');
 	}
-
 	// Display the form
+	$time = date('Y-m-d');
 	$locations = Location::loadLocationsByUserId($user->getUserId());
 	$backers = BackingAgreement::loadBackingAgreementsByHorseId($user->getUserId());
-	//print("<pre>".print_r($backers, true)."</pre>");
 
 	$TBS = new clsTinyButStrong;
 	$TBS->LoadTemplate('views/templates/app-container.html');
@@ -47,7 +46,7 @@ if (isset($_SESSION['USER'])) {
 	$TBS->Show();
 
 } else {
-	header('Location: ./login.php?redirect=1');
+	header('Location: ./index.php?action=login');
 }
 
 ?>

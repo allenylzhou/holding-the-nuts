@@ -11,7 +11,7 @@ class Location extends Database {
 
 	protected static $tableAttributes = array(
 		'LOCATION' => array(
-			'favourite' => array('type' => DataType::NUMBER)
+			'favourite' => array('type' => DataType::NUMBER, 'default' => 0)
 		)
 	);
 

@@ -1,11 +1,11 @@
 <html>
 	<body>
 		<h2>Create Cash Game</h2>
-		<form id="newSessionForm" method="POST" action="">
+		<form id="newSessionForm" method="POST" action="index.php?action=record">
 			<table>
 				<tr>
 					<td class="leftColumn"><label for="sessionStart">Start:</label></td>
-					<td class="rightColumn"><input id="sessionStart" type="date" name="startDate"></td>
+					<td class="rightColumn"><input id="sessionStart" type="date" name="startDate" value="[var.time]"></td>
 				</tr>
 				<tr>
 					<td class="leftColumn"><label for="sessionEnd">End:</label></td>
@@ -13,11 +13,19 @@
 				</tr>
 				<tr>
 					<td class="leftColumn"><label for="sessionBuyin">Buy-in:</label></td>
-					<td class="rightColumn"><input id="sessionBuyin" type="text" name="amountIn"></td>
+					<td class="rightColumn"><input id="sessionBuyin" type="number" name="amountIn" value="0"></td>
 				</tr>
 				<tr>
 					<td class="leftColumn"><label for="sessionCashout">Cash-out:</label></td>
-					<td class="rightColumn"><input id="sessionCashout" type="text" name="amountOut"></td>
+					<td class="rightColumn"><input id="sessionCashout" type="number" name="amountOut" value="0"></td>
+				</tr>
+				<tr>
+					<td class="leftColumn"><label for="sessionSmallblind">Small-blind:</label></td>
+					<td class="rightColumn"><input id="sessionSmallblind" type="number" name="smallBlind" value="0"></td>
+				</tr>
+				<tr>
+					<td class="leftColumn"><label for="sessionBigblind">Big-blind:</label></td>
+					<td class="rightColumn"><input id="sessionBigblind" type="number" name="bigBlind" value="0"></td>
 				</tr>
 				<tr>
 					<td class="leftColumn"><label for="sessionLocation">Location:</label></td>

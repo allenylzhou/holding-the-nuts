@@ -28,48 +28,27 @@ if (isset($_SESSION['USER'])) {
 		));
 		$game->save2(true);
 
-		// if(!empty($_POST['newBackerName'])) {
-		// 	//Insert or load new user
-		// 	$newBacker = $user;
-
-
-		// 	//Insert new backing agreement
-		// 	$newBackingAgreement = new BackingAgreement;
-		// 	$newBackingAgreement->setAttributes(array('horseId' => $user->getUserId(), 'backerId' => $newBacker->getUserId(), 'percentOfWin' => $_POST['newBackerPercentage']));
-		// 	$newBackingAgreement->save();
-
-		// 	$backingAgreementId = $newBackingAgreement->getBaId();
-
-		// } else {
-		// 	$backingAgreementId = $_POST['backingAgreementId'];
-		// }
-		
-		// if ($backingAgreementId >= 0) {
-		// 	$newBacking = new Backing(array('baId' => $backingAgreementId, 'gsId' => $newGame->getGsId()));
-		// 	$newBacking->save();
-		// }
-		header('Location: ./sessions.php');
+		header('Location: ./index.php?action=sessions');
 	}
 
 	if (array_key_exists('delete', $_POST)) {
 		$game->delete();
-		header('Location: ./sessions.php');
+		header('Location: ./index.php?action=sessions');
 	}
 
 	// Display stuff
 	$details = $game->getAttributes();
 	$locations = Location::loadLocationsByUserId($user->getUserId());
-	$backers = BackingAgreement::loadBackingAgreementsByHorseId($user->getUserId());
+	$backing = $game->loadBacking();
 
 	$TBS = new clsTinyButStrong;
 	$TBS->LoadTemplate('views/templates/app-container.html');
 	$TBS->MergeBlock('details', $details);
 	$TBS->MergeBlock('locations', $locations);
-	$TBS->MergeBlock('backers', $backers);
 	$TBS->Show();
 
 } else {
-	header('Location: ./login.php?redirect=1');
+	header('Location: ./index.php?action=login');
 }
 
 ?>

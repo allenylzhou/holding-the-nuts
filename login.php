@@ -24,7 +24,7 @@ else {
 		));
 		
 		$user->login();
-		header('Location: index.php?view=sessions') ;
+		header('Location: index.php?action=sessions') ;
 
 	}
 	catch (Exception $exception) {

@@ -1,7 +1,7 @@
 <html>
 	<body>
 		<h2>Cash Game Details</h2>
-		<form id="newSessionForm" method="POST" action="">
+		<form id="newSessionForm" method="POST" action="index.php?action=details&gsId=[var.details.gsId]">
 			<table>
 				<tr>
 					<td class="leftColumn"><label for="sessionStart">Start:</label></td>
@@ -20,6 +20,14 @@
 					<td class="rightColumn"><input id="sessionCashout" type="number" name="amountOut" value="[var.details.amountOut]"></td>
 				</tr>
 				<tr>
+					<td class="leftColumn"><label for="sessionSmallblind">Small-blind:</label></td>
+					<td class="rightColumn"><input id="sessionSmallblind" type="number" name="smallBlind" value="[var.details.smallBlind]"></td>
+				</tr>
+				<tr>
+					<td class="leftColumn"><label for="sessionBigblind">Big-blind:</label></td>
+					<td class="rightColumn"><input id="sessionBigblind" type="number" name="bigBlind" value="[var.details.bigBlind]"></td>
+				</tr>
+				<tr>
 					<td class="leftColumn"><label for="sessionLocation">Location:</label></td>
 					<td class="rightColumn">
 						<select id="sessionLocation" name="locationName" onchange="checkLocationName();">
@@ -36,30 +44,17 @@
 				<tr>
 					<td class="leftColumn"><label for="sessionBacker">Backer:</label></td>
 					<td class="rightColumn">
-						<select id="sessionBacker" name="backingAgreementId" onchange="checkBackerNamePercentage();">
-							<option value="-1">No Backer</option>
-							<option value="[backers.BA_ID;block=option;]">[backers.USERNAME] - [backers.PERCENT_OF_WIN]%</option>
-							<option value="">New Backer</option>
-						</select>
-						<span id="newBackingAgreement" style="display:none;">
-							<br/>
-							<label for="sessionNewBackerName">Name:</label>
-							<input id="sessionNewBackerName" type="text" name="newBackerName">
-							<br/>
-							<label for="sessionNewBackerPercentage">Percentage:</label>
-							<input id="sessionNewBackerPercentage" type="text" name="newBackerPercentage" size="2">
-						</span>
+						[var.backing.USERNAME;ifempty='None';noerr] - [var.backing.PERCENT_OF_WIN;ifempty='0';noerr]%
 					</td>
 				</tr>
 			</table>
 
 			<input id="sessionSave" type="submit" value="Save" name="submit">
-			<input id="sessionDelete" type="submit" value="Delete" name="delete">
+			<input id="sessionDelete" type="submit" value="Delete" name="delete" onclick="confirmDelete();">
 		</form>
 
 		<script>
 			checkLocationName();
-			checkBackerNamePercentage();
 
 			var dropdownList = document.getElementById("sessionLocation");
 			for(var i, j = 0; i = dropdownList.options[j]; j++) {
@@ -81,19 +76,15 @@
 				}
 			}
 
-			function checkBackerNamePercentage() {
-				// Hide input
-				document.getElementById("newBackingAgreement").style.display = "none";
-				document.getElementById("sessionNewBackerName").value = "";
-				document.getElementById("sessionNewBackerPercentage").value = "";
-
-				var dropdownList = document.getElementById("sessionBacker");
-
-				if(dropdownList.options[dropdownList.selectedIndex].value == "") {
-					// Show input
-				 	document.getElementById("newBackingAgreement").style.display = "";
+			function confirmDelete() {
+				if(confirm("Please note that any backings associated with this session will also be deleted and your backings balance may be affected. Are you sure you want to continue?")) {
+					document.forms[0].submit()
+				} else {
+					return false;
 				}
 			}
+
+
 
 		</script>
 
