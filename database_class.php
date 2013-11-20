@@ -173,7 +173,7 @@ class Database {
 
 					// Execute SQL statement
 					if (oci_execute($sqlStatement)) {
-						$result = oci_fetch_array($sqlStatement);
+						$result = oci_fetch_assoc($sqlStatement);
 						if($result) {
 							foreach ($result as $key => $value) {
 								$results[static::camelize($key)] = $value;

@@ -1,23 +1,23 @@
 <html>
 	<body>
+		<h2>Cash Game Details</h2>
 		<form id="newSessionForm" method="POST" action="">
-			<h1>Cash Game</h1>
 			<table>
 				<tr>
 					<td class="leftColumn"><label for="sessionStart">Start:</label></td>
-					<td class="rightColumn"><input id="sessionStart" type="date" name="startDate"></td>
+					<td class="rightColumn"><input id="sessionStart" type="date" name="startDate" value="[var.details.startDate;frm='yyyy-mm-dd']"></td>
 				</tr>
 				<tr>
 					<td class="leftColumn"><label for="sessionEnd">End:</label></td>
-					<td class="rightColumn"><input id="sessionEnd" type="date" name="endDate"></td>
+					<td class="rightColumn"><input id="sessionEnd" type="date" name="endDate" value="[var.details.endDate;frm='yyyy-mm-dd']"></td>
 				</tr>
 				<tr>
 					<td class="leftColumn"><label for="sessionBuyin">Buy-in:</label></td>
-					<td class="rightColumn"><input id="sessionBuyin" type="text" name="amountIn"></td>
+					<td class="rightColumn"><input id="sessionBuyin" type="number" name="amountIn" value="[var.details.amountIn]"></td>
 				</tr>
 				<tr>
 					<td class="leftColumn"><label for="sessionCashout">Cash-out:</label></td>
-					<td class="rightColumn"><input id="sessionCashout" type="text" name="amountOut"></td>
+					<td class="rightColumn"><input id="sessionCashout" type="number" name="amountOut" value="[var.details.amountOut]"></td>
 				</tr>
 				<tr>
 					<td class="leftColumn"><label for="sessionLocation">Location:</label></td>
@@ -54,11 +54,20 @@
 			</table>
 
 			<input id="sessionSave" type="submit" value="Save" name="submit">
+			<input id="sessionDelete" type="submit" value="Delete" name="delete">
 		</form>
 
 		<script>
 			checkLocationName();
 			checkBackerNamePercentage();
+
+			var dropdownList = document.getElementById("sessionLocation");
+			for(var i, j = 0; i = dropdownList.options[j]; j++) {
+			    if(i.value == "[var.details.locationName]") {
+			        dropdownList.selectedIndex = j;
+			        break;
+			    }
+			}
 
 			function checkLocationName() {
 				// Hide input
@@ -79,6 +88,7 @@
 				document.getElementById("sessionNewBackerPercentage").value = "";
 
 				var dropdownList = document.getElementById("sessionBacker");
+
 				if(dropdownList.options[dropdownList.selectedIndex].value == "") {
 					// Show input
 				 	document.getElementById("newBackingAgreement").style.display = "";

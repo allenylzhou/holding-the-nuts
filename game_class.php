@@ -39,6 +39,10 @@ abstract class Game extends Database {
 	public function getAmountOut() { return $this->amountOut; }
 	public function getLocationName() { return $this->locationName; }
 
+	public function getAttributes() {
+		return get_object_vars($this);
+	}
+
 	public function setAttributes($attributes) {
 		foreach($attributes as $name => $value) {
 			if (!array_key_exists($name, static::$tableKey)) {
@@ -56,7 +60,7 @@ abstract class Game extends Database {
 			$where .= " AND P.END_DATE IS NULL";
 		}
 
-		$sqlString = "SELECT *
+		$sqlString = "SELECT P.GS_ID, START_DATE, LOCATION_NAME, START_DATE - END_DATE AS DURATION, AMOUNT_IN - AMOUNT_OUT AS PROFIT, BIG_BLIND, SMALL_BLIND
 				FROM GAME P, $gameType C
 				WHERE $where
 				ORDER BY P.GS_ID ASC";

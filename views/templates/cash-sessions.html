@@ -1,43 +1,61 @@
 <html>
-<body>
-<a href="record.php">ADD NEW SESSION</a>
-<table style="width:100%;">
-	<tr style="background-color:#CACACA">
-		<td><strong>Start Date</strong></td>
-		<td><strong>Start Time</strong></td>
-		<td><strong>End Time</strong></td>
-		<td><strong>Buy In</strong></td>
-		<td><strong>Buy Out</strong></td>
-		<td><strong>Location</strong></td>
-		<td><strong>Big Blind</strong></td>
-		<td><strong>Small Blind</strong></td>
-	</tr>
-	<tr style="background-color:#F0F0F0">
-		<td>[finishedGames.START_DATE;block=tr;frm='mmm dd yyyy']</td>
-		<td>[finishedGames.START_DATE;frm='hh:nn:ss']</td>
-		<td>[finishedGames.END_DATE;frm='hh:nn:ss']</td>
-		<td>[finishedGames.AMOUNT_IN;frm='$ 0,000.00']</td>
-		<td>[finishedGames.AMOUNT_OUT;frm='$ 0,000.00']</td>
-		<td>[finishedGames.LOCATION_NAME;frm='$ 0,000.00']</td>
-		<td>[finishedGames.BIG_BLIND]</td>
-		<td>[finishedGames.SMALL_BLIND]</td>
-	</tr>
-	<tr style="background-color:#E6E6E6">
-		<td>[finishedGames.START_DATE;block=tr;frm='mmm dd yyyy']</td>
-		<td>[finishedGames.START_DATE;frm='hh:nn:ss']</td>
-		<td>[finishedGames.END_DATE;frm='hh:nn:ss']</td>
-		<td>[finishedGames.AMOUNT_IN;frm='$ 0,000.00']</td>
-		<td>[finishedGames.AMOUNT_OUT;frm='$ 0,000.00']</td>
-		<td>[finishedGames.LOCATION_NAME;frm='$ 0,000.00']</td>
-		<td>[finishedGames.BIG_BLIND]</td>
-		<td>[finishedGames.SMALL_BLIND]</td>
-	</tr>
+	<body>
+	<h2>Cash Games</h2>
+	<form method="POST" action="">
+		<table class="sessionTable">
+			<tr style="background-color:#CACACA">
+				<td><strong>Date</strong></td>
+				<td><strong>Location</strong></td>
+				<td><strong>Small Blind</strong></td>
+				<td><strong>Big Blind</strong></td>
+				<td><strong>Duration</strong></td>
+				<td><strong>Profit</strong></td>
+				<td></td>
+			</tr>
+			<tr style="background-color:#F0F0F0">
+				<td>
+					<strong>[finishedGames.START_DATE;block=tr;frm='ddd dd mmm yyyy']</strong>
+				</td>
+				<td>
+					<strong>[finishedGames.LOCATION_NAME]</strong>
+				</td>
+				<td>[finishedGames.SMALL_BLIND]</td>
+				<td>[finishedGames.BIG_BLIND]</td>
+				<td>[finishedGames.DURATION;frm='hh:nn']</td>
+				<td>
+					<strong>[finishedGames.PROFIT;frm='$ 0,000.00']</strong>
+				</td>
+				<td>
+					<a href="details.php?gsId=[finishedGames.GS_ID]">Edit</a>
+				</td>
+			</tr>
+			<tr style="background-color:#E6E6E6">
+				<td>
+					<strong>[finishedGames.START_DATE;block=tr;frm='ddd dd mmm yyyy']</strong>
+				</td>
+				<td>
+					<strong>[finishedGames.LOCATION_NAME]</strong>
+				</td>
+				<td>[finishedGames.SMALL_BLIND]</td>
+				<td>[finishedGames.BIG_BLIND]</td>
+				<td>[finishedGames.DURATION;frm='hh:nn']</td>
+				<td>
+					<strong>[finishedGames.PROFIT;frm='$ 0,000.00']</strong>
+				</td>
+				<td>
+					<a href="details.php?gsId=[finishedGames.GS_ID]">Edit</a>
+				</td>
+			</tr>
 
-	<tr style="background-color:#FFCFB9">
-		[finishedGames;block=tr;nodata]
-		<td colspan="8">No history available.</td>
-	</tr>
-</table>
+			<tr style="background-color:#FFCFB9">
+				[finishedGames;block=tr;nodata]
+				<td colspan="3">No sessions available.</td>
+			</tr>
+			<tr>
+				<td colspan="3"><a href="record.php">Add a new session</a></td>
+			</tr>
+		</table>
+	</form>
 
-</body>
+	</body>
 </html>

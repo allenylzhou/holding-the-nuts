@@ -10,10 +10,7 @@ include 'location_class.php';
 
 $template = 'views/templates/new-session.html';
 
-// TODO: remove this later
-$guest = new User(array('userId'=>0), true);
-$guest->login();
-
+session_start();
 if (isset($_SESSION['USER'])) {
 	$user = $_SESSION['USER'];
 
