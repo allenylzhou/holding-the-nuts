@@ -7,7 +7,10 @@ if (isset($_SESSION['USER'])) {
 
 	if (array_key_exists('submit', $_POST)) {
 
-		if(empty($_POST['locationName'])) {
+		if(!empty($_POST['locationName'])){
+			$locationName = $_POST['locationName'];
+		}
+		else if(array_key_exists('locationName', $_POST) && $_POST['locationName'] != '') {
 			$locationName = $_POST['newLocationName'];
 			$newLocation = new Location(array('userId' => $user->getUserId(), 'name' => $locationName));
 			$newLocation->save();
