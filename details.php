@@ -57,10 +57,12 @@ if (isset($_SESSION['USER'])) {
 		// 	$newBacking = new Backing(array('baId' => $backingAgreementId, 'gsId' => $newGame->getGsId()));
 		// 	$newBacking->save();
 		// }
+		header('Location: ./sessions.php');
 	}
 
 	if (array_key_exists('delete', $_POST)) {
 		$game->delete();
+		header('Location: ./sessions.php');
 	}
 
 	// Display stuff
