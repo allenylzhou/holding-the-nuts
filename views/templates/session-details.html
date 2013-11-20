@@ -32,6 +32,7 @@
 					<td class="rightColumn">
 						<select id="sessionLocation" name="locationName" onchange="checkLocationName();">
 							<option value="[locations.NAME;block=option;]">[locations.NAME]</option>
+							<option id='none' value="">None</option>
 							<option value="">New Location</option>
 						</select>
 						<span id="newLocation" style="display:none;">
@@ -70,7 +71,8 @@
 				document.getElementById("sessionNewLocation").value = "";
 
 				var dropdownList = document.getElementById("sessionLocation");
-				if(dropdownList.options[dropdownList.selectedIndex].value == "") {
+				if(dropdownList.options[dropdownList.selectedIndex].id != 'none' && 
+				   dropdownList.options[dropdownList.selectedIndex].value == "") {
 					// Show input
 				 	document.getElementById("newLocation").style.display = "";
 				}
