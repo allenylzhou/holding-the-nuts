@@ -59,13 +59,6 @@ abstract class Game extends Database {
 		if ($active) {
 			$where .= " AND P.END_DATE IS NULL";
 		}
-		
-		if($gameType == 'GAME_CASH'){
-			$additionalColumns = ", BIG_BLIND, SMALL_BLIND";
-		}
-		else if ($GAME_CASH == 'GAME_TOURNAMENT'){
-			$additionalColumns = ", PLACED_FINISHED";
-		}
 
 		$sqlString = "SELECT 
 					P.GS_ID, 
@@ -74,7 +67,6 @@ abstract class Game extends Database {
 					(TO_DATE(TO_CHAR(END_DATE,'yyyy-mm-dd hh24:mi:ss'), 'yyyy-mm-dd hh24:mi:ss') - TO_DATE(TO_CHAR(START_DATE,'yyyy-mm-dd hh24:mi:ss'), 'yyyy-mm-dd hh24:mi:ss')) * 24 * 60 AS DURATION,
 					AMOUNT_OUT - AMOUNT_IN AS PROFIT, 
 					BIG_BLIND, SMALL_BLIND
-					$additionalColumns
 				FROM GAME P, $gameType C
 				WHERE $where
 				ORDER BY P.GS_ID ASC";

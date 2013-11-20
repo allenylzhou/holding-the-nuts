@@ -31,6 +31,8 @@ if (isset($_SESSION['USER'])) {
 			'endDate' => $endDate,
 			'amountIn' => $_POST['amountIn'],
 			'amountOut' => $_POST['amountOut'],
+			'bigBlind' => $_POST['bigBlind'],
+			'smallBlind' => $_POST['smallBlind'],
 			'locationName' => $locationName
 		));
 		$newGame->save();
