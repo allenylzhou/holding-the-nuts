@@ -19,12 +19,24 @@ if (isset($_SESSION['USER'])) {
 	if(    isset($_POST['backerId']) && $_POST['backerId'] != '' 
 		&& $_POST['flatfee'] != ''
 		&& $_POST['pow'] != ''
-		&& $_POST['pol'] != ''
-		&& $_POST['oa'] != ''){
+		&& $_POST['pol'] != ''){
 		try{
 			addBackingAgreement($user->getUserId(), $_POST['backerId'], $_POST['flatfee'], $_POST['pow'], $_POST['pol'], $_POST['oa']);
 		}
 		catch(DataBaseException $e){
+			switch ($e->getCode()) {
+			case 1:
+				$m = 'This agreement already exists.';
+				break;
+			case 2290:
+				$m = "Please don't make an agreement with yourself please.";
+				break;
+			default:
+				$m = "Something bad happened.";
+			}
+			$error[] = $m;
+		}
+		catch(Exception $e){
 			$error[] = $e->getMessage();
 		}
 	}

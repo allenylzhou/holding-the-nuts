@@ -18,6 +18,9 @@ if (   !array_key_exists('username', $_POST)
 	&& !array_key_exists('email', $_POST)) {
 }
 else {
+	$un = $user->getUsername();
+	$pw = $user->getPassword();
+	$e = $user->getEmail();
 	try {
 		$user = $_SESSION['USER'];
 		$username = $_POST['username'];                                        
@@ -29,10 +32,31 @@ else {
 			$user->setPassword(User::hash($_POST['password']));
 		}
 		$user->setEmail($email);
-		$user->save2(true);
+		$user->store();
 		$error[] =  'Done';
 	}
+	catch (DataBaseException $exception) {
+		$user->setUsername($un);
+		$user->setPassword($pw);
+		$user->setEmail($e);
+		
+		switch ($exception->getCode()) {
+			case 1:
+				$m = 'Your information is no longer unique.';
+				break;
+			case 2290:
+				$m = "Your email is illegal.";
+				break;
+			default:
+				$m = "Something bad happened.";
+		}
+		$error[] = $m;
+	}
 	catch (Exception $exception) {
+		$user->setUsername($un);
+		$user->setPassword($pw);
+		$user->setEmail($e);
+	
 		$error[] =  $exception->getMessage();
 	}
 }

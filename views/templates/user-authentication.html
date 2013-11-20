@@ -4,10 +4,11 @@
 
 <h1>Login Form</h1>
 <form method="POST" action="login.php">
+	<p>Your username must be of at least length 3</p>
 	<label>Username:</label>
-	<input type="text" name="username">
+	<input type="text" name="username" pattern=".{3,}" required> 
 	<label>Password:</label>
-	<input type="password" name="password">
+	<input type="password" name="password" required>
 	<input type="submit" name="" value="Login" >
 </form>
 
@@ -15,10 +16,10 @@
 <form method="POST" action="register.php">
 	<p>Your username must be of at least length 3</p>
 	<label>Username:</label>
-	<input type="text" name="username">
+	<input type="text" name="username" pattern=".{3,}" required>
 	<label>Password:</label>
-	<input type="password" name="password">
+	<input type="password" name="password" required>
 	<label>Email:</label>
-	<input type="text" name="email">
+	<input type="text" name="email" required>
 	<input type="submit" name="" value="Register Me" >
 </form>

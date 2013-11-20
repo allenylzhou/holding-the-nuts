@@ -1,6 +1,7 @@
 <html>
 <body>
-<h2>Backings</h2>
+
+<h1>Your Backers</h1>
 <table style="width:100%;">
 	<tr style="background-color:#CACACA">
 		<td><strong>Backer Name</strong></td>
@@ -31,6 +32,7 @@
 	</tr>
 </table>
 
+<h1>Your Backing Agreements</h1>
 <table style="width:100%;">
 	<tr style="background-color:#CACACA">
 		<td><strong>Backer Name</strong></td>
@@ -55,9 +57,10 @@
 	</tr>
 </table>
 
+<h1>Users with the same Backers</h1>
 <table style="width:100%;">
 	<tr style="background-color:#CACACA">
-		<td><strong>Users with the same Backers</strong></td>
+		<td><strong>Username</strong></td>
 	</tr>
 	<tr style="background-color:#F0F0F0">
 		<td>[sameBackers.val;block=tr;]</td>
@@ -68,21 +71,21 @@
 	[messages.val;block=p;]
 </p>
 
-<h1>Add Backer</h1>
+<h1>Add a Backer</h1>
 <form method="POST" action="backer.php">
 	<div>
 		<label>Username:</label>
-		<input type="text" name="backerToAdd">
+		<input type="text" name="backerToAdd" required>
 	</div>		
 	<input type="submit" name="" value="Add" >
 </form>
 
 
-<h1>Backing Agreement Form</h1>
+<h1>Add a Backing Agreement</h1>
 <form method="POST" action="backings.php">
 	<div>
 		<label>Username:</label>
-		<select name="backerId">
+		<select name="backerId" required>
 			<option value="[backerList.key]">[backerList.val;block=option]</option> 
 		</select>
 	</div>	

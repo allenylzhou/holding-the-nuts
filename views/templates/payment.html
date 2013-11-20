@@ -2,6 +2,8 @@
 
 <html>
 <body>
+
+<h1>Payments from You</h1>
 <table style="width:100%;">
 	<tr style="background-color:#CACACA">
 		<td><strong>To</strong></td>
@@ -20,6 +22,7 @@
 	</tr>
 </table>
 
+<h1>Payments to You</h1>
 <table style="width:100%;">
 	<tr style="background-color:#CACACA">
 		<td><strong>From</strong></td>
@@ -42,17 +45,17 @@
 	[messages.val;block=p;]
 </p>
 
-<h1>Backing Agreement Form</h1>
+<h1>Add a Payment</h1>
 
 
 <form method="POST" action="payment.php">
 	<div>
 		<label>Username:</label>
-		<input type="text" name="username" value="[payeeUsername]">
+		<input type="text" name="username" value="[payeeUsername]" required>
 	</div>	
 	<div>
 		<label>Amount:</label>
-		<input type="number" name="amount" value=[payeeAmount]>
+		<input type="number" name="amount" value=[payeeAmount] required min=1>
 	</div>	
 	<div>
 		<label>Date:</label>

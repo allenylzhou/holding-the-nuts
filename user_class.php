@@ -36,6 +36,7 @@ class User extends Database {
 	}
 
 	public function getUserId() { return $this->userId; }
+	public function getPassword() { return $this->password; }
 	public function getUsername() { return $this->username; }
 	public function getEmail() { return $this->email; }
 	
@@ -51,10 +52,14 @@ class User extends Database {
 		}
 	}	
 	
+	public function store(){
+		$this->update();
+	}
+	
 	public function login() {
 		try{
 			$connection = Database::start();
-			$sqlString = 'SELECT USER_ID, USERNAME, PASSWORD 
+			$sqlString = 'SELECT USER_ID, USERNAME, PASSWORD, EMAIL
 						FROM USERS
 						WHERE USERNAME = :username 
 						and PASSWORD = :password';
@@ -70,6 +75,8 @@ class User extends Database {
 				$this->username = $val;
 				$val = $row['PASSWORD'];
 				$this->password = $val;
+				$val = $row['EMAIL'];
+				$this->email = $val;
 				
 				$_SESSION['USER'] = $this;
 				session_write_close();
@@ -123,7 +130,11 @@ class User extends Database {
 			$stid = oci_parse($connection, $sqlString);
 			oci_bind_by_name($stid, ':userId', $this->userId, 20);
 			oci_bind_by_name($stid, ':backerId', $backerId, 20);
-			oci_execute($stid);
+			
+			if(!oci_execute($stid)){
+				$error = oci_error($stid);	
+				throw new DatabaseException($error['message'], $error['code'], NULL, $error['sqltext']);
+			}
 		}
 		catch (Exception $exception) {
 			if($connection != null){
@@ -182,6 +193,9 @@ class User extends Database {
 											select distinct(hb2.backer) 
 											from horse_backers hb2
 											where hb2.horse = hb.horse)
+							and exists (select distinct(hb1.backer)
+											from horse_backers hb1
+											where hb1.horse = :userId)
 							and u.user_id = hb.horse';
 			$stid = oci_parse($connection, $sqlString);
 			oci_bind_by_name($stid, ':userId', $this->userId, 20);
