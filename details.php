@@ -13,13 +13,16 @@ if (isset($_SESSION['USER'])) {
 		if(!empty($_POST['locationName'])){
 			$locationName = $_POST['locationName'];
 		}
-		else if(array_key_exists('newLocationName', $_POST) && $_POST['locationName'] != '' && $_POST['newLocationName'] != '') {
+		else if(array_key_exists('newLocationName', $_POST) &&
+			($_POST['locationName'] == null  ||$_POST['locationName'] == '' )&&
+			$_POST['newLocationName'] != '') {
 			$locationName = $_POST['newLocationName'];
 			$newLocation = new Location(array('userId' => $user->getUserId(), 'name' => $locationName));
-			$newLocation->save();
+			$newLocation->save2(true);
 		} else {
-			$locationName = $_POST['locationName'];
+			$locationName = null;
 		}	
+		
 		$startDate = (!empty($_POST['startDate'])) ? date('Y-m-d H:i:s', strtotime($_POST['startDate'])) : "";
 		$endDate = (!empty($_POST['endDate'])) ? date('Y-m-d H:i:s', strtotime($_POST['endDate'])) : "";
 		$game->setAttributes(array(
