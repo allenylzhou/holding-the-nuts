@@ -18,10 +18,12 @@ if (isset($_SESSION['USER'])) {
 			$locationName = $_POST['locationName'];
 		}	
 
+		$startDate = (!empty($_POST['startDate'])) ? date('Y-m-d H:i:s', strtotime($_POST['startDate'])) : "";
+		$endDate = (!empty($_POST['endDate'])) ? date('Y-m-d H:i:s', strtotime($_POST['endDate'])) : "";
 		$game->setAttributes(array(
 			'userId' => $user->getUserId(),
-			'startDate' => $_POST['startDate'],
-			'endDate' => $_POST['endDate'],
+			'startDate' => $startDate,
+			'endDate' => $endDate,
 			'amountIn' => $_POST['amountIn'],
 			'amountOut' => $_POST['amountOut'],
 			'locationName' => $locationName

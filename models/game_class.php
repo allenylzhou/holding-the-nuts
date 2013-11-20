@@ -60,7 +60,13 @@ abstract class Game extends Database {
 			$where .= " AND P.END_DATE IS NULL";
 		}
 
-		$sqlString = "SELECT P.GS_ID, START_DATE, LOCATION_NAME, START_DATE - END_DATE AS DURATION, AMOUNT_OUT - AMOUNT_IN AS PROFIT, BIG_BLIND, SMALL_BLIND
+		$sqlString = "SELECT 
+					P.GS_ID, 
+					START_DATE, 
+					LOCATION_NAME, 
+					(TO_DATE(TO_CHAR(END_DATE,'yyyy-mm-dd hh24:mi:ss'), 'yyyy-mm-dd hh24:mi:ss') - TO_DATE(TO_CHAR(START_DATE,'yyyy-mm-dd hh24:mi:ss'), 'yyyy-mm-dd hh24:mi:ss')) * 24 * 60 AS DURATION,
+					AMOUNT_OUT - AMOUNT_IN AS PROFIT, 
+					BIG_BLIND, SMALL_BLIND
 				FROM GAME P, $gameType C
 				WHERE $where
 				ORDER BY P.GS_ID ASC";

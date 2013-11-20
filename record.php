@@ -15,11 +15,15 @@ if (isset($_SESSION['USER'])) {
 			$locationName = $_POST['locationName'];
 		}	
 
+		var_dump($_POST);
+
 		$newGame = new CashGame;
+		$startDate = (!empty($_POST['startDate'])) ? date('Y-m-d H:i:s', strtotime($_POST['startDate'])) : "";
+		$endDate = (!empty($_POST['endDate'])) ? date('Y-m-d H:i:s', strtotime($_POST['endDate'])) : "";
 		$newGame->setAttributes(array(
 			'userId' => $user->getUserId(),
-			'startDate' => $_POST['startDate'],
-			'endDate' => $_POST['endDate'],
+			'startDate' => $startDate,
+			'endDate' => $endDate,
 			'amountIn' => $_POST['amountIn'],
 			'amountOut' => $_POST['amountOut'],
 			'locationName' => $locationName
@@ -35,7 +39,7 @@ if (isset($_SESSION['USER'])) {
 		header('Location: ./index.php?action=sessions');
 	}
 	// Display the form
-	$time = date('Y-m-d');
+	$time = date('Y-m-d H:i:s');
 	$locations = Location::loadLocationsByUserId($user->getUserId());
 	$backers = BackingAgreement::loadBackingAgreementsByHorseId($user->getUserId());
 
