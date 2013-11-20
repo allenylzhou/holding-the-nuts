@@ -1,7 +1,7 @@
 <html>
 	<body>
+		<h2>Create Cash Game</h2>
 		<form id="newSessionForm" method="POST" action="">
-			<h1>Cash Game</h1>
 			<table>
 				<tr>
 					<td class="leftColumn"><label for="sessionStart">Start:</label></td>
@@ -39,16 +39,7 @@
 						<select id="sessionBacker" name="backingAgreementId" onchange="checkBackerNamePercentage();">
 							<option value="-1">No Backer</option>
 							<option value="[backers.BA_ID;block=option;]">[backers.USERNAME] - [backers.PERCENT_OF_WIN]%</option>
-							<option value="">New Backer</option>
 						</select>
-						<span id="newBackingAgreement" style="display:none;">
-							<br/>
-							<label for="sessionNewBackerName">Name:</label>
-							<input id="sessionNewBackerName" type="text" name="newBackerName">
-							<br/>
-							<label for="sessionNewBackerPercentage">Percentage:</label>
-							<input id="sessionNewBackerPercentage" type="text" name="newBackerPercentage" size="2">
-						</span>
 					</td>
 				</tr>
 			</table>
@@ -58,7 +49,6 @@
 
 		<script>
 			checkLocationName();
-			checkBackerNamePercentage();
 
 			function checkLocationName() {
 				// Hide input
@@ -71,20 +61,6 @@
 				 	document.getElementById("newLocation").style.display = "";
 				}
 			}
-
-			function checkBackerNamePercentage() {
-				// Hide input
-				document.getElementById("newBackingAgreement").style.display = "none";
-				document.getElementById("sessionNewBackerName").value = "";
-				document.getElementById("sessionNewBackerPercentage").value = "";
-
-				var dropdownList = document.getElementById("sessionBacker");
-				if(dropdownList.options[dropdownList.selectedIndex].value == "") {
-					// Show input
-				 	document.getElementById("newBackingAgreement").style.display = "";
-				}
-			}
-
 		</script>
 
 	</body>

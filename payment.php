@@ -1,14 +1,8 @@
 <?php
 
-include 'error_reporting.php';
-include_once 'tbs_class.php';
-include 'user_class.php';
-include 'payment_class.php';
-session_start();
- 
 $template = "views/templates/payment.html";
-$error = array();
 
+$error = array();
 if (!isset($_SESSION['USER'])){
 	header('Location: ./login.php?redirect=1');
 }

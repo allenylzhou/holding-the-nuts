@@ -1,5 +1,3 @@
-
-
 <?php
 
 include_once 'database_class.php';

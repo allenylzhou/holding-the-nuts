@@ -1,14 +1,8 @@
 <?php 				
 
-include 'error_reporting.php';
-include_once 'tbs_class.php';
-
-include 'user_class.php';
-session_start();
-
 $template = "views/templates/user-authentication.html";
-$error = array();
 
+$error = array();
 if (!array_key_exists('username', $_POST) && !array_key_exists('password', $_POST)) {
 	
 }
@@ -30,7 +24,7 @@ else {
 		));
 		
 		$user->login();
-		header('Location: sessions.php') ;
+		header('Location: index.php?view=sessions') ;
 
 	}
 	catch (Exception $exception) {

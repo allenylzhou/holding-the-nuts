@@ -1,13 +1,5 @@
 <?php
 
-include 'error_reporting.php';
-include_once 'tbs_class.php';
-
-include 'game_class.php';
-include 'user_class.php';
-include 'statistics_class.php';
-
-session_start();
 $template = "views/templates/player-statistics.html";
 $bestWorst = 'Best';
 if (isset($_SESSION['USER'])) {

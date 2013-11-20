@@ -1,15 +1,6 @@
 <?php
 
-include 'error_reporting.php';
-include_once 'tbs_class.php';
-include 'backing_class.php';
-include 'user_class.php';
-
-session_start();
-
 $template = "views/templates/player-horses.html";
-$error[] = array();
-
 
 $error = array();
 	

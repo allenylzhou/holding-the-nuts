@@ -1,7 +1,28 @@
 <?php
+	error_reporting(E_ALL);
+	ini_set('display_errors', 'On');
 
-include "error_reporting.php";
+	// Configure TBS
+	date_default_timezone_set('America/Vancouver');
 
-header("Location: login.php");
+	// Configure session
+	session_save_path('./tmp');
+
+	// Include TBS
+	require_once 'third-party/tbs_class.php';
+
+	// Include models
+	require_once 'models/backing_class.php';
+	require_once 'models/user_class.php';
+	require_once 'models/game_class.php';
+	require_once 'models/location_class.php';
+	require_once 'models/payment_class.php';
+	require_once 'models/statistics_class.php';
+	require_once 'models/user_class.php';
+
+	// Show view
+	session_start();
+	$view = (isset($_GET['view'])) ? $_GET['view'] : 'login';
+	include "$view.php";
 
 ?>

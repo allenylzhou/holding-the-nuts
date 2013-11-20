@@ -1,16 +1,7 @@
 <?php
 
-include "error_reporting.php";
-include 'tbs_class.php';
-
-include 'user_class.php';
-include 'game_class.php';
-include 'backing_class.php';
-include 'location_class.php';
-
 $template = 'views/templates/session-details.html';
 
-session_start();
 if (isset($_SESSION['USER'])) {
 	$user = $_SESSION['USER'];
 	$gameSessionId = $_GET['gsId'];

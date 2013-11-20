@@ -1,18 +1,14 @@
 <?php
 
-include 'error_reporting.php';
-include_once 'tbs_class.php';
-include 'user_class.php';
-session_start();
- 
 $template = "views/templates/user-profile.html";
-$error = array();
 
+$error = array();
 if (!isset($_SESSION['USER'])){
 	header('Location: ./login.php?redirect=1');
 }
 
 $user = $_SESSION['USER'];
+var_dump($user);
 if (   !array_key_exists('username', $_POST) 
 	&& !array_key_exists('password', $_POST)
 	&& !array_key_exists('email', $_POST)) {

@@ -1,13 +1,8 @@
 <?php
 
-include 'error_reporting.php';
-include 'tbs_class.php';
-
-include 'user_class.php';
-session_start();
 $template = "views/templates/user-authentication.html";
+
 $error = array();
-	
 if (!array_key_exists('username', $_POST) 
 	&& !array_key_exists('password', $_POST)
 	&& !array_key_exists('email', $_POST)) {

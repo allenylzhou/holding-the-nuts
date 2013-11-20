@@ -1,16 +1,6 @@
 <?php
 
-include 'error_reporting.php';
-include_once 'tbs_class.php';
-
-include 'user_class.php';
-include 'game_class.php';
-include 'backing_class.php';
-include 'location_class.php';
-
-session_start();
 $template = 'views/templates/cash-sessions.html';
-
 
 if (isset($_SESSION['USER'])) {
 
