@@ -74,6 +74,10 @@ class Statistics {
 	public static function getPerformingDays($userId, $getMin) {
 		try{
 			$connection = Database::start();
+			$minMax = 'max';
+			if($getMin){
+				$minMax = 'min';
+			}
 			$sqlString = "WITH USER_WINNING_ON_DAY AS (
 							  SELECT TRUNC(START_DATE) AS GAME_DAY,
                                      AVG(AMOUNT_OUT-AMOUNT_IN) as WINNINGS
@@ -82,15 +86,11 @@ class Statistics {
 							  GROUP BY TRUNC(START_DATE))
 							SELECT GAME_DAY, WINNINGS
 							FROM   USER_WINNING_ON_DAY
-							WHERE  WINNINGS = (SELECT decode(:getMin, 1, MIN(A.WINNINGS), MAX(A.WINNINGS))
+							WHERE  WINNINGS = (SELECT $minMax(A.WINNINGS)
 													FROM USER_WINNING_ON_DAY A)";
 			$stid = oci_parse($connection, $sqlString);
 			oci_bind_by_name($stid, ':userId', $userId, 20);
-			$switch = 0;
-			if($getMin){
-				$switch = 1;
-			}
-			oci_bind_by_name($stid, ':getMin', $switch, 20);
+
 			oci_execute($stid);
 			
 			$day = array();

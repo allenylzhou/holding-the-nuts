@@ -54,31 +54,35 @@ class Payment extends Database {
 	
 	public static function _getPayments($userId, $isFrom, $isTo){
 		$results = array();
+		if(!$isFrom && !$isTo){
+			return $results;
+		}
 		$connection = static::start();
 
-		$sqlString = 'select PP_ID, u1.username as PAYER, u2.username AS PAYEE, PAYMENT_DATE, AMOUNT
+		$fromClause = '';
+		if($isFrom){
+			$fromClause = '(payer_id = :userId)';
+		}
+		
+		$toClause = '';
+		if($isTo){
+			$toClause = '(payee_id = :userId)';
+		}
+		
+		$or = '';
+		if($isTo && $isFrom){
+			$or = 'or';
+		}
+		
+		$sqlString = "select PP_ID, u1.username as PAYER, u2.username AS PAYEE, PAYMENT_DATE, AMOUNT
 						from payment, users u1, users u2
 						where u1.user_id = payer_id
 						and u2.user_id = payee_id
-						and ((payer_id = :userId and 1 = :isPayer) 
-                 or (payee_id = :userId and 1 = :isPayee))';
-
+						and (" . $fromClause . $or . $toClause . ")";
+		echo $sqlString;
 		$sqlStatement = oci_parse($connection, $sqlString);
 		oci_bind_by_name($sqlStatement, ':userId', $userId);
-		if($isFrom){
-			$isFrom = 1;
-		}
-		else{
-			$isFrom = 0;
-		}
-		if($isFrom){
-			$isFrom = 1;
-		}
-		else{
-			$isFrom = 0;
-		}
-		oci_bind_by_name($sqlStatement, ':isPayer', $isFrom);
-		oci_bind_by_name($sqlStatement, ':isPayee', $isTo);
+
 		if(oci_execute($sqlStatement)) {
 			while ($row = oci_fetch_assoc($sqlStatement)) {
 				$rowTemp = array();
