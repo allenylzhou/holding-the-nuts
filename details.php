@@ -33,8 +33,19 @@ if (isset($_SESSION['USER'])) {
 			'amountOut' => $_POST['amountOut'],
 			'locationName' => $locationName
 		));
-		$game->save2(true);
-
+		try{
+			$game->save2(true);
+		}
+		catch (DatabaseException $exception) {
+			switch ($exception->getErrorCode()) {
+				default:
+					$error[] =  "An unknown error has occured";
+					break;
+			}
+		}
+		catch (Exception $exception) {
+			$error[] = $exception->getMessage();
+		}
 		header('Location: ./index.php?action=sessions');
 	}
 

@@ -36,7 +36,6 @@ else {
 		$error[] = 'Registration successful';
 	}
 	catch (DatabaseException $exception) {
-		echo $exception->getMessage();
 		switch ($exception->getErrorCode()) {
 			case 1:
 				$error[] =  "This username has already been claimed, or the email has already been claimed";

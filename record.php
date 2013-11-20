@@ -6,7 +6,7 @@ if (isset($_SESSION['USER'])) {
 	$user = $_SESSION['USER'];
 
 	if (array_key_exists('submit', $_POST)) {
-	
+		
 		if(!empty($_POST['locationName'])){
 			$locationName = $_POST['locationName'];
 		}
@@ -35,12 +35,36 @@ if (isset($_SESSION['USER'])) {
 			'smallBlind' => $_POST['smallBlind'],
 			'locationName' => $locationName
 		));
-		$newGame->save();
+		try{
+			$newGame->save();
+		}
+		catch (DatabaseException $exception) {
+			switch ($exception->getErrorCode()) {
+				default:
+					$error[] =  "An unknown error has occured";
+					break;
+			}
+		}
+		catch (Exception $exception) {
+			$error[] = $exception->getMessage();
+		}
 
 		$backingAgreementId = $_POST['backingAgreementId'];
 		if ($backingAgreementId >= 0) {
 			$newBacking = new Backing(array('baId' => $backingAgreementId, 'gsId' => $newGame->getGsId()));
-			$newBacking->save();
+			try{
+				$newBacking->save();
+			}
+			catch (DatabaseException $exception) {
+				switch ($exception->getErrorCode()) {
+					default:
+						$error[] =  "An unknown error has occured";
+						break;
+				}
+			}
+			catch (Exception $exception) {
+				$error[] = $exception->getMessage();
+			}
 		}
 
 		header('Location: ./index.php?action=sessions');
