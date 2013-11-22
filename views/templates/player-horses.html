@@ -1,24 +1,24 @@
-<div>
-
 <p>
 	[messages.val;block=p;]
 </p>
 
 
 <h1>Your Horses</h1>
-<table style="width:100%;">
-	<tr style="background-color:#CACACA">
-		<td><strong>[usernameEmail]</strong></td>
-		<td><strong>Total Amount Owed</strong></td>
-	</tr>
-	<tr style="background-color:#F0F0F0">
-		<td>[horses.VAL;block=tr;]</td>
-		<td>[horses.OWED]</td>
-	</tr>
-	<tr style="background-color:#E6E6E6">
-		<td>[horses.VAL;block=tr;]</td>
-		<td>[horses.OWED]</td>
-	</tr>
+<table>
+	<thead>
+		<th>[usernameEmail]</th>
+		<th>Total Amount Owed</th>
+	</thead>
+	<tbody>
+		<tr class="odd">
+			<td>[horses.VAL;block=tr;]</td>
+			<td>[horses.OWED]</td>
+		</tr>
+		<tr class="even">
+			<td>[horses.VAL;block=tr;]</td>
+			<td>[horses.OWED]</td>
+		</tr>
+	</tbody>
 </table>
 
 
@@ -30,5 +30,3 @@
 	and Owes At Least <input type="number" name="owesAtLeast" value="0" required>
 	<input type="submit" value="Show">
 </form>
-
-</div>

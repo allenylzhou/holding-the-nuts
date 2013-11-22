@@ -10,7 +10,6 @@ if (isset($_SESSION['USER'])) {
 	if(isset($_POST['backerToAdd'])){
 		try{
 			$user->addBacker(User::findUserId($_POST['backerToAdd']));
-			echo 'aaaa';
 		}
 		catch(DataBaseException $e){
 			switch ($e->getCode()) {

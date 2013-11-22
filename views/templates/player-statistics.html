@@ -1,37 +1,33 @@
-<html>
-<body>
-	<h2>Statistics</h2>
-	<ul>
-		<li>Total Profit: $[var.totalProfit]</li>
-		<li>Total Hours Played: [var.totalHours]</li>
-		<li>Hourly: $[var.hourly]</li> 
-		<li>Average Buyin: $[var.averageBuyin]</li>
-		<li>Profit By Month:<ul>
+<h2>Statistics</h2>
+<ul>
+	<li>Total Profit: $[var.totalProfit]</li>
+	<li>Total Hours Played: [var.totalHours]</li>
+	<li>Hourly: $[var.hourly]</li> 
+	<li>Average Buyin: $[var.averageBuyin]</li>
+	<li>Profit By Month:<ul>
+		<li>
+			[profitByMonth.MON;block=li;]/[profitByMonth.YEAR;block=li] = [profitByMonth.AM;block=li]
+		</li>
+		</ul>
+	</li>
+	<li>Profit By Day Of Week:<ul>
+		<li>
+			[profitByDOW.DAY;block=li;] = [profitByDOW.AMOUNT;block=li]
+		</li>
+		</ul>
+	</li>
+	<li>[bestWorst] Performing Days: 
+		<ul>
 			<li>
-				[profitByMonth.MON;block=li;]/[profitByMonth.YEAR;block=li] = [profitByMonth.AM;block=li]
+				[bestWorstPerformingDays.val;block=li;]
 			</li>
-			</ul>
-		</li>
-		<li>Profit By Day Of Week:<ul>
-			<li>
-				[profitByDOW.DAY;block=li;] = [profitByDOW.AMOUNT;block=li]
-			</li>
-			</ul>
-		</li>
-		<li>[bestWorst] Performing Days: 
-			<ul>
-				<li>
-					[bestWorstPerformingDays.val;block=li;]
-				</li>
-			</ul>
-		</li>
-	</ul>
+		</ul>
+	</li>
+</ul>
 
 <form method="POST" action="index.php?action=statistics">	
 	<input type="radio" name="bestWorst" value="best" checked="checked" required>Best<br>
-	<input type="radio" name="bestWorst" value="worst" required>Worst
+	<input type="radio" name="bestWorst" value="worst" required>Worst<br>
 	<input type="submit" value="Show">
 </form>
 
-	
-</html>

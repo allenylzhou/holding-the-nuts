@@ -1,51 +1,112 @@
 <html>
 	<head>
-		<link rel="stylesheet" type="text/css" href="views/css/all.css">
+		<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+		<script src="js/bootstrap.min.js"></script>
+		<link rel="stylesheet" type="text/css" href="views/css/bootstrap.min.css"/>
+		<link rel="stylesheet" type="text/css" href="views/css/all.css"/>
+		<style type="text/css">
+
+		</style>
+		<title>
+			Horse and Backers
+		</title>
 	</head>
 	<body>
-		<div id="appContainer">
-			<div id="appHeader">
-				<h1>HORSES & BACKERS</h1>
-			</div>
-			<ul id="appMenu">
-				<li>
-					<a href="index.php?action=register">
-						Register/Login<span>&gt;</span>
-					</a>
-				</li>
-				<li>
-					<a href="index.php?action=user">
-						My Settings<span>&gt;</span>
-					</a>
-				</li>
-				<li>
-					<a href="index.php?action=sessions">
-						Sessions<span>&gt;</span>
-					</a>
-				</li>
-				<li>
-					<a href="index.php?action=statistics">
-						Statistics<span>&gt;</span>
-					</a>
-				</li>
-				<li>
-					<a href="index.php?action=backings">
-						Backings<span>&gt;</span>
-					</a>
-				</li>
-				<li>
-					<a href="index.php?action=horses">
-						Horses<span>&gt;</span>
-					</a>
-				</li>
-				<li>
-					<a href="index.php?action=payment">
-						Track a Payment<span>&gt;</span>
-					</a>
-				</li>
-			</ul>
-			<div id="appView">
-				[onload;file=[var.template];getbody]
+		<div class="row-fluid">
+			<div id="body" class="span10 offset1">
+				<div id="header" class="row-fluid">
+					<div id="logo">
+						<img style="width:90px;height:90px" src="images/e.jpg"/>
+					</div>
+					<h1 id="banner">
+					<a href="#">Horses and Backers</a>
+					</h1>
+				</div>
+				<div id="menubarItemBar" class="row-fluid">
+					<div class="menubarItem menu">
+						<ul>		
+							<li>
+							<span>Payments</span>
+								<ul>
+									<li><a href="index.php?action=payment">Payments</a></li>
+								</ul>
+							</li>
+						</ul>
+					</div>
+					<div class="menubarItem menu">
+						<ul>		
+							<li>
+							<span>Backing Management</span>
+								<ul>
+									<li><a href="index.php?action=backings">Backings</a></li>
+									<li><a href="index.php?action=horses">Horses</a></li>
+								</ul>
+							</li>
+						</ul>
+					</div>
+					<div class="menubarItem menu">
+						<ul>		
+							<li>
+							<span>My Games</span>
+								<ul>
+									<li><a href="index.php?action=sessions">Sessions</a></li>
+									<li><a href="index.php?action=statistics">Statistics</a></li>
+								</ul>
+							</li>
+						</ul>
+					</div>
+					<div class="menubarItem menu">
+						<ul>		
+							<li>
+							<span>Account Management</span>
+								<ul>
+									<li><a href="index.php?action=register">Register/Login</a></li>
+									<li><a href="index.php?action=user">My Account</a></li>
+								</ul>
+							</li>
+						</ul>
+					</div>
+				</div>
+				<div id="contentContainer">
+					<div id="appView">
+						[onload;file=[var.template];getbody]
+					</div>
+				</div>
+				<div id="footer" class="row-fluid">
+					<div id="footerSections" class="span12">
+						<div class="footerSection span1 offset4">
+							Account
+							<ul class="footerList">
+								<li><a href="index.php?action=register">Register</a></li>
+								<li><a href="index.php?action=login">Login</a></li>
+								<li><a href="index.php?action=user">Account</a></li>
+							</ul>
+						</div>
+						<div class="footerSection span1">
+							Games
+							<ul class="footerList">
+								<li><a href="index.php?action=sessions">Sessions</a></li>
+								<li><a href="index.php?action=statistics">Statistics</a></li>
+							</ul>
+						</div>
+						<div class="footerSection span1">
+							Backings
+							<ul class="footerList">
+								<li><a href="index.php?action=backings">Backings</a></li>
+								<li><a href="index.php?action=horses">Horses</a></li>
+							</ul>
+						</div>
+						<div class="footerSection span1">
+							Payment
+							<ul class="footerList">
+								<li><a href="index.php?action=backings">Payments</a></li>
+							</ul>
+						</div>
+					</div>
+					<div id="copyright" class="span3 offset4">
+						JY (C) 2013
+					</div>
+				</div>
 			</div>
 		</div>
 	</body>

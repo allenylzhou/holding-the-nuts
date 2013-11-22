@@ -1,17 +1,16 @@
-<html>
-	<body>
-	<h2>Cash Games</h2>
-	<table class="sessionTable">
-		<tr style="background-color:#CACACA">
-			<td><strong>Date</strong></td>
-			<td><strong>Location</strong></td>
-			<td><strong>Small Blind</strong></td>
-			<td><strong>Big Blind</strong></td>
-			<td><strong>Duration</strong></td>
-			<td><strong>Profit</strong></td>
-			<td></td>
-		</tr>
-		<tr style="background-color:#F0F0F0">
+<h2>Cash Games</h2>
+<table class="sessionTable">
+	<thead>
+		<th>Date</th>
+		<th>Location</th>
+		<th>Small Blind</th>
+		<th>Big Blind</th>
+		<th>Duration</th>
+		<th>Profit</th>
+		<th></td>
+	</thead>
+	<tbody>
+		<tr class="odd">
 			<td>
 				<strong>[finishedGames.START_DATE;block=tr;frm='ddd dd mmm yyyy']</strong>
 			</td>
@@ -28,7 +27,7 @@
 				<a href="index.php?action=details&gsId=[finishedGames.GS_ID]">View Details ></a>
 			</td>
 		</tr>
-		<tr style="background-color:#E6E6E6">
+		<tr class="even">
 			<td>
 				<strong>[finishedGames.START_DATE;block=tr;frm='ddd dd mmm yyyy']</strong>
 			</td>
@@ -52,8 +51,6 @@
 		</tr>
 		<tr>
 			<td colspan="7"><a href="index.php?action=record">Add a new session</a></td>
-		</tr>
-	</table>
-
-	</body>
-</html>
+		</tr>	
+	</tbody>
+</table>

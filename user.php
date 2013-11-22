@@ -8,7 +8,6 @@ if (!isset($_SESSION['USER'])){
 }
 
 $user = $_SESSION['USER'];
-var_dump($user);
 if (   !array_key_exists('username', $_POST) 
 	&& !array_key_exists('password', $_POST)
 	&& !array_key_exists('email', $_POST)) {
