@@ -38,7 +38,10 @@ li:hover span {
 .menu ul li ul li a {
 	color: #eee;
 }
-.menu ul li ul li:hover a {
+.menu ul li ul a li:hover {
+    text-decoration:underline;
+}
+.menu ul li ul li:hover {
     text-decoration:underline;
 }
 body {
