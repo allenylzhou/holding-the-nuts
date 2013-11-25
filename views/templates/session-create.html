@@ -1,34 +1,34 @@
-<h2>Cash Game Details</h2>
+<h2>Create Cash Game</h2>
 
 <p>
 	[messages.val;block=p;]
 </p>
 
-<form id="newSessionForm" method="POST" action="index.php?action=details&gsId=[var.details.gsId]">
+<form id="newSessionForm" method="POST" action="index.php?action=record">
 	<table>
 		<tr>
 			<td class="leftColumn"><label for="sessionStart">Start:</label></td>
-			<td class="rightColumn"><input id="sessionStart" type="text" name="startDate" value="[var.details.startDate;frm='yyyy-mm-dd hh:nn:ss']"></td>
+			<td class="rightColumn"><input id="sessionStart" type="text" name="startDate" value="[var.time]"></td>
 		</tr>
 		<tr>
 			<td class="leftColumn"><label for="sessionEnd">End:</label></td>
-			<td class="rightColumn"><input id="sessionEnd" type="text" name="endDate" value="[var.details.endDate;frm='yyyy-mm-dd hh:nn:ss']"></td>
+			<td class="rightColumn"><input id="sessionEnd" type="text" name="endDate" value="[var.time]"></td>
 		</tr>
 		<tr>
 			<td class="leftColumn"><label for="sessionBuyin">Buy-in:</label></td>
-			<td class="rightColumn"><input id="sessionBuyin" type="number" name="amountIn" value="[var.details.amountIn]" required></td>
+			<td class="rightColumn"><input id="sessionBuyin" type="number" name="amountIn" value="0" required></td>
 		</tr>
 		<tr>
 			<td class="leftColumn"><label for="sessionCashout">Cash-out:</label></td>
-			<td class="rightColumn"><input id="sessionCashout" type="number" name="amountOut" value="[var.details.amountOut]" required></td>
+			<td class="rightColumn"><input id="sessionCashout" type="number" name="amountOut" value="0" required></td>
 		</tr>
 		<tr>
 			<td class="leftColumn"><label for="sessionSmallblind">Small-blind:</label></td>
-			<td class="rightColumn"><input id="sessionSmallblind" type="number" name="smallBlind" value="[var.details.smallBlind]"></td>
+			<td class="rightColumn"><input id="sessionSmallblind" type="number" name="smallBlind" value="0"></td>
 		</tr>
 		<tr>
 			<td class="leftColumn"><label for="sessionBigblind">Big-blind:</label></td>
-			<td class="rightColumn"><input id="sessionBigblind" type="number" name="bigBlind" value="[var.details.bigBlind]"></td>
+			<td class="rightColumn"><input id="sessionBigblind" type="number" name="bigBlind" value="0"></td>
 		</tr>
 		<tr>
 			<td class="leftColumn"><label for="sessionLocation">Location:</label></td>
@@ -48,25 +48,19 @@
 		<tr>
 			<td class="leftColumn"><label for="sessionBacker">Backer:</label></td>
 			<td class="rightColumn">
-				[var.backing.USERNAME;ifempty='None';noerr] - [var.backing.PERCENT_OF_WIN;ifempty='0';noerr]%
+				<select id="sessionBacker" name="backingAgreementId" onchange="checkBackerNamePercentage();">
+					<option value="-1">No Backer</option>
+					<option value="[backers.BA_ID;block=option;]">[backers.USERNAME] - [backers.PERCENT_OF_WIN]%</option>
+				</select>
 			</td>
 		</tr>
 	</table>
 
 	<input id="sessionSave" type="submit" value="Save" name="submit">
-	<input id="sessionDelete" type="submit" value="Delete" name="delete" onclick="return confirmDelete();">
 </form>
 
 <script>
 	checkLocationName();
-
-	var dropdownList = document.getElementById("sessionLocation");
-	for(var i, j = 0; i = dropdownList.options[j]; j++) {
-		if(i.value == "[var.details.locationName]") {
-			dropdownList.selectedIndex = j;
-			break;
-		}
-	}
 
 	function checkLocationName() {
 		// Hide input
@@ -80,16 +74,4 @@
 			document.getElementById("newLocation").style.display = "";
 		}
 	}
-
-	function confirmDelete() {
-		if(confirm("Please note that any backings associated with this session will also be deleted and your backings balance may be affected. Are you sure you want to continue?")) {
-			document.forms[0].submit();
-		} else {
-			debugger;
-			return false;
-		}
-	}
-
-
-
 </script>

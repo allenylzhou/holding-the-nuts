@@ -7,6 +7,7 @@ if (isset($_SESSION['USER'])) {
 	$gameSessionId = $_GET['gsId'];
 	$game = new CashGame(array('gsId'=>$gameSessionId), true);
 
+	$error = array();
 	// Handle form
 	if (array_key_exists('submit', $_POST)) {
 
@@ -40,6 +41,9 @@ if (isset($_SESSION['USER'])) {
 		}
 		catch (DatabaseException $exception) {
 			switch ($exception->getErrorCode()) {
+				case 2290:
+					$error[] = "Your inputs were invalid";
+					break;
 				default:
 					$error[] =  "An unknown error has occured";
 					break;
@@ -50,9 +54,7 @@ if (isset($_SESSION['USER'])) {
 		}
 
 		// TODO: add error messaging
-		if (!empty($error)) {
-			var_dump($error);
-		} else {
+		if (empty($error)) {
 			header('Location: ./index.php?action=sessions');
 		}
 	}
@@ -70,6 +72,7 @@ if (isset($_SESSION['USER'])) {
 	$TBS = new clsTinyButStrong;
 	$TBS->LoadTemplate('views/templates/app-container.html');
 	$TBS->MergeBlock('details', $details);
+	$TBS->MergeBlock('messages', $error);
 	$TBS->MergeBlock('locations', $locations);
 	$TBS->Show();
 
