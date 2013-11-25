@@ -143,6 +143,7 @@ class Database {
 
 				foreach ($tableAttributes as $table => $attributes) {
 
+					$selects = array();
 					$wheres = array();
 					$bindings = array();
 
@@ -152,18 +153,33 @@ class Database {
 						$placeholder = ":bv" . count($bindings);
 						switch ($domain['type']) {
 							case DataType::DATE:
+								$selects[] = "TO_CHAR($columnname,'yyyy-mm-dd hh24:mi:ss') AS $columnname";
 								$wheres[] = "$columnname=TO_DATE($placeholder, 'yyyy/mm/dd hh24:mi:ss')";
 								break;
 							default:
+								$selects[] = $columnname;
 								$wheres[] = "$columnname=$placeholder";
 								break;
 						}
 						$bindings[$placeholder] = $name;
 					}
 
+					foreach ($attributes as $name => $domain) {
+						$columnname = static::underscore($name);
+						switch ($domain['type']) {
+							case DataType::DATE:
+								$selects[] = "TO_CHAR($columnname,'yyyy-mm-dd hh24:mi:ss') AS $columnname";
+								break;
+							default:
+								$selects[] = $columnname;
+								break;
+						}
+					}
+
+					$selects = implode(',', $selects);
 					$wheres = implode(' AND ', $wheres);
 
-					$sqlString = "SELECT * FROM $table WHERE $wheres";
+					$sqlString = "SELECT $selects FROM $table WHERE $wheres";
 					$sqlStatement = oci_parse($connection, $sqlString);
 
 					// Perform SQL injection (substitute binding variable placeholders with attribute values)
