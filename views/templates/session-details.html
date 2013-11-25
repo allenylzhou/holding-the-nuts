@@ -1,5 +1,4 @@
-<html>
-	<body>
+
 		<h2>Cash Game Details</h2>
 		<form id="newSessionForm" method="POST" action="index.php?action=details&gsId=[var.details.gsId]">
 			<table>
@@ -51,7 +50,7 @@
 			</table>
 
 			<input id="sessionSave" type="submit" value="Save" name="submit">
-			<input id="sessionDelete" type="submit" value="Delete" name="delete" onclick="confirmDelete();">
+			<input id="sessionDelete" type="submit" value="Delete" name="delete" onclick="return confirmDelete();">
 		</form>
 
 		<script>
@@ -80,8 +79,9 @@
 
 			function confirmDelete() {
 				if(confirm("Please note that any backings associated with this session will also be deleted and your backings balance may be affected. Are you sure you want to continue?")) {
-					document.forms[0].submit()
+					document.forms[0].submit();
 				} else {
+					debugger;
 					return false;
 				}
 			}
@@ -89,6 +89,3 @@
 
 
 		</script>
-
-	</body>
-</html>

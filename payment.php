@@ -30,7 +30,6 @@ else {
 		$amount = $_POST['amount'];
 		$date = $_POST['date'];
 		
-		echo $date;
 		if($date == null || $date == ''){
 			$date = date ('Y-m-d');
 		}

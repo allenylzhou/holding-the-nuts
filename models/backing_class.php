@@ -62,12 +62,11 @@ class BackingAgreement extends Database {
 		$connection = static::start();
 
 		$sqlString = "WITH OWES AS(
-						SELECT DECODE(DS.HORSE_ID, U.USER_ID, DS.BACKER_ID, DS.HORSE_ID) AS OTHER_USER,
-							   SUM(DECODE(DS.HORSE_ID, U.USER_ID, DS.OWED - DS.PAYED, DS.PAYED - DS.OWED)) AS OWED
-						FROM V_DEBT_STATUS DS,USERS U
-						WHERE (DS.HORSE_ID = U.USER_ID OR DS.BACKER_ID = U.USER_ID)
-						AND U.USER_ID = :userId
-						GROUP BY DECODE(DS.HORSE_ID, U.USER_ID, DS.BACKER_ID, DS.HORSE_ID)
+						SELECT DECODE(DS.HORSE_ID, :userId, DS.BACKER_ID, DS.HORSE_ID) AS OTHER_USER,
+							   SUM(DECODE(DS.HORSE_ID, :userId, DS.OWED - DS.PAYED, DS.PAYED - DS.OWED)) AS OWED
+						FROM V_DEBT_STATUS DS
+						WHERE (DS.HORSE_ID = :userId OR DS.BACKER_ID = :userId)
+						GROUP BY DECODE(DS.HORSE_ID, :userId, DS.BACKER_ID, DS.HORSE_ID)
 					)
 					SELECT u.user_id as BACKER_ID, u.username AS USERNAME, O.OWED AS OWED
 					FROM HORSE_BACKERS HB, OWES O, users U
@@ -101,12 +100,11 @@ class BackingAgreement extends Database {
 		$connection = static::start();
 
 		$sqlString = "WITH OWES AS(
-						SELECT DECODE(DS.HORSE_ID, U.USER_ID, DS.BACKER_ID, DS.HORSE_ID) AS OTHER_USER,
-							   SUM(DECODE(DS.HORSE_ID, U.USER_ID, DS.OWED - DS.PAYED, DS.PAYED - DS.OWED)) AS OWED
-						FROM V_DEBT_STATUS DS,USERS U
-						WHERE (DS.HORSE_ID = U.USER_ID OR DS.BACKER_ID = U.USER_ID)
-						AND U.USER_ID = :userId
-						GROUP BY DECODE(DS.HORSE_ID, U.USER_ID, DS.BACKER_ID, DS.HORSE_ID)
+						SELECT DECODE(DS.HORSE_ID, :userId, DS.BACKER_ID, DS.HORSE_ID) AS OTHER_USER,
+							   -1 * SUM(DECODE(DS.HORSE_ID, :userId, DS.OWED - DS.PAYED, DS.PAYED - DS.OWED)) AS OWED
+						FROM V_DEBT_STATUS DS
+						WHERE (DS.HORSE_ID = :userId OR DS.BACKER_ID = :userId)
+						GROUP BY DECODE(DS.HORSE_ID, :userId, DS.BACKER_ID, DS.HORSE_ID)
 					)
 					SELECT u.user_id as HORSE_ID, 
 							decode(:getEmail, 1, u.email, u.username) AS VALUE, 

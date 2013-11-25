@@ -79,7 +79,7 @@ class Payment extends Database {
 						where u1.user_id = payer_id
 						and u2.user_id = payee_id
 						and (" . $fromClause . $or . $toClause . ")";
-		echo $sqlString;
+						
 		$sqlStatement = oci_parse($connection, $sqlString);
 		oci_bind_by_name($sqlStatement, ':userId', $userId);
 

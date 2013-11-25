@@ -52,26 +52,22 @@
 					</td>
 				</tr>
 			</table>
+	<input id="sessionSave" type="submit" value="Save" name="submit">
+</form>
 
-			<input id="sessionSave" type="submit" value="Save" name="submit">
-		</form>
+<script>
+	checkLocationName();
 
-		<script>
-			checkLocationName();
+	function checkLocationName() {
+		// Hide input
+		document.getElementById("newLocation").style.display = "none";
+		document.getElementById("sessionNewLocation").value = "";
 
-			function checkLocationName() {
-				// Hide input
-				document.getElementById("newLocation").style.display = "none";
-				document.getElementById("sessionNewLocation").value = "";
-
-				var dropdownList = document.getElementById("sessionLocation");
-				if(dropdownList.options[dropdownList.selectedIndex].id != 'none' && 
-				   dropdownList.options[dropdownList.selectedIndex].value == "") {
-					// Show input
-				 	document.getElementById("newLocation").style.display = "";
-				}
-			}
-		</script>
-
-	</body>
-</html>
+		var dropdownList = document.getElementById("sessionLocation");
+		if(dropdownList.options[dropdownList.selectedIndex].id != 'none' && 
+		   dropdownList.options[dropdownList.selectedIndex].value == "") {
+			// Show input
+			document.getElementById("newLocation").style.display = "";
+		}
+	}
+</script>

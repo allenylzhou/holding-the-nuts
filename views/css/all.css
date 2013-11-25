@@ -1,146 +1,163 @@
+a,a:link,a:visited,a:active,a:hover {
+    color: #000;
+    text-decoration: none;
+}
+ul,li {
+    margin: 0;
+    list-style: none;
+}
+li span {
+    padding: 4px;
+    margin-bottom: -10px;
+    display: block;
+	font-size: 22px;
+	font-weight: bold;
+		border-bottom:2px solid #111;
+}
+li:hover span {
+    background-color: #ccc;
+    color: #111;
+    display: block;
+}
+.menu ul li ul {
+    display: none;
+    background: #ccc;
+    position: absolute;
+    color: #111;
+    margin-top: 10px;
+	font-size: 15px;
+}
+.menu ul li:hover ul {
+    display: block;
+}
+.menu ul li ul li {
+    background-color: #222;
+	color: #eee;
+    padding: 5px 15px 4px 7px;
+}
+.menu ul li ul li a {
+	color: #eee;
+}
+.menu ul li ul a li:hover {
+    text-decoration:underline;
+}
+.menu ul li ul li:hover {
+    text-decoration:underline;
+}
 body {
-	background-image:url('../../images/edgewater.jpg'); 
+	background-color: #e0e0e0;
+	height:100%;
+}
+div#body {
+	background-color: #cecece;
+	height:100%;
+}
+div#header {
+	background-color: #e0e0e0;
+    padding: 4px 0 6px;
+    margin: 0 0 6px;
+    border-bottom: 6px solid #000;
+}
+div#menubarItemBar {
+    padding: 4px 0px 11px 0px;
+    background-color: #000;
+}
+div.menubarItem {
+    margin: 0 20px 0 0px;
+    padding: 5px;
+    font-size: 20px;
+    color: #fff;
+    text-align: left;
+    cursor: pointer;
+    float: right;
+}
+div #contentContainer {
+    background-color: #eee;
+    border-top: 6px solid #000;
+    margin: 6px 0 0;
+	padding: 0 15px 3px 15px;
+	min-height: 400px;
+}
+div #contentContainer .title {
+    font-size: 25px;
+    margin-bottom: 10px;
+    padding: 12px 10px;
+    border-bottom: 2px solid #000;
+}
+div #contentContainer .text {
+    background-color: #eee;
+    padding: 10px;
+}
+div .content-block {
+    margin: 15px auto;
+}
+div #contentContainer .images {
+}
+div #footer {
+    padding: 10px 0 0;
+    margin-bottom: 10px;
+    border-top: 3px solid #000;
+    text-align: center;
+    background-color: #ccc;
+    font-weight: 700;
+}
+div .footerSection {
+    font-size: 18px;
+}
+div .footerSection .footerList {
+    border-top: 2px solid #000;
+    list-style: none;
+    font-size: 14px;
+    text-align: center;
+    font-weight: 400;
+}
+div #copyright {
+    padding: 8px;
+    font-size: 13px;
+    color: #222;
+}
+h1#banner {
+    float: left;
+    margin: 30px 0 8px 15px;
+    font-size: 55px;
+}
+div#logo {
+    float: left;
+    bottom: 0;
+    left: 0;
 }
 
-h2 {
-	background-color:#0033CC;
-	color:white;
-	padding: 0px 8px;
-}
-
-#appContainer {
-	width:1024px;
-	margin: 0 auto;
-	overflow:hidden;
-}
-
-#appHeader h1 {
-	color: white;
-	text-shadow: 2px 2px #000000;
-	margin: 10px 0px;
-	padding: 10px;
-	text-align: center;
-	border: 20px groove #003300;
-	background-color: #003300;
-}
-
-#appMenu {
-	margin:0;
-	padding:0;
-
-	float: left;
-	width: 200px;
-}
-
-#appMenu a {
-	font-weight: bold;
-	color: black;
-	text-decoration: none;
-	display: block;
-	background-color: white;
-	padding: 10px;
-	border-bottom: 1px groove black;
-}
-
-#appMenu a:hover {
-	color: white;
-	background-color: black;
-}
-
-#appMenu a span {
-	display: inline-block;
-	float: right;
-	font-weight: bold;
-	font-size: 18px;
-}
-
-#appMenu li{
-	list-style-type: none;
-}
-
-#appView {
-	margin:0;
-	padding:0;
-	float: right;
-	width: 80%;
-	min-height: 768px;
-	border: #CCCCCC;
-	background-color: white;
-}
-
-#appView .content{
-	padding: 10px;
-}
-
-#newSessionForm h1{
-	margin: 0;
-	background-color:#006600;
-	color:white;
-	font-size:18px;
-}
-
-#newSessionForm td {
-	padding: 5px;
-}
-
-#newSessionForm label{
-	font-size: 16px;
-}
-
-#newSessionForm td.leftColumn {
-	vertical-align: top;
-	font-weight:bold;
-	text-align:right;
-}
-
-#newSessionForm td.rightColumn {
-	line-height: 10px;
-}
-
-#newSessionForm td.rightColumn span {
-	display: inherit;
-}
-
-#newSessionForm #sessionSaveDelete {
-	width:100px;
-	padding:2px;
-	float:right;
-	font-weight:bold;
-	background-color:red;
-	color:white;
-}
-
-div.sessionTable {
+table {
 	width:100%;
-	overflow: hidden;
+	border-style:solid;
+	border-width:1px 1px 2px 1px;
+	margin-bottom: 30px;
 }
 
-div.sessionTable.oddRow {
-	background-color: #CACACA;
+table td{
+	border-style:solid;
+	border-width:0 1px 0 0;
+	padding: 1px 7px 1px 7px;
 }
 
-div.sessionTable.evenRow {
-	background-color: #F0F0F0;
+
+table thead{
+	background-color:#CACACA;
 }
 
-table.sessionTable{
-	width: 100%;
+table thead th{
+	border-style:solid;
+	border-width:0 0 2px 0;
 }
 
-table.sessionTable td{
-	padding: 4px;
+table tfoot{
+	background-color:#CACACA;
 }
 
-div.sessionTable p span{
-	display: inline-block;
-	padding: 8px;
+table tr.odd{
+	background-color:#F1F1F1;
 }
 
-div.sessionTable span.gain {
-	color: green;
+table tr.even{
+	background-color:#E6E6E6;
 }
-
-div.sessionTable span.loss {
-	color: red;
-}
-

@@ -84,7 +84,7 @@ class Statistics {
 							  FROM   GAME
 							  WHERE  USER_ID = :userId
 							  GROUP BY TRUNC(START_DATE))
-							SELECT GAME_DAY, WINNINGS
+							SELECT GAME_DAY, WINNINGS as AVG_WIN
 							FROM   USER_WINNING_ON_DAY
 							WHERE  WINNINGS = (SELECT $minMax(A.WINNINGS)
 													FROM USER_WINNING_ON_DAY A)";
@@ -93,10 +93,12 @@ class Statistics {
 
 			oci_execute($stid);
 			
-			$day = array();
+			$results = array();
 			while ($row = oci_fetch_array($stid)) {
-				$val = $row['GAME_DAY'];
-				array_push($day, $val);
+				$rowTemp = array();
+				$rowTemp['GAME_DAY'] = $row['GAME_DAY'];
+				$rowTemp['AVG_WIN'] = $row['AVG_WIN'];
+				$results[] = $rowTemp;
 			}
 		}
 		catch (Exception $exception) {
@@ -108,7 +110,7 @@ class Statistics {
 		if($connection != null){
 			Database::end($connection);	
 		}
-		return $day;
+		return $results;
 	}
 
 	public static function getProfitByMonth($userId){
