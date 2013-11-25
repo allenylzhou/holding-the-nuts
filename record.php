@@ -20,8 +20,6 @@ if (isset($_SESSION['USER'])) {
 			$locationName = null;
 		}	
 
-		var_dump($_POST);
-
 		$newGame = new CashGame;
 		$startDate = (!empty($_POST['startDate'])) ? date('Y-m-d H:i:s', strtotime($_POST['startDate'])) : "";
 		$endDate = (!empty($_POST['endDate'])) ? date('Y-m-d H:i:s', strtotime($_POST['endDate'])) : "";
