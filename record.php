@@ -20,8 +20,6 @@ if (isset($_SESSION['USER'])) {
 			$locationName = null;
 		}	
 
-		var_dump($_POST);
-
 		$newGame = new CashGame;
 		$startDate = (!empty($_POST['startDate'])) ? date('Y-m-d H:i:s', strtotime($_POST['startDate'])) : "";
 		$endDate = (!empty($_POST['endDate'])) ? date('Y-m-d H:i:s', strtotime($_POST['endDate'])) : "";
@@ -67,7 +65,12 @@ if (isset($_SESSION['USER'])) {
 			}
 		}
 
-		header('Location: ./index.php?action=sessions');
+		// TODO: add error messaging
+		if (!empty($error)) {
+			var_dump($error);
+		} else {
+			header('Location: ./index.php?action=sessions');
+		}
 	}
 	// Display the form
 	$time = date('Y-m-d H:i:s');
