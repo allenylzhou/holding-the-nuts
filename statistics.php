@@ -15,12 +15,15 @@ if (isset($_SESSION['USER'])) {
 	
 	$totalHours = ($tempHours[0] * 60 + $tempMinutes[0]) / 60;
 	$totalHours = number_format((float)$totalHours, 2, '.', '');
-	
+	//echo "total hours is ". $totalHours;
+
 	if($totalHours == 0){
-		$totalHours = 1;
+		$hourly = 0;
+	}else
+	{
+		$hourly = $totalProfit / $totalHours;
+		$hourly = number_format((float)$hourly, 2, '.', '');
 	}
-	$hourly = $totalProfit / $totalHours;
-	$hourly = number_format((float)$hourly, 2, '.', '');
 	
 	$averageBuyin = Statistics::getAverageCashBuyIn($user->getUserId());
 	$averageBuyin = number_format((float)$averageBuyin, 2, '.', '');
