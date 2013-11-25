@@ -46,7 +46,13 @@ if (isset($_SESSION['USER'])) {
 		catch (Exception $exception) {
 			$error[] = $exception->getMessage();
 		}
-		header('Location: ./index.php?action=sessions');
+
+		// TODO: add error messaging
+		if (!empty($error)) {
+			var_dump($error);
+		} else {
+			header('Location: ./index.php?action=sessions');
+		}
 	}
 
 	if (array_key_exists('delete', $_POST)) {

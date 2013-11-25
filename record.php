@@ -65,7 +65,12 @@ if (isset($_SESSION['USER'])) {
 			}
 		}
 
-		header('Location: ./index.php?action=sessions');
+		// TODO: add error messaging
+		if (!empty($error)) {
+			var_dump($error);
+		} else {
+			header('Location: ./index.php?action=sessions');
+		}
 	}
 	// Display the form
 	$time = date('Y-m-d H:i:s');
