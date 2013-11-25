@@ -1,7 +1,7 @@
 <html>
 	<body>
 		<h2>Create Cash Game</h2>
-		<form id="newSessionForm" method="POST" action="index.php?action=record">
+		<form id="newSessionForm" method="POST" action="index.php?action=record_cash">
 			<table>
 				<tr>
 					<td class="leftColumn"><label for="sessionStart">Start:</label></td>
@@ -13,11 +13,11 @@
 				</tr>
 				<tr>
 					<td class="leftColumn"><label for="sessionBuyin">Buy-in:</label></td>
-					<td class="rightColumn"><input id="sessionBuyin" type="number" name="amountIn" value="0" required></td>
+					<td class="rightColumn"><input id="sessionBuyin" type="number" name="amountIn" value="0"></td>
 				</tr>
 				<tr>
 					<td class="leftColumn"><label for="sessionCashout">Cash-out:</label></td>
-					<td class="rightColumn"><input id="sessionCashout" type="number" name="amountOut" value="0" required></td>
+					<td class="rightColumn"><input id="sessionCashout" type="number" name="amountOut" value="0"></td>
 				</tr>
 				<tr>
 					<td class="leftColumn"><label for="sessionSmallblind">Small-blind:</label></td>
@@ -32,7 +32,6 @@
 					<td class="rightColumn">
 						<select id="sessionLocation" name="locationName" onchange="checkLocationName();">
 							<option value="[locations.NAME;block=option;]">[locations.NAME]</option>
-							<option id='none' value>None</option>
 							<option value="">New Location</option>
 						</select>
 						<span id="newLocation" style="display:none;">
@@ -65,13 +64,11 @@
 				document.getElementById("sessionNewLocation").value = "";
 
 				var dropdownList = document.getElementById("sessionLocation");
-				if(dropdownList.options[dropdownList.selectedIndex].id != 'none' && 
-				   dropdownList.options[dropdownList.selectedIndex].value == "") {
+				if(dropdownList.options[dropdownList.selectedIndex].value == "") {
 					// Show input
 				 	document.getElementById("newLocation").style.display = "";
 				}
 			}
 		</script>
-
 	</body>
 </html>

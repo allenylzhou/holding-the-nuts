@@ -13,45 +13,97 @@
 		</tr>
 		<tr style="background-color:#F0F0F0">
 			<td>
-				<strong>[finishedGames.START_DATE;block=tr;frm='ddd dd mmm yyyy']</strong>
+				<strong>[finishedCGames.START_DATE;block=tr;frm='ddd dd mmm yyyy']</strong>
 			</td>
 			<td>
-				<strong>[finishedGames.LOCATION_NAME]</strong>
+				<strong>[finishedCGames.LOCATION_NAME]</strong>
 			</td>
-			<td>[finishedGames.SMALL_BLIND]</td>
-			<td>[finishedGames.BIG_BLIND]</td>
-			<td>[finishedGames.DURATION;frm='0';ifempty='0'] mins</td>
+			<td>[finishedCGames.SMALL_BLIND]</td>
+			<td>[finishedCGames.BIG_BLIND]</td>
+			<td>[finishedCGames.DURATION;frm='0';ifempty='0'] mins</td>
 			<td>
-				<strong>[finishedGames.PROFIT;frm='$ 0,000.00']</strong>
+				<strong>[finishedCGames.PROFIT;frm='$ 0,000.00']</strong>
 			</td>
 			<td>
-				<a href="index.php?action=details&gsId=[finishedGames.GS_ID]">View Details ></a>
+				<a href="index.php?action=details&gsId=[finishedCGames.GS_ID]">View Details ></a>
 			</td>
 		</tr>
 		<tr style="background-color:#E6E6E6">
 			<td>
-				<strong>[finishedGames.START_DATE;block=tr;frm='ddd dd mmm yyyy']</strong>
+				<strong>[finishedCGames.START_DATE;block=tr;frm='ddd dd mmm yyyy']</strong>
 			</td>
 			<td>
-				<strong>[finishedGames.LOCATION_NAME]</strong>
+				<strong>[finishedCGames.LOCATION_NAME]</strong>
 			</td>
-			<td>[finishedGames.SMALL_BLIND]</td>
-			<td>[finishedGames.BIG_BLIND]</td>
-			<td>[finishedGames.DURATION;frm='0';ifempty='0'] mins</td>
+			<td>[finishedCGames.SMALL_BLIND]</td>
+			<td>[finishedCGames.BIG_BLIND]</td>
+			<td>[finishedCGames.DURATION;frm='0';ifempty='0'] mins</td>
 			<td>
-				<strong>[finishedGames.PROFIT;frm='$ 0,000.00']</strong>
+				<strong>[finishedCGames.PROFIT;frm='$ 0,000.00']</strong>
 			</td>
 			<td>
-				<a href="index.php?action=details&gsId=[finishedGames.GS_ID]">View Details ></a>
+				<a href="index.php?action=details&gsId=[finishedCGames.GS_ID]">View Details ></a>
 			</td>
 		</tr>
 
 		<tr style="background-color:#FFCFB9">
-			[finishedGames;block=tr;nodata]
+			[finishedCGames;block=tr;nodata]
 			<td colspan="7">No sessions available.</td>
 		</tr>
 		<tr>
-			<td colspan="7"><a href="index.php?action=record">Add a new session</a></td>
+			<td colspan="7"><a href="index.php?action=record_cash">Add a new session</a></td>
+		</tr>
+	</table>
+	
+	<h2>Tournament Games</h2>
+	<table class="sessionTable">
+		<tr style="background-color:#CACACA">
+			<td><strong>Date</strong></td>
+			<td><strong>Location</strong></td>
+			<td><strong>Placed Finished</strong></td>
+			<td><strong>Duration</strong></td>
+			<td><strong>Profit</strong></td>
+			<td></td>
+		</tr>
+		<tr style="background-color:#F0F0F0">
+			<td>
+				<strong>[finishedTGames.START_DATE;block=tr;frm='ddd dd mmm yyyy']</strong>
+			</td>
+			<td>
+				<strong>[finishedTGames.LOCATION_NAME]</strong>
+			</td>
+			<td>[finishedTGames.PLACED_FINISHED]</td>
+			<td>[finishedTGames.DURATION;frm='0';ifempty='0'] mins</td>
+			<td>
+				<strong>[finishedTGames.PROFIT;frm='$ 0,000.00']</strong>
+			</td>
+			<td>
+				<a href="index.php?action=details-tournament&gsId=[finishedTGames.GS_ID]">View Details ></a>
+			</td>
+		</tr>
+		<tr style="background-color:#E6E6E6">
+			<td>
+				<strong>[finishedTGames.START_DATE;block=tr;frm='ddd dd mmm yyyy']</strong>
+			</td>
+			<td>
+				<strong>[finishedTGames.LOCATION_NAME]</strong>
+			</td>
+			<td>[finishedTGames.PLACED_FINISHED]</td>
+			<td>[finishedTGames.DURATION;frm='0';ifempty='0'] mins</td>
+			<td>
+				<strong>[finishedTGames.PROFIT;frm='$ 0,000.00']</strong> 
+			</td>
+			<td>
+				<a href="index.php?action=details-tournament&gsId=[finishedTGames.GS_ID]">View Details ></a>
+			</td>
+		</tr>
+
+		<tr style="background-color:#FFCFB9">
+			[finishedTGames;block=tr;nodata]
+			<td colspan="6">No sessions available.</td>
+		</tr>
+		<tr>
+			<td colspan="6"><a href="index.php?action=record_tournament">Add a new session</a></td>
 		</tr>
 	</table>
 

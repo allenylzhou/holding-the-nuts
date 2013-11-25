@@ -51,39 +51,6 @@ abstract class Game extends Database {
 		}
 	}
 
-	protected static function loadGames($userId, $gameType, $active = false) {
-		$results = array();
-		$connection = static::start();
-
-		$where = "P.GS_ID = C.GS_ID AND P.USER_ID = (:userId)";
-		if ($active) {
-			$where .= " AND P.END_DATE IS NULL";
-		}
-
-		$sqlString = "SELECT 
-					P.GS_ID, 
-					START_DATE, 
-					LOCATION_NAME, 
-					(TO_DATE(TO_CHAR(END_DATE,'yyyy-mm-dd hh24:mi:ss'), 'yyyy-mm-dd hh24:mi:ss') - TO_DATE(TO_CHAR(START_DATE,'yyyy-mm-dd hh24:mi:ss'), 'yyyy-mm-dd hh24:mi:ss')) * 24 * 60 AS DURATION,
-					AMOUNT_OUT - AMOUNT_IN AS PROFIT, 
-					BIG_BLIND, SMALL_BLIND
-				FROM GAME P, $gameType C
-				WHERE $where
-				ORDER BY P.GS_ID ASC";
-
-		$sqlStatement = oci_parse($connection, $sqlString);
-		oci_bind_by_name($sqlStatement, ':userId', $userId);
-
-		if(oci_execute($sqlStatement)) {
-			while ($row = oci_fetch_assoc($sqlStatement)) {
-				array_push($results, $row);
-			}
-		}
-		static::end($connection);
-
-		return $results;
-	}
-
 	public function loadBacking() {
 		$results = array();
 		$connection = static::start();
@@ -137,14 +104,47 @@ class CashGame extends Game {
 
 	public function getBigBlind() { return $this->bigBlind; }
 	public function getSmallBlind() { return $this->smallBlind; }
-
+/*
 	public static function loadActiveGames($userId) {
 		return static::loadGames($userId, 'GAME_CASH', true);
 	}
 
 	public static function loadFinishedGames($userId) {
 		return static::loadGames($userId, 'GAME_CASH');
-	}
+	}*/
+	
+	public function loadFinishedGames($userId) {
+		$results = array();
+		$connection = static::start();
+
+		$where = "P.GS_ID = C.GS_ID AND P.USER_ID = (:userId)";
+		if (false) {
+			$where .= " AND P.END_DATE IS NULL";
+		}
+
+		$sqlString = "SELECT 
+					P.GS_ID, 
+					START_DATE, 
+					LOCATION_NAME, 
+					(TO_DATE(TO_CHAR(END_DATE,'yyyy-mm-dd hh24:mi:ss'), 'yyyy-mm-dd hh24:mi:ss') - TO_DATE(TO_CHAR(START_DATE,'yyyy-mm-dd hh24:mi:ss'), 'yyyy-mm-dd hh24:mi:ss')) * 24 * 60 AS DURATION,
+					AMOUNT_OUT - AMOUNT_IN AS PROFIT, 
+					BIG_BLIND, SMALL_BLIND
+				FROM GAME P, GAME_CASH C
+				WHERE $where
+				ORDER BY P.GS_ID ASC";
+
+		$sqlStatement = oci_parse($connection, $sqlString);
+		oci_bind_by_name($sqlStatement, ':userId', $userId);
+
+		if(oci_execute($sqlStatement)) {
+			while ($row = oci_fetch_assoc($sqlStatement)) {
+				array_push($results, $row);
+			}
+		}
+		static::end($connection);
+
+		return $results;
+	}		
 }
 
 class TournamentGame extends Game {
@@ -173,8 +173,8 @@ class TournamentGame extends Game {
 		}
 	}
 
-	public function getPlacedFinished() { return $this->placeFinished; }
-
+	public function getPlacedFinished() { return $this->placedFinished; }
+/*
 	public static function loadActiveGames($userId) {
 		return static::loadGames($userId, 'GAME_TOURNAMENT', true);
 	}
@@ -182,6 +182,39 @@ class TournamentGame extends Game {
 	public static function loadFinishedGames($userId) {
 		return static::loadGames($userId, 'GAME_TOURNAMENT');
 	}
+	*/
+	public static function loadFinishedGames($userId) {
+		$results = array();
+		$connection = static::start();
+
+		$where = "P.GS_ID = C.GS_ID AND P.USER_ID = (:userId)";
+		if (false) {
+			$where .= " AND P.END_DATE IS NULL";
+		}
+
+		$sqlString = "SELECT 
+					P.GS_ID, 
+					START_DATE, 
+					LOCATION_NAME, 
+					(TO_DATE(TO_CHAR(END_DATE,'yyyy-mm-dd hh24:mi:ss'), 'yyyy-mm-dd hh24:mi:ss') - TO_DATE(TO_CHAR(START_DATE,'yyyy-mm-dd hh24:mi:ss'), 'yyyy-mm-dd hh24:mi:ss')) * 24 * 60 AS DURATION,
+					AMOUNT_OUT - AMOUNT_IN AS PROFIT, 
+					PLACED_FINISHED
+				FROM GAME P, GAME_TOURNAMENT C
+				WHERE $where
+				ORDER BY P.GS_ID ASC";
+
+		$sqlStatement = oci_parse($connection, $sqlString);
+		oci_bind_by_name($sqlStatement, ':userId', $userId);
+
+		if(oci_execute($sqlStatement)) {
+			while ($row = oci_fetch_assoc($sqlStatement)) {
+				array_push($results, $row);
+			}
+		}
+		static::end($connection);
+
+		return $results;
+	}		
 }
 
 ?>

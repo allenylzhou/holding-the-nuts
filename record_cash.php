@@ -1,15 +1,12 @@
 <?php
 
-$template = 'views/templates/session-details.html';
+$template = 'views/templates/session-create-cash.html';
 
 if (isset($_SESSION['USER'])) {
 	$user = $_SESSION['USER'];
-	$gameSessionId = $_GET['gsId'];
-	$game = new CashGame(array('gsId'=>$gameSessionId), true);
 
-	// Handle form
 	if (array_key_exists('submit', $_POST)) {
-
+		
 		if(!empty($_POST['locationName'])){
 			$locationName = $_POST['locationName'];
 		}
@@ -22,21 +19,24 @@ if (isset($_SESSION['USER'])) {
 		} else {
 			$locationName = null;
 		}	
-		
+
+		var_dump($_POST);
+
+		$newGame = new CashGame;
 		$startDate = (!empty($_POST['startDate'])) ? date('Y-m-d H:i:s', strtotime($_POST['startDate'])) : "";
 		$endDate = (!empty($_POST['endDate'])) ? date('Y-m-d H:i:s', strtotime($_POST['endDate'])) : "";
-		$game->setAttributes(array(
+		$newGame->setAttributes(array(
 			'userId' => $user->getUserId(),
 			'startDate' => $startDate,
 			'endDate' => $endDate,
 			'amountIn' => $_POST['amountIn'],
 			'amountOut' => $_POST['amountOut'],
-			'locationName' => $locationName,
 			'bigBlind' => $_POST['bigBlind'],
-			'smallBlind' => $_POST['smallBlind']
+			'smallBlind' => $_POST['smallBlind'],
+			'locationName' => $locationName
 		));
 		try{
-			$game->save2(true);
+			$newGame->save();
 		}
 		catch (DatabaseException $exception) {
 			switch ($exception->getErrorCode()) {
@@ -48,23 +48,36 @@ if (isset($_SESSION['USER'])) {
 		catch (Exception $exception) {
 			$error[] = $exception->getMessage();
 		}
+
+		$backingAgreementId = $_POST['backingAgreementId'];
+		if ($backingAgreementId >= 0) {
+			$newBacking = new Backing(array('baId' => $backingAgreementId, 'gsId' => $newGame->getGsId()));
+			try{
+				$newBacking->save();
+			}
+			catch (DatabaseException $exception) {
+				switch ($exception->getErrorCode()) {
+					default:
+						$error[] =  "An unknown error has occured";
+						break;
+				}
+			}
+			catch (Exception $exception) {
+				$error[] = $exception->getMessage();
+			}
+		}
+
 		header('Location: ./index.php?action=sessions');
 	}
-
-	if (array_key_exists('delete', $_POST)) {
-		$game->delete();
-		header('Location: ./index.php?action=sessions');
-	}
-
-	// Display stuff
-	$details = $game->getAttributes();
+	// Display the form
+	$time = date('Y-m-d H:i:s');
 	$locations = Location::loadLocationsByUserId($user->getUserId());
-	$backing = $game->loadBacking();
+	$backers = BackingAgreement::loadBackingAgreementsByHorseId($user->getUserId());
 
 	$TBS = new clsTinyButStrong;
 	$TBS->LoadTemplate('views/templates/app-container.html');
-	$TBS->MergeBlock('details', $details);
 	$TBS->MergeBlock('locations', $locations);
+	$TBS->MergeBlock('backers', $backers);
 	$TBS->Show();
 
 } else {
