@@ -1,91 +1,95 @@
+<h2>Cash Game Details</h2>
 
-		<h2>Cash Game Details</h2>
-		<form id="newSessionForm" method="POST" action="index.php?action=details&gsId=[var.details.gsId]">
-			<table>
-				<tr>
-					<td class="leftColumn"><label for="sessionStart">Start:</label></td>
-					<td class="rightColumn"><input id="sessionStart" type="text" name="startDate" value="[var.details.startDate;frm='yyyy-mm-dd hh:nn:ss']"></td>
-				</tr>
-				<tr>
-					<td class="leftColumn"><label for="sessionEnd">End:</label></td>
-					<td class="rightColumn"><input id="sessionEnd" type="text" name="endDate" value="[var.details.endDate;frm='yyyy-mm-dd hh:nn:ss']"></td>
-				</tr>
-				<tr>
-					<td class="leftColumn"><label for="sessionBuyin">Buy-in:</label></td>
-					<td class="rightColumn"><input id="sessionBuyin" type="number" name="amountIn" value="[var.details.amountIn]" required></td>
-				</tr>
-				<tr>
-					<td class="leftColumn"><label for="sessionCashout">Cash-out:</label></td>
-					<td class="rightColumn"><input id="sessionCashout" type="number" name="amountOut" value="[var.details.amountOut]" required></td>
-				</tr>
-				<tr>
-					<td class="leftColumn"><label for="sessionSmallblind">Small-blind:</label></td>
-					<td class="rightColumn"><input id="sessionSmallblind" type="number" name="smallBlind" value="[var.details.smallBlind]"></td>
-				</tr>
-				<tr>
-					<td class="leftColumn"><label for="sessionBigblind">Big-blind:</label></td>
-					<td class="rightColumn"><input id="sessionBigblind" type="number" name="bigBlind" value="[var.details.bigBlind]"></td>
-				</tr>
-				<tr>
-					<td class="leftColumn"><label for="sessionLocation">Location:</label></td>
-					<td class="rightColumn">
-						<select id="sessionLocation" name="locationName" onchange="checkLocationName();">
-							<option value="[locations.NAME;block=option;]">[locations.NAME]</option>
-							<option id='none' value>None</option>
-							<option value="">New Location</option>
-						</select>
-						<span id="newLocation" style="display:none;">
-							<br/>
-							<label for="sessionNewLocation">Name:</label>
-							<input id="sessionNewLocation" type="text" name="newLocationName">
-						</span>
-					</td>
-				</tr>
-				<tr>
-					<td class="leftColumn"><label for="sessionBacker">Backer:</label></td>
-					<td class="rightColumn">
-						[var.backing.USERNAME;ifempty='None';noerr] - [var.backing.PERCENT_OF_WIN;ifempty='0';noerr]%
-					</td>
-				</tr>
-			</table>
+<p>
+	[messages.val;block=p;]
+</p>
 
-			<input id="sessionSave" type="submit" value="Save" name="submit">
-			<input id="sessionDelete" type="submit" value="Delete" name="delete" onclick="return confirmDelete();">
-		</form>
+<form id="newSessionForm" method="POST" action="index.php?action=details&gsId=[var.details.gsId]">
+	<table>
+		<tr>
+			<td class="leftColumn"><label for="sessionStart">Start:</label></td>
+			<td class="rightColumn"><input id="sessionStart" type="text" name="startDate" value="[var.details.startDate;frm='yyyy-mm-dd hh:nn:ss']"></td>
+		</tr>
+		<tr>
+			<td class="leftColumn"><label for="sessionEnd">End:</label></td>
+			<td class="rightColumn"><input id="sessionEnd" type="text" name="endDate" value="[var.details.endDate;frm='yyyy-mm-dd hh:nn:ss']"></td>
+		</tr>
+		<tr>
+			<td class="leftColumn"><label for="sessionBuyin">Buy-in:</label></td>
+			<td class="rightColumn"><input id="sessionBuyin" type="number" name="amountIn" value="[var.details.amountIn]" required></td>
+		</tr>
+		<tr>
+			<td class="leftColumn"><label for="sessionCashout">Cash-out:</label></td>
+			<td class="rightColumn"><input id="sessionCashout" type="number" name="amountOut" value="[var.details.amountOut]" required></td>
+		</tr>
+		<tr>
+			<td class="leftColumn"><label for="sessionSmallblind">Small-blind:</label></td>
+			<td class="rightColumn"><input id="sessionSmallblind" type="number" name="smallBlind" value="[var.details.smallBlind]"></td>
+		</tr>
+		<tr>
+			<td class="leftColumn"><label for="sessionBigblind">Big-blind:</label></td>
+			<td class="rightColumn"><input id="sessionBigblind" type="number" name="bigBlind" value="[var.details.bigBlind]"></td>
+		</tr>
+		<tr>
+			<td class="leftColumn"><label for="sessionLocation">Location:</label></td>
+			<td class="rightColumn">
+				<select id="sessionLocation" name="locationName" onchange="checkLocationName();">
+					<option value="[locations.NAME;block=option;]">[locations.NAME]</option>
+					<option id='none' value>None</option>
+					<option value="">New Location</option>
+				</select>
+				<span id="newLocation" style="display:none;">
+					<br/>
+					<label for="sessionNewLocation">Name:</label>
+					<input id="sessionNewLocation" type="text" name="newLocationName">
+				</span>
+			</td>
+		</tr>
+		<tr>
+			<td class="leftColumn"><label for="sessionBacker">Backer:</label></td>
+			<td class="rightColumn">
+				[var.backing.USERNAME;ifempty='None';noerr] - [var.backing.PERCENT_OF_WIN;ifempty='0';noerr]%
+			</td>
+		</tr>
+	</table>
 
-		<script>
-			checkLocationName();
+	<input id="sessionSave" type="submit" value="Save" name="submit">
+	<input id="sessionDelete" type="submit" value="Delete" name="delete" onclick="return confirmDelete();">
+</form>
 
-			var dropdownList = document.getElementById("sessionLocation");
-			for(var i, j = 0; i = dropdownList.options[j]; j++) {
-			    if(i.value == "[var.details.locationName]") {
-			        dropdownList.selectedIndex = j;
-			        break;
-			    }
-			}
+<script>
+	checkLocationName();
 
-			function checkLocationName() {
-				// Hide input
-				document.getElementById("newLocation").style.display = "none";
-				document.getElementById("sessionNewLocation").value = "";
+	var dropdownList = document.getElementById("sessionLocation");
+	for(var i, j = 0; i = dropdownList.options[j]; j++) {
+		if(i.value == "[var.details.locationName]") {
+			dropdownList.selectedIndex = j;
+			break;
+		}
+	}
 
-				var dropdownList = document.getElementById("sessionLocation");
-				if(dropdownList.options[dropdownList.selectedIndex].id != 'none' && 
-				   dropdownList.options[dropdownList.selectedIndex].value == "") {
-					// Show input
-				 	document.getElementById("newLocation").style.display = "";
-				}
-			}
+	function checkLocationName() {
+		// Hide input
+		document.getElementById("newLocation").style.display = "none";
+		document.getElementById("sessionNewLocation").value = "";
 
-			function confirmDelete() {
-				if(confirm("Please note that any backings associated with this session will also be deleted and your backings balance may be affected. Are you sure you want to continue?")) {
-					document.forms[0].submit();
-				} else {
-					debugger;
-					return false;
-				}
-			}
+		var dropdownList = document.getElementById("sessionLocation");
+		if(dropdownList.options[dropdownList.selectedIndex].id != 'none' && 
+		   dropdownList.options[dropdownList.selectedIndex].value == "") {
+			// Show input
+			document.getElementById("newLocation").style.display = "";
+		}
+	}
+
+	function confirmDelete() {
+		if(confirm("Please note that any backings associated with this session will also be deleted and your backings balance may be affected. Are you sure you want to continue?")) {
+			document.forms[0].submit();
+		} else {
+			debugger;
+			return false;
+		}
+	}
 
 
 
-		</script>
+</script>
