@@ -41,7 +41,7 @@ if (isset($_SESSION['USER'])) {
 		catch (DatabaseException $exception) {
 			switch ($exception->getErrorCode()) {
 				case 2290:
-					$error[] = "You inputs were invalid";
+					$error[] = "Your inputs were invalid";
 				break;
 				default:
 					$error[] =  "An unknown error has occured";
@@ -61,7 +61,7 @@ if (isset($_SESSION['USER'])) {
 			catch (DatabaseException $exception) {
 				switch ($exception->getErrorCode()) {
 					case 2290:
-						$error[] = "You inputs were invalid";
+						$error[] = "Your inputs were invalid";
 					break;
 					default:
 						$error[] =  "An unknown error has occured";
