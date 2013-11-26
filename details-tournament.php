@@ -41,6 +41,9 @@ if (isset($_SESSION['USER'])) {
 		}
 		catch (DatabaseException $exception) {
 			switch ($exception->getErrorCode()) {
+				case 2290:
+					$error[] = "Your inputs were invalid";
+				break;
 				default:
 					$error[] =  "An unknown error has occured";
 				break;
@@ -49,7 +52,10 @@ if (isset($_SESSION['USER'])) {
 		catch (Exception $exception) {
 			$error[] = $exception->getMessage();
 		}
-		header('Location: ./index.php?action=sessions');
+		
+		if (empty($error)) {
+			header('Location: ./index.php?action=sessions');
+		}
 	}
 
 	if (array_key_exists('delete', $_POST)) {
