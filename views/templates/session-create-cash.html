@@ -1,57 +1,61 @@
-<html>
-	<body>
-		<h2>Create Cash Game</h2>
-		<form id="newSessionForm" method="POST" action="index.php?action=record_cash">
-			<table>
-				<tr>
-					<td class="leftColumn"><label for="sessionStart">Start:</label></td>
-					<td class="rightColumn"><input id="sessionStart" type="text" name="startDate" value="[var.time]"></td>
-				</tr>
-				<tr>
-					<td class="leftColumn"><label for="sessionEnd">End:</label></td>
-					<td class="rightColumn"><input id="sessionEnd" type="text" name="endDate" value="[var.time]"></td>
-				</tr>
-				<tr>
-					<td class="leftColumn"><label for="sessionBuyin">Buy-in:</label></td>
-					<td class="rightColumn"><input id="sessionBuyin" type="number" name="amountIn" value="0" required></td>
-				</tr>
-				<tr>
-					<td class="leftColumn"><label for="sessionCashout">Cash-out:</label></td>
-					<td class="rightColumn"><input id="sessionCashout" type="number" name="amountOut" value="0" required></td>
-				</tr>
-				<tr>
-					<td class="leftColumn"><label for="sessionSmallblind">Small-blind:</label></td>
-					<td class="rightColumn"><input id="sessionSmallblind" type="number" name="smallBlind" value="0"></td>
-				</tr>
-				<tr>
-					<td class="leftColumn"><label for="sessionBigblind">Big-blind:</label></td>
-					<td class="rightColumn"><input id="sessionBigblind" type="number" name="bigBlind" value="0"></td>
-				</tr>
-				<tr>
-					<td class="leftColumn"><label for="sessionLocation">Location:</label></td>
-					<td class="rightColumn">
-						<select id="sessionLocation" name="locationName" onchange="checkLocationName();">
-							<option value="[locations.NAME;block=option;]">[locations.NAME]</option>
-							<option id='none' value>None</option>
-							<option value="">New Location</option>
-						</select>
-						<span id="newLocation" style="display:none;">
-							<br/>
-							<label for="sessionNewLocation">Name:</label>
-							<input id="sessionNewLocation" type="text" name="newLocationName">
-						</span>
-					</td>
-				</tr>
-				<tr>
-					<td class="leftColumn"><label for="sessionBacker">Backer:</label></td>
-					<td class="rightColumn">
-						<select id="sessionBacker" name="backingAgreementId" onchange="checkBackerNamePercentage();">
-							<option value="-1">No Backer</option>
-							<option value="[backers.BA_ID;block=option;]">[backers.USERNAME] - [backers.PERCENT_OF_WIN]%</option>
-						</select>
-					</td>
-				</tr>
-			</table>
+<h2>Create Cash Game</h2>
+
+<p>
+	[messages.val;block=p;]
+</p>
+
+<form id="newSessionForm" method="POST" action="index.php?action=record_cash">
+	<table>
+		<tr>
+			<td class="leftColumn"><label for="sessionStart">Start:</label></td>
+			<td class="rightColumn"><input id="sessionStart" type="text" name="startDate" value="[var.time]"></td>
+		</tr>
+		<tr>
+			<td class="leftColumn"><label for="sessionEnd">End:</label></td>
+			<td class="rightColumn"><input id="sessionEnd" type="text" name="endDate" value="[var.time]"></td>
+		</tr>
+		<tr>
+			<td class="leftColumn"><label for="sessionBuyin">Buy-in:</label></td>
+			<td class="rightColumn"><input id="sessionBuyin" type="number" name="amountIn" value="0" required></td>
+		</tr>
+		<tr>
+			<td class="leftColumn"><label for="sessionCashout">Cash-out:</label></td>
+			<td class="rightColumn"><input id="sessionCashout" type="number" name="amountOut" value="0" required></td>
+		</tr>
+		<tr>
+			<td class="leftColumn"><label for="sessionSmallblind">Small-blind:</label></td>
+			<td class="rightColumn"><input id="sessionSmallblind" type="number" name="smallBlind" value="0"></td>
+		</tr>
+		<tr>
+			<td class="leftColumn"><label for="sessionBigblind">Big-blind:</label></td>
+			<td class="rightColumn"><input id="sessionBigblind" type="number" name="bigBlind" value="0"></td>
+		</tr>
+		<tr>
+			<td class="leftColumn"><label for="sessionLocation">Location:</label></td>
+			<td class="rightColumn">
+				<select id="sessionLocation" name="locationName" onchange="checkLocationName();">
+					<option value="[locations.NAME;block=option;]">[locations.NAME]</option>
+					<option id='none' value>None</option>
+					<option value="">New Location</option>
+				</select>
+				<span id="newLocation" style="display:none;">
+					<br/>
+					<label for="sessionNewLocation">Name:</label>
+					<input id="sessionNewLocation" type="text" name="newLocationName">
+				</span>
+			</td>
+		</tr>
+		<tr>
+			<td class="leftColumn"><label for="sessionBacker">Backer:</label></td>
+			<td class="rightColumn">
+				<select id="sessionBacker" name="backingAgreementId" onchange="checkBackerNamePercentage();">
+					<option value="-1">No Backer</option>
+					<option value="[backers.BA_ID;block=option;]">[backers.USERNAME] - [backers.PERCENT_OF_WIN]%</option>
+				</select>
+			</td>
+		</tr>
+	</table>
+
 	<input id="sessionSave" type="submit" value="Save" name="submit">
 </form>
 

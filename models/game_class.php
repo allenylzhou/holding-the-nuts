@@ -113,7 +113,7 @@ class CashGame extends Game {
 		return static::loadGames($userId, 'GAME_CASH');
 	}*/
 	
-	public function loadFinishedGames($userId) {
+	public static function loadFinishedGames($userId) {
 		$results = array();
 		$connection = static::start();
 

@@ -6,6 +6,7 @@ if (isset($_SESSION['USER'])) {
 	$user = $_SESSION['USER'];
 	$gameSessionId = $_GET['gsId'];
 	$game = new TournamentGame(array('gsId'=>$gameSessionId), true);
+	$error = array();
 
 	// Handle form
 	if (array_key_exists('submit', $_POST)) {
@@ -42,7 +43,7 @@ if (isset($_SESSION['USER'])) {
 			switch ($exception->getErrorCode()) {
 				default:
 					$error[] =  "An unknown error has occured";
-					break;
+				break;
 			}
 		}
 		catch (Exception $exception) {
@@ -65,6 +66,7 @@ if (isset($_SESSION['USER'])) {
 	$TBS->LoadTemplate('views/templates/app-container.html');
 	$TBS->MergeBlock('details', $details);
 	$TBS->MergeBlock('locations', $locations);
+	$TBS->MergeBlock('messages', $error);
 	$TBS->Show();
 
 } else {

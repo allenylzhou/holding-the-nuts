@@ -58,54 +58,58 @@
 	
 	<h2>Tournament Games</h2>
 	<table class="sessionTable">
-		<tr style="background-color:#CACACA">
-			<td><strong>Date</strong></td>
-			<td><strong>Location</strong></td>
-			<td><strong>Placed Finished</strong></td>
-			<td><strong>Duration</strong></td>
-			<td><strong>Profit</strong></td>
-			<td></td>
-		</tr>
-		<tr style="background-color:#F0F0F0">
-			<td>
-				<strong>[finishedTGames.START_DATE;block=tr;frm='ddd dd mmm yyyy']</strong>
-			</td>
-			<td>
-				<strong>[finishedTGames.LOCATION_NAME]</strong>
-			</td>
-			<td>[finishedTGames.PLACED_FINISHED]</td>
-			<td>[finishedTGames.DURATION;frm='0';ifempty='0'] mins</td>
-			<td>
-				<strong>[finishedTGames.PROFIT;frm='$ 0,000.00']</strong>
-			</td>
-			<td>
-				<a href="index.php?action=details-tournament&gsId=[finishedTGames.GS_ID]">View Details ></a>
-			</td>
-		</tr>
-		<tr style="background-color:#E6E6E6">
-			<td>
-				<strong>[finishedTGames.START_DATE;block=tr;frm='ddd dd mmm yyyy']</strong>
-			</td>
-			<td>
-				<strong>[finishedTGames.LOCATION_NAME]</strong>
-			</td>
-			<td>[finishedTGames.PLACED_FINISHED]</td>
-			<td>[finishedTGames.DURATION;frm='0';ifempty='0'] mins</td>
-			<td>
-				<strong>[finishedTGames.PROFIT;frm='$ 0,000.00']</strong> 
-			</td>
-			<td>
-				<a href="index.php?action=details-tournament&gsId=[finishedTGames.GS_ID]">View Details ></a>
-			</td>
-		</tr>
+		<thead>
+			<th>Date</th>
+			<th>Location</th>
+			<th>Placed Finished</th>
+			<th>Duration</th>
+			<th>Profit</th>
+			<th></th>
+		</thead>
+		<tbody>
+			<tr class="odd">
+				<td>
+					<strong>[finishedTGames.START_DATE;block=tr;frm='ddd dd mmm yyyy']</strong>
+				</td>
+				<td>
+					<strong>[finishedTGames.LOCATION_NAME;ifempty='None']</strong>
+				</td>
+				<td>[finishedTGames.PLACED_FINISHED]</td>
+				<td>[finishedTGames.DURATION;frm='0';ifempty='0'] mins</td>
+				<td>
+					<strong>[finishedTGames.PROFIT;frm='$ 0,000.00']</strong>
+				</td>
+				<td>
+					<a href="index.php?action=details-tournament&gsId=[finishedTGames.GS_ID]">View Details ></a>
+				</td>
+			</tr>
+			<tr class="even">
+				<td>
+					<strong>[finishedTGames.START_DATE;block=tr;frm='ddd dd mmm yyyy']</strong>
+				</td>
+				<td>
+					<strong>[finishedTGames.LOCATION_NAME]</strong>
+				</td>
+				<td>[finishedTGames.PLACED_FINISHED]</td>
+				<td>[finishedTGames.DURATION;frm='0';ifempty='0'] mins</td>
+				<td>
+					<strong>[finishedTGames.PROFIT;frm='$ 0,000.00']</strong> 
+				</td>
+				<td>
+					<a href="index.php?action=details-tournament&gsId=[finishedTGames.GS_ID]">View Details ></a>
+				</td>
+			</tr>
 
-		<tr style="background-color:#FFCFB9">
-			[finishedTGames;block=tr;nodata]
-			<td colspan="6">No sessions available.</td>
-		</tr>
-		<tr>
-			<td colspan="6"><a href="index.php?action=record_tournament">Add a new session</a></td>
-		</tr>
+			<tr style="background-color:#FFCFB9">
+				[finishedTGames;block=tr;nodata]
+				<td colspan="6">No sessions available.</td>
+			</tr>
+		</tbody>
+		<tfoot>
+			<tr>
+				<td colspan="6"><a href="index.php?action=record_tournament">Add a new session</a></td>
+			</tr>
+		</tfoot>
 	</table>
 
 	</body>
