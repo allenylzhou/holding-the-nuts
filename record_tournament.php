@@ -4,6 +4,7 @@ $template = 'views/templates/session-create-tournament.html';
 
 if (isset($_SESSION['USER'])) {
 	$user = $_SESSION['USER'];
+	$error = array();
 
 	if (array_key_exists('submit', $_POST)) {
 		
@@ -20,8 +21,6 @@ if (isset($_SESSION['USER'])) {
 			$locationName = null;
 		}	
 
-		var_dump($_POST);
-
 		$newGame = new TournamentGame;
 		$startDate = (!empty($_POST['startDate'])) ? date('Y-m-d H:i:s', strtotime($_POST['startDate'])) : "";
 		$endDate = (!empty($_POST['endDate'])) ? date('Y-m-d H:i:s', strtotime($_POST['endDate'])) : "";
@@ -34,11 +33,15 @@ if (isset($_SESSION['USER'])) {
 			'placedFinished' => $_POST['placedFinished'],
 			'locationName' => $locationName
 		));
+		
 		try{
 			$newGame->save();
 		}
 		catch (DatabaseException $exception) {
 			switch ($exception->getErrorCode()) {
+				case 2290:
+					$error[] = "Your inputs were invalid";
+				break;
 				default:
 					$error[] =  "An unknown error has occured";
 					break;
@@ -56,6 +59,9 @@ if (isset($_SESSION['USER'])) {
 			}
 			catch (DatabaseException $exception) {
 				switch ($exception->getErrorCode()) {
+					case 2290:
+						$error[] = "Your inputs were invalid";
+					break;
 					default:
 						$error[] =  "An unknown error has occured";
 						break;
@@ -66,7 +72,9 @@ if (isset($_SESSION['USER'])) {
 			}
 		}
 
-		header('Location: ./index.php?action=sessions');
+		if (empty($error)) {
+			header('Location: ./index.php?action=sessions');
+		}
 	}
 	// Display the form
 	$time = date('Y-m-d H:i:s');
@@ -76,6 +84,7 @@ if (isset($_SESSION['USER'])) {
 	$TBS = new clsTinyButStrong;
 	$TBS->LoadTemplate('views/templates/app-container.html');
 	$TBS->MergeBlock('locations', $locations);
+	$TBS->MergeBlock('messages', $error);
 	$TBS->MergeBlock('backers', $backers);
 	$TBS->Show();
 
