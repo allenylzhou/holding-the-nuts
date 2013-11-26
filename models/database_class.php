@@ -107,7 +107,7 @@ class Database {
 						}
 
 						// Execute SQL statement
-						if (oci_execute($sqlStatement)) {
+						if (@oci_execute($sqlStatement)) {
 							$result = oci_fetch_assoc($sqlStatement);
 							$result = array_shift($result);
 						} else {
@@ -188,7 +188,7 @@ class Database {
 					}
 
 					// Execute SQL statement
-					if (oci_execute($sqlStatement)) {
+					if (@oci_execute($sqlStatement)) {
 						$result = oci_fetch_assoc($sqlStatement);
 						if($result) {
 							foreach ($result as $key => $value) {
@@ -305,7 +305,7 @@ class Database {
 				}
 
 				// Execute SQL statement
-				if (oci_execute($sqlStatement, OCI_NO_AUTO_COMMIT)) {
+				if (@oci_execute($sqlStatement, OCI_NO_AUTO_COMMIT)) {
 					oci_commit($connection);
 				} else {
 					$error = oci_error($sqlStatement);	
@@ -385,7 +385,7 @@ class Database {
 					}
 
 					//Execute SQL statement
-					if (oci_execute($sqlStatement, OCI_NO_AUTO_COMMIT)) {
+					if (@oci_execute($sqlStatement, OCI_NO_AUTO_COMMIT)) {
 						oci_commit($connection);
 					} else {
 						$error = oci_error($sqlStatement);	
@@ -443,7 +443,7 @@ class Database {
 				}
 
 				// Execute SQL statement
-				if (oci_execute($sqlStatement, OCI_NO_AUTO_COMMIT)) {
+				if (@oci_execute($sqlStatement, OCI_NO_AUTO_COMMIT)) {
 					oci_commit($connection);
 				} else {
 					$error = oci_error($sqlStatement);	

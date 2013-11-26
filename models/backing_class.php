@@ -77,7 +77,7 @@ class BackingAgreement extends Database {
 		$sqlStatement = oci_parse($connection, $sqlString);
 		oci_bind_by_name($sqlStatement, ':userId', $userId);
 
-		if(oci_execute($sqlStatement)) {
+		if(@oci_execute($sqlStatement)) {
 			while ($row = oci_fetch_assoc($sqlStatement)) {
 				$rowTemp = array();
 				$rowTemp['BACKER_ID'] = $row['BACKER_ID'];
@@ -124,7 +124,7 @@ class BackingAgreement extends Database {
 		}
 		oci_bind_by_name($sqlStatement, ':getEmail', $getEmail);
 
-		if(oci_execute($sqlStatement)) {
+		if(@oci_execute($sqlStatement)) {
 			while ($row = oci_fetch_assoc($sqlStatement)) {
 				$rowTemp = array();
 				$rowTemp['HORSE_ID'] = $row['HORSE_ID'];
@@ -161,7 +161,7 @@ class BackingAgreement extends Database {
 		$sqlStatement = oci_parse($connection, $sqlString);
 		oci_bind_by_name($sqlStatement, ':userId', $userId);
 
-		if(oci_execute($sqlStatement)) {
+		if(@oci_execute($sqlStatement)) {
 			while ($row = oci_fetch_assoc($sqlStatement)) {
 				array_push($results, $row);
 			}
@@ -184,7 +184,7 @@ class BackingAgreement extends Database {
 			$sqlStatement = oci_parse($connection, $sqlString);
 			oci_bind_by_name($sqlStatement, ':userId', $userId);
 
-			if(oci_execute($sqlStatement)) {
+			if(@oci_execute($sqlStatement)) {
 					while ($row = oci_fetch_assoc($sqlStatement)) {
 							array_push($results, $row);
 					}
@@ -206,7 +206,7 @@ class BackingAgreement extends Database {
 		$sqlStatement = oci_parse($connection, $sqlString);
 		oci_bind_by_name($sqlStatement, ':userId', $userId);
 
-		if(oci_execute($sqlStatement)) {
+		if(@oci_execute($sqlStatement)) {
 			while ($row = oci_fetch_assoc($sqlStatement)) {
 				array_push($results, $row);
 			}

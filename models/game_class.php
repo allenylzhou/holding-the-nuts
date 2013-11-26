@@ -65,7 +65,7 @@ abstract class Game extends Database {
 		$userId = $this->getUserId();
 		oci_bind_by_name($sqlStatement, ':userId', $userId);
 
-		if(oci_execute($sqlStatement)) {
+		if(@oci_execute($sqlStatement)) {
 			$results = oci_fetch_assoc($sqlStatement);
 		}
 		static::end($connection);
@@ -136,7 +136,7 @@ class CashGame extends Game {
 		$sqlStatement = oci_parse($connection, $sqlString);
 		oci_bind_by_name($sqlStatement, ':userId', $userId);
 
-		if(oci_execute($sqlStatement)) {
+		if(@oci_execute($sqlStatement)) {
 			while ($row = oci_fetch_assoc($sqlStatement)) {
 				array_push($results, $row);
 			}
@@ -206,7 +206,7 @@ class TournamentGame extends Game {
 		$sqlStatement = oci_parse($connection, $sqlString);
 		oci_bind_by_name($sqlStatement, ':userId', $userId);
 
-		if(oci_execute($sqlStatement)) {
+		if(@oci_execute($sqlStatement)) {
 			while ($row = oci_fetch_assoc($sqlStatement)) {
 				array_push($results, $row);
 			}

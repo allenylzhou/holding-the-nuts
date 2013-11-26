@@ -13,7 +13,7 @@ class Statistics {
 				Where G.gs_id = C.gs_id And G.user_id = (:userID)';
 			$sqlStatement = oci_parse($connection, $sqlString);
 			oci_bind_by_name($sqlStatement, ':userId', $userId);
-			oci_execute($sqlStatement);
+			@oci_execute($sqlStatement);
 
 			while($row = oci_fetch_array($sqlStatement)){
 				$val = $row['AMOUNT'];
@@ -51,7 +51,7 @@ class Statistics {
 			
 			oci_define_by_name($stid, 'DAY_OF_WEEK', $dayOfWeek);
 			oci_define_by_name($stid, 'WINNINGS', $winnings);
-			oci_execute($stid);
+			@oci_execute($stid);
 			
 			while (oci_fetch($stid)) {
 				$dayOfWeek[((string) $dayOfWeek)] = $winnings; 
@@ -91,7 +91,7 @@ class Statistics {
 			$stid = oci_parse($connection, $sqlString);
 			oci_bind_by_name($stid, ':userId', $userId, 20);
 
-			oci_execute($stid);
+			@oci_execute($stid);
 			
 			$results = array();
 			while ($row = oci_fetch_array($stid)) {
@@ -125,7 +125,7 @@ class Statistics {
 			$stid = oci_parse($connection, $sqlString);
 			oci_bind_by_name($stid, ':userId', $userId, 20);
 
-			if (oci_execute($stid)) {
+			if (@oci_execute($stid)) {
 				while ($row = oci_fetch_assoc($stid)) {
 					array_push($months, $row);
 				}
@@ -148,7 +148,7 @@ class Statistics {
 					where USER_ID = :userId";
 			$stid = oci_parse($connection, $sqlString);
 			oci_bind_by_name($stid, ':userId', $userId, 20);
-			oci_execute($stid);
+			@oci_execute($stid);
 			
 			$hours = array();
 			while ($row = oci_fetch_array($stid)) {
@@ -175,7 +175,7 @@ class Statistics {
 					where USER_ID = :userId";
 			$stid = oci_parse($connection, $sqlString);
 			oci_bind_by_name($stid, ':userId', $userId, 20);
-			oci_execute($stid);
+			@oci_execute($stid);
 			
 			$minutes = array();
 			while ($row = oci_fetch_array($stid)) {
@@ -205,7 +205,7 @@ class Statistics {
 			$stid = oci_parse($connection, $sqlString);
 			oci_bind_by_name($stid, ':userId', $userId, 20);
 
-			if (oci_execute($stid)) {
+			if (@oci_execute($stid)) {
 				while ($row = oci_fetch_assoc($stid)) {
 					array_push($results, $row);
 				}

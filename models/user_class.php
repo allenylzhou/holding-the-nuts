@@ -66,7 +66,7 @@ class User extends Database {
 			$stid = oci_parse($connection, $sqlString);
 			oci_bind_by_name($stid, ':username', $this->username, 20);
 			oci_bind_by_name($stid, ':password', $this->password, 20);
-			oci_execute($stid);
+			@oci_execute($stid);
 
 			while ($row = oci_fetch_array($stid)) {
 				$val = $row['USER_ID'];
@@ -101,7 +101,7 @@ class User extends Database {
 			$sqlString = 'SELECT USER_ID FROM USERS WHERE USERNAME = :username';
 			$stid = oci_parse($connection, $sqlString);
 			oci_bind_by_name($stid, ':username', $username, 20);
-			oci_execute($stid);
+			@oci_execute($stid);
 			
 			while ($row = oci_fetch_array($stid)) {
 				$userId = $row['USER_ID'];
@@ -131,7 +131,7 @@ class User extends Database {
 			oci_bind_by_name($stid, ':userId', $this->userId, 20);
 			oci_bind_by_name($stid, ':backerId', $backerId, 20);
 			
-			if(!oci_execute($stid)){
+			if(!@oci_execute($stid)){
 				$error = oci_error($stid);	
 				throw new DatabaseException($error['message'], $error['code'], NULL, $error['sqltext']);
 			}
@@ -159,7 +159,7 @@ class User extends Database {
 			oci_bind_by_name($stid, ':user_id', $this->userId, 20);
 			
 			oci_define_by_name($stid, 'myBackers', $backerId);
-			oci_execute($stid);
+			@oci_execute($stid);
 			
 			while (oci_fetch($stid)) {
 				if($userid != null){
@@ -199,7 +199,7 @@ class User extends Database {
 							and u.user_id = hb.horse';
 			$stid = oci_parse($connection, $sqlString);
 			oci_bind_by_name($stid, ':userId', $this->userId, 20);
-			oci_execute($stid);
+			@oci_execute($stid);
 			
 			while ($row = oci_fetch_array($stid)) {
 				$otherUsers[] = $row['OTHER_USER'];;

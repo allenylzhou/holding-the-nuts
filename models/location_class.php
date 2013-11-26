@@ -72,7 +72,7 @@ class Location extends Database {
 		}
 		oci_bind_by_name($sqlStatement, ':favorite', $val);
 		
-		if(oci_execute($sqlStatement)) {
+		if(@oci_execute($sqlStatement)) {
 			while ($row = oci_fetch_assoc($sqlStatement)) {
 				array_push($results, $row);
 			}

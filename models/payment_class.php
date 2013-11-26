@@ -83,7 +83,7 @@ class Payment extends Database {
 		$sqlStatement = oci_parse($connection, $sqlString);
 		oci_bind_by_name($sqlStatement, ':userId', $userId);
 
-		if(oci_execute($sqlStatement)) {
+		if(@oci_execute($sqlStatement)) {
 			while ($row = oci_fetch_assoc($sqlStatement)) {
 				$rowTemp = array();
 				$rowTemp['FROM'] = $row['PAYER'];
